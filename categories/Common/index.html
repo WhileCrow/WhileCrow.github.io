@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Category: Common - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Crow&#039;s Sky"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"Crow's Sky","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":""}</script><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">Categories</a></li><li class="is-active"><a href="#" aria-current="page">Common</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-14T02:50:44.222Z" title="2022/2/14 上午10:50:44">2022-02-14</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:44.223Z" title="2022/2/14 上午10:50:44">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Jvm/">Jvm</a></span><span class="level-item">5 minutes read (About 736 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/14/LeakType/">LeakType</a></h1><div class="content"><h1 id="内存泄漏实质"><a href="#内存泄漏实质" class="headerlink" title="内存泄漏实质"></a>内存泄漏实质</h1><p>内存泄漏实质上是GC时候，被GC Root引用或间接引用着的对象无法被回收，而可以作为GC Root的对象在java中有几种：</p>
+<ol>
+<li><p>虚拟机栈或叫JVM栈（栈帧中的本地变量表）中引用的对象； （线程泄露）</p>
+<blockquote>
+<p>虚拟机栈是<strong>线程私有的</strong>，每个java方法被执行的时候都会同时创建一个栈帧（Stack Frame）用于<strong>存储局部变量表</strong>、操作栈、动态链接、方法出口等信息。每一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。</p>
+</blockquote>
+</li>
+<li><p>方法区中的类静态属性引用的对象；  （static变量）</p>
+<blockquote>
+<p>方法区存储<strong>类信息、常量、静态变量</strong>等数据，是线程共享的区域</p>
+</blockquote>
+</li>
+<li><p>本地方法栈中JNI（即一般说的Native方法）中引用的对象  （Jni持有的对象）</p>
+<blockquote>
+<p>对应虚拟机栈为虚拟机执行java方法服务，而本地方法栈为虚拟机使用到的Native方法服务</p>
+</blockquote>
+</li>
+<li><p>方法区中常量引用的对象； （final修饰的int/float/long等基本数据类型和String）   不常见</p>
+</li>
+</ol></div><a class="article-more button is-small is-size-7" href="/2022/02/14/LeakType/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-14T02:50:43.930Z" title="2022/2/14 上午10:50:43">2022-02-14</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:43.930Z" title="2022/2/14 上午10:50:43">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Jvm/">Jvm</a></span><span class="level-item">10 minutes read (About 1478 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/14/JMM/">JvmMemoryStructure</a></h1><div class="content"><p><img src="/2022/02/14/JMM/image-20210430141704116.png" alt="image-20210430141704116"></p>
+<p>Java内存比较流行的说法便是堆和栈，这其实是非常粗略的一种划分，这种划分的”堆”对应内存模型的Java堆，”栈”是指虚拟机栈。</p></div><a class="article-more button is-small is-size-7" href="/2022/02/14/JMM/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-14T02:50:42.761Z" title="2022/2/14 上午10:50:42">2022-02-14</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:42.762Z" title="2022/2/14 上午10:50:42">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Code/">Code</a></span><span class="level-item">4 minutes read (About 598 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/14/CodeOptimization/">CodeOptimization</a></h1><div class="content"><h2 id="代码优化"><a href="#代码优化" class="headerlink" title="# 代码优化"></a># 代码优化</h2><h2 id="1：纯函数"><a href="#1：纯函数" class="headerlink" title="1：纯函数"></a>1：纯函数</h2><p>纯函数是函数编程中的一个概念，指的是一个方法函数，就像一个数学的函数式一样，同样的参数输入会得到同样的输出。<br>可以近似理解为函数内部不依赖任何的外部状态，外部变量。</p>
+<h2 id="2：空安全"><a href="#2：空安全" class="headerlink" title="2：空安全"></a>2：空安全</h2><p>java是强对象类型语言，故对于java来说我们很容易关注到类型强转的错误</p></div><a class="article-more button is-small is-size-7" href="/2022/02/14/CodeOptimization/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-22T12:59:00.000Z" title="2021/11/22 下午8:59:00">2021-11-22</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:44.234Z" title="2022/2/14 上午10:50:44">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">an hour read (About 10879 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/22/OperatingSystem/">OperatingSystem</a></h1><div class="content"><h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><ul>
+<li>进程和线程<ul>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB">进程和线程有什么区别？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F">进程间通信有哪些方式？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98">进程同步问题</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81">进程有哪几种状态？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5%E6%9C%89%E5%93%AA%E4%BA%9B">进程调度策略有哪些？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B">什么是僵尸进程？</a></li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F">线程同步有哪些方式？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E7%A8%8B">什么是协程？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%BC%82%E5%B8%B8%E6%8E%A7%E5%88%B6%E6%B5%81%EF%BC%9A%E9%99%B7%E9%98%B1%E3%80%81%E4%B8%AD%E6%96%AD%E3%80%81%E5%BC%82%E5%B8%B8%E5%92%8C%E4%BF%A1%E5%8F%B7">进程的异常控制流：陷阱、中断、异常和信号</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFIO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0">什么是IO多路复用？怎么实现？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81">什么是用户态和内核态？</a></li>
+</ul>
+</li>
+<li>死锁<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%AD%BB%E9%94%81">什么是死锁？</a></li>
+<li><a href="#%E6%AD%BB%E9%94%81%E4%BA%A7%E7%94%9F%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6">死锁产生的必要条件？</a></li>
+<li><a href="#%E6%AD%BB%E9%94%81%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95">死锁有哪些处理方法？</a></li>
+</ul>
+</li>
+<li>内存管理<ul>
+<li><a href="#%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB">分页和分段有什么区别？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98">什么是虚拟内存？</a></li>
+<li><a href="#%E6%9C%89%E5%93%AA%E4%BA%9B%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95">有哪些页面置换算法？</a></li>
+<li><a href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E9%97%AE%E9%A2%98">缓冲区溢出问题</a></li>
+</ul>
+</li>
+<li><a href="#%E7%A3%81%E7%9B%98%E8%B0%83%E5%BA%A6">磁盘调度</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+<hr>
+<h3 id="进程和线程有什么区别？"><a href="#进程和线程有什么区别？" class="headerlink" title="进程和线程有什么区别？"></a>进程和线程有什么区别？</h3><ul>
+<li>进程（Process）是系统进行资源分配和调度的基本单位，线程（Thread）是CPU调度和分派的基本单位；</li>
+<li>线程依赖于进程而存在，一个进程至少有一个线程；</li>
+<li>进程有自己的独立地址空间，线程共享所属进程的地址空间；</li>
+<li>进程是拥有系统资源的一个独立单位，而线程自己基本上不拥有系统资源，只拥有一点在运行中必不可少的资源(如程序计数器,一组寄存器和栈)，和其他线程共享本进程的相关资源如内存、I/O、cpu等；</li>
+<li>在进程切换时，涉及到整个当前进程CPU环境的保存环境的设置以及新被调度运行的CPU环境的设置，而线程切换只需保存和设置少量的寄存器的内容，并不涉及存储器管理方面的操作，可见，进程切换的开销远大于线程切换的开销；</li>
+<li>线程之间的通信更方便，同一进程下的线程共享全局变量等数据，而进程之间的通信需要以进程间通信(IPC)的方式进行；</li>
+<li>多线程程序只要有一个线程崩溃，整个程序就崩溃了，但多进程程序中一个进程崩溃并不会对其它进程造成影响，因为进程有自己的独立地址空间，因此多进程更加健壮</li>
+</ul>
+<p>进程操作代码实现，可以参考：<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017628290184064">多进程 - 廖雪峰的官方网站</a></p>
+<h5 id="同一进程中的线程可以共享哪些数据？"><a href="#同一进程中的线程可以共享哪些数据？" class="headerlink" title="同一进程中的线程可以共享哪些数据？"></a>同一进程中的线程可以共享哪些数据？</h5><details>
+<summary>展开</summary>
+
+<ul>
+<li>进程代码段</li>
+<li>进程的公有数据（全局变量、静态变量…）</li>
+<li>进程打开的文件描述符</li>
+<li>进程的当前目录</li>
+<li>信号处理器/信号处理函数：对收到的信号的处理方式</li>
+<li>进程ID与进程组ID</li></ul></details>
+
+<h5 id="线程独占哪些资源？"><a href="#线程独占哪些资源？" class="headerlink" title="线程独占哪些资源？"></a>线程独占哪些资源？</h5><details>
+<summary>展开</summary>
+
+<ul>
+<li>线程ID</li>
+<li>一组寄存器的值</li>
+<li>线程自身的栈（堆是共享的）</li>
+<li>错误返回码：线程可能会产生不同的错误返回码，一个线程的错误返回码不应该被其它线程修改；</li>
+<li>信号掩码/信号屏蔽字(Signal mask)：表示是否屏蔽/阻塞相应的信号（SIGKILL,SIGSTOP除外）</li></ul></details>
+
+<h3 id="进程间通信有哪些方式？"><a href="#进程间通信有哪些方式？" class="headerlink" title="进程间通信有哪些方式？"></a>进程间通信有哪些方式？</h3><ol>
+<li>管道(Pipe)<details>
+<summary>展开</summary></details></li>
+</ol>
+<ul>
+<li>管道是半双工的，数据只能向一个方向流动；需要双方通信时，需要建立起两个管道；</li>
+<li>一个进程向管道中写的内容被管道另一端的进程读出。写入的内容每次都添加在管道缓冲区的末尾，并且每次都是从缓冲区的头部读出数据；</li>
+<li>只能用于父子进程或者兄弟进程之间(具有亲缘关系的进程)</li>
+</ul>
+<ol start="2">
+<li>命名管道</li>
+<li>消息队列</li>
+<li>信号(Signal)</li>
+<li>共享内存</li>
+<li>信号量(Semaphore)：初始化操作、P操作、V操作；P操作：信号量-1，检测是否小于0，小于则进程进入阻塞状态；V操作：信号量+1，若小于等于0，则从队列中唤醒一个等待的进程进入就绪态</li>
+<li>套接字(Socket)</li>
+</ol>
+<p>更详细的可以参考（待整理）：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://imageslr.github.io/2020/02/26/ipc.html">https://imageslr.github.io/2020/02/26/ipc.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c1015f5ffa74">https://www.jianshu.com/p/c1015f5ffa74</a></li>
+</ul>
+<h3 id="进程同步问题"><a href="#进程同步问题" class="headerlink" title="进程同步问题"></a>进程同步问题</h3><blockquote>
+<p>进程的同步是目的，而进程间通信是实现进程同步的手段</p>
+</blockquote>
+<details>
+<summary>管程 Monitor</summary>
+
+<p>管程将共享变量以及对这些共享变量的操作封装起来，形成一个具有一定接口的功能模块，这样只能通过管程提供的某个过程才能访问管程中的资源。进程只能互斥地使用管程，使用完之后必须释放管程并唤醒入口等待队列中的进程。</p>
+<p>当一个进程试图进入管程时，在<strong>入口等待队列</strong>等待。若P进程唤醒了Q进程，则Q进程先执行，P在<strong>紧急等待队列</strong>中等待。（<strong>HOARE管程</strong>）</p>
+<p>wait操作：执行wait操作的进程进入条件变量链末尾，唤醒紧急等待队列或者入口队列中的进程；signal操作：唤醒条件变量链中的进程，自己进入紧急等待队列，若条件变量链为空，则继续执行。（<strong>HOARE管程</strong>）</p>
+<p><strong>MESA管程</strong>：将HOARE中的signal换成了notify（或者broadcast通知所有满足条件的），进行通知而不是立马交换管程的使用权，在合适的时候，条件队列首位的进程可以进入，进入之前必须用while检查条件是否合适。优点：没有额外的进程切换</p>
+</details>
+
+<details>
+<summary>生产者-消费者问题</summary>
+
+<blockquote>
+<p>问题描述：使用一个缓冲区来存放数据，只有缓冲区没有满，生产者才可以写入数据；只有缓冲区不为空，消费者才可以读出数据</p>
+</blockquote>
+<p>代码实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伪代码描述 </span></span><br><span class="line"><span class="comment">// 定义信号量 full记录缓冲区物品数量 empty代表缓冲区空位数量 mutex为互斥量</span></span><br><span class="line">semaphore full = <span class="number">0</span>, empty = n, mutex = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生产者进程</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">producer</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">do</span>&#123;</span><br><span class="line">   	  P(empty);</span><br><span class="line">	  P(mutex);</span><br><span class="line"></span><br><span class="line">     <span class="comment">// 生产者进行生产</span></span><br><span class="line">   	</span><br><span class="line">   	  V(mutex);</span><br><span class="line">   	  V(full);</span><br><span class="line"> 	&#125; <span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">consumer</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">do</span>&#123;</span><br><span class="line">	  P(full);</span><br><span class="line">	  P(mutex);</span><br><span class="line"></span><br><span class="line">    	<span class="comment">// 消费者进行消费</span></span><br><span class="line"></span><br><span class="line">	  V(mutex);</span><br><span class="line">	  V(empty);</span><br><span class="line"> 	&#125; <span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</details>
+
+<details>
+<summary>哲学家就餐问题</summary>
+
+<blockquote>
+<p>问题描述：有五位哲学家围绕着餐桌坐，每一位哲学家要么思考，要么吃饭。为了吃饭，哲学家必须拿起两双筷子（分别放于左右两端）不幸的是，筷子的数量和哲学家相等，所以每只筷子必须由两位哲学家共享。</p>
+</blockquote>
+<p>代码实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> N 5  <span class="comment">// number of philosopher</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LEFT (i + N - 1)%N <span class="comment">// number of i&#x27;s left neighbors</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> RIGHT (i + 1)%N <span class="comment">// number of i&#x27;s right neighbors</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> THINKING 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> HUNGRY 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EATING 2</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> semaphore;</span><br><span class="line"><span class="keyword">int</span> state[N]; <span class="comment">// array to keep track of everyone&#x27;s state</span></span><br><span class="line">semaphore mutex = <span class="number">1</span>; <span class="comment">// mutual exclusion of critical region</span></span><br><span class="line">semaphore s[N]; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">philosopher</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">while</span> (TRUE) &#123;</span><br><span class="line">		think();</span><br><span class="line">		take_forks(i);</span><br><span class="line">		eat();</span><br><span class="line">		put_forks(i);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">take_forks</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	down(&amp;mutex); <span class="comment">// enter critical region</span></span><br><span class="line">	state[i] = HUNGRY; <span class="comment">// record that i is hungry</span></span><br><span class="line">	test_forks(i); <span class="comment">// try to acquire two forks</span></span><br><span class="line">	up(&amp;mutex); <span class="comment">// exit critical region</span></span><br><span class="line">	down(&amp;s[i]); <span class="comment">// block if forks are not acquired</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">put_forks</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	down(&amp;mutex); <span class="comment">// enter critical region</span></span><br><span class="line">	state[i] = THINKING; <span class="comment">// record that has finished eating</span></span><br><span class="line">	test_forks(LEFT); <span class="comment">// see if left neighbor can now eat</span></span><br><span class="line">	test_forks(RIGHT); <span class="comment">// see if right neighbor can now eat</span></span><br><span class="line">	up(&amp;mutex); <span class="comment">// exit critical region</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_forks</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (state[i] == HUNGRY &amp;&amp; state[LEFT] != EATING &amp;&amp; state[RIGHT] != EATING) &#123;</span><br><span class="line">		state[i] = EATING;</span><br><span class="line">		up(&amp;s[i]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</details>
+
+<details>
+<summary>读者-写者问题</summary>
+
+
+</details>
+
+<h5 id="临界区的概念？"><a href="#临界区的概念？" class="headerlink" title="临界区的概念？"></a>临界区的概念？</h5><details>
+<summary>展开</summary>
+
+<p>各个进程中对临界资源（互斥资源/共享变量，一次只能给一个进程使用）进行操作的程序片段</p>
+</details>
+
+<h5 id="同步与互斥的概念？"><a href="#同步与互斥的概念？" class="headerlink" title="同步与互斥的概念？"></a>同步与互斥的概念？</h5><details>
+<summary>展开</summary>
+
+<ul>
+<li>同步：多个进程因为合作而使得进程的执行有一定的先后顺序。比如某个进程需要另一个进程提供的消息，获得消息之前进入阻塞态；</li>
+<li>互斥：多个进程在同一时刻只有一个进程能进入临界区</li></ul></details>
+
+<h5 id="并发、并行、异步的区别？"><a href="#并发、并行、异步的区别？" class="headerlink" title="并发、并行、异步的区别？"></a>并发、并行、异步的区别？</h5><details>
+<summary>展开</summary>
+
+<p>并发：在一个时间段中同时有多个程序在运行，但其实任一时刻，只有一个程序在CPU上运行，宏观上的并发是通过不断的切换实现的；</p>
+<p>多线程：并发运行的一段代码。是实现异步的手段</p>
+<p>并行（和串行相比）：在多CPU系统中，多个程序无论宏观还是微观上都是同时执行的</p>
+<p>异步（和同步相比）：同步是顺序执行，异步是在等待某个资源的时候继续做自己的事</p>
+</details>
+
+<h3 id="进程有哪几种状态？"><a href="#进程有哪几种状态？" class="headerlink" title="进程有哪几种状态？"></a>进程有哪几种状态？</h3><p><img src="_v_images/20191202090217863_1873.png" alt="Process State"></p>
+<ul>
+<li>就绪状态：进程已获得除处理机以外的所需资源，等待分配处理机资源</li>
+<li>运行状态：占用处理机资源运行，处于此状态的进程数小于等于CPU数</li>
+<li>阻塞状态： 进程等待某种条件，在条件满足之前无法执行</li>
+</ul>
+<h3 id="进程调度策略有哪些？"><a href="#进程调度策略有哪些？" class="headerlink" title="进程调度策略有哪些？"></a>进程调度策略有哪些？</h3><ol>
+<li><strong>批处理系统</strong>：</li>
+</ol>
+<details>
+<summary>先来先服务 first-come first-serverd（FCFS）</summary>
+
+<p>按照请求的顺序进行调度。非抢占式，开销小，无饥饿问题，响应时间不确定（可能很慢）；</p>
+<p>对短进程不利，对IO密集型进程不利。</p>
+</details>
+
+<details>
+<summary>最短作业优先 shortest job first（SJF）</summary>
+
+<p>按估计运行时间最短的顺序进行调度。非抢占式，吞吐量高，开销可能较大，可能导致饥饿问题；</p>
+<p>对短进程提供好的响应时间，对长进程不利。</p>
+</details>
+
+<details>
+<summary>最短剩余时间优先 shortest remaining time next（SRTN）</summary>
+
+<p>按剩余运行时间的顺序进行调度。(最短作业优先的抢占式版本)。吞吐量高，开销可能较大，提供好的响应时间；</p>
+<p>可能导致饥饿问题，对长进程不利。</p>
+</details>
+
+<details>
+<summary>最高响应比优先 Highest Response Ratio Next（HRRN）</summary>
+
+<p>响应比 = 1+ 等待时间/处理时间。同时考虑了等待时间的长短和估计需要的执行时间长短，很好的平衡了长短进程。非抢占，吞吐量高，开销可能较大，提供好的响应时间，无饥饿问题。</p>
+</details>
+
+<ol start="2">
+<li><strong>交互式系统</strong><br>交互式系统有大量的用户交互操作，在该系统中调度算法的目标是快速地进行响应。</li>
+</ol>
+<details>
+<summary>时间片轮转 Round Robin</summary>
+
+<p>将所有就绪进程按 FCFS 的原则排成一个队列，用完时间片的进程排到队列最后。抢占式（时间片用完时），开销小，无饥饿问题，为短进程提供好的响应时间；</p>
+<p>若时间片小，进程切换频繁，吞吐量低；若时间片太长，实时性得不到保证。</p>
+</details>
+
+<details>
+<summary>优先级调度算法</summary>
+
+<p>为每个进程分配一个优先级，按优先级进行调度。为了防止低优先级的进程永远等不到调度，可以随着时间的推移增加等待进程的优先级。</p>
+</details>
+
+<details>
+<summary>多级反馈队列调度算法 Multilevel Feedback Queue</summary>
+
+<p>设置多个就绪队列1、2、3…，优先级递减，时间片递增。只有等到优先级更高的队列为空时才会调度当前队列中的进程。如果进程用完了当前队列的时间片还未执行完，则会被移到下一队列。</p>
+<p>抢占式（时间片用完时），开销可能较大，对IO型进程有利，可能会出现饥饿问题。</p>
+</details>
+
+<h5 id="什么叫优先级反转？如何解决？"><a href="#什么叫优先级反转？如何解决？" class="headerlink" title="什么叫优先级反转？如何解决？"></a>什么叫优先级反转？如何解决？</h5><details>
+<summary>展开</summary>
+
+<p>高优先级的进程等待被一个低优先级进程占用的资源时，就会出现优先级反转，即优先级较低的进程比优先级较高的进程先执行。此处详细解释优先级反转带来的问题：如果有一个中等优先级的进程将低优先级的进程抢占，那么此时低优先级的进程无法正常进行并在后续释放被占用的资源，导致高优先级的任务一直被挂起，直到中等优先级的进程完成后，低优先级的进程才可以继续并在后续释放占用的资源，最后高优先级的进程才可以执行。导致的问题就是高优先级的进程在中等优先级的进程调度之后。</p>
+<p>解决方法：</p>
+<ul>
+<li>优先级天花板(priority ceiling)：当任务申请某资源时，把该任务的优先级提升到可访问这个资源的所有任务中的最高优先级，这个优先级称为该资源的优先级天花板。简单易行。</li>
+<li>优先级继承(priority inheritance)：当任务A申请共享资源S时，如果S正在被任务C使用，通过比较任务C与自身的优先级，如发现任务C的优先级小于自身的优先级，则将任务C的优先级提升到自身的优先级，任务C释放资源S后，再恢复任务C的原优先级。</li></ul></details>
+
+<h3 id="什么是僵尸进程？"><a href="#什么是僵尸进程？" class="headerlink" title="什么是僵尸进程？"></a>什么是僵尸进程？</h3><p>一个子进程结束后，它的父进程并没有等待它（调用wait或者waitpid），那么这个子进程将成为一个僵尸进程。僵尸进程是一个已经死亡的进程，但是并没有真正被销毁。它已经放弃了几乎所有内存空间，没有任何可执行代码，也不能被调度，仅仅在进程表中保留一个位置，记载该进程的进程ID、终止状态以及资源利用信息(CPU时间，内存使用量等等)供父进程收集，除此之外，僵尸进程不再占有任何内存空间。这个僵尸进程可能会一直留在系统中直到系统重启。</p>
+<p>危害：占用进程号，而系统所能使用的进程号是有限的；占用内存。</p>
+<p>以下情况不会产生僵尸进程：</p>
+<ul>
+<li>该进程的父进程先结束了。每个进程结束的时候，系统都会扫描是否存在子进程，如果有则用Init进程接管，成为该进程的父进程，并且会调用wait等待其结束。</li>
+<li>父进程调用wait或者waitpid等待子进程结束（需要每隔一段时间查询子进程是否结束）。wait系统调用会使父进程暂停执行，直到它的一个子进程结束为止。waitpid则可以加入<code>WNOHANG</code>(wait-no-hang)选项，如果没有发现结束的子进程，就会立即返回，不会将调用waitpid的进程阻塞。同时，waitpid还可以选择是等待任一子进程（同wait），还是等待指定pid的子进程，还是等待同一进程组下的任一子进程，还是等待组ID等于pid的任一子进程；</li>
+<li>子进程结束时，系统会产生<code>SIGCHLD</code>(signal-child)信号，可以注册一个信号处理函数，在该函数中调用waitpid，等待所有结束的子进程（注意：一般都需要循环调用waitpid，因为在信号处理函数开始执行之前，可能已经有多个子进程结束了，而信号处理函数只执行一次，所以要循环调用将所有结束的子进程回收）；</li>
+<li>也可以用<code>signal(SIGCLD, SIG_IGN)</code>(signal-ignore)通知内核，表示忽略<code>SIGCHLD</code>信号，那么子进程结束后，内核会进行回收。</li>
+</ul>
+<h5 id="什么是孤儿进程？"><a href="#什么是孤儿进程？" class="headerlink" title="什么是孤儿进程？"></a>什么是孤儿进程？</h5><details>
+<summary>展开</summary>
+
+<p>一个父进程已经结束了，但是它的子进程还在运行，那么这些子进程将成为孤儿进程。孤儿进程会被Init（进程ID为1）接管，当这些孤儿进程结束时由Init完成状态收集工作。</p>
+</details>
+
+<h3 id="线程同步有哪些方式？"><a href="#线程同步有哪些方式？" class="headerlink" title="线程同步有哪些方式？"></a>线程同步有哪些方式？</h3><blockquote>
+<p>为什么需要线程同步：线程有时候会和其他线程共享一些资源，比如内存、数据库等。当多个线程同时读写同一份共享资源的时候，可能会发生冲突。因此需要线程的同步，多个线程按顺序访问资源。</p>
+</blockquote>
+<ul>
+<li><strong>互斥量</strong> Mutex：互斥量是内核对象，只有拥有互斥对象的线程才有访问互斥资源的权限。因为互斥对象只有一个，所以可以保证互斥资源不会被多个线程同时访问；当前拥有互斥对象的线程处理完任务后必须将互斥对象交出，以便其他线程访问该资源；</li>
+<li><strong>信号量</strong> Semaphore：信号量是内核对象，它允许同一时刻多个线程访问同一资源，但是需要控制同一时刻访问此资源的最大线程数量。信号量对象保存了<strong>最大资源计数</strong>和<strong>当前可用资源计数</strong>，每增加一个线程对共享资源的访问，当前可用资源计数就减1，只要当前可用资源计数大于0，就可以发出信号量信号，如果为0，则将线程放入一个队列中等待。线程处理完共享资源后，应在离开的同时通过<code>ReleaseSemaphore</code>函数将当前可用资源数加1。如果信号量的取值只能为0或1，那么信号量就成为了互斥量；</li>
+<li><strong>事件</strong> Event：允许一个线程在处理完一个任务后，主动唤醒另外一个线程执行任务。事件分为手动重置事件和自动重置事件。手动重置事件被设置为激发状态后，会唤醒所有等待的线程，而且一直保持为激发状态，直到程序重新把它设置为未激发状态。自动重置事件被设置为激发状态后，会唤醒<strong>一个</strong>等待中的线程，然后自动恢复为未激发状态。</li>
+<li><strong>临界区</strong> Critical Section：任意时刻只允许一个线程对临界资源进行访问。拥有临界区对象的线程可以访问该临界资源，其它试图访问该资源的线程将被挂起，直到临界区对象被释放。</li>
+</ul>
+<h5 id="互斥量和临界区有什么区别？"><a href="#互斥量和临界区有什么区别？" class="headerlink" title="互斥量和临界区有什么区别？"></a>互斥量和临界区有什么区别？</h5><details>
+<summary>展开</summary>
+
+<p>互斥量是可以命名的，可以用于不同进程之间的同步；而临界区只能用于同一进程中线程的同步。创建互斥量需要的资源更多，因此临界区的优势是速度快，节省资源。</p>
+</details>
+
+<h3 id="什么是协程？"><a href="#什么是协程？" class="headerlink" title="什么是协程？"></a>什么是协程？</h3><p>协程是一种用户态的轻量级线程，协程的调度完全由用户控制。协程拥有自己的寄存器上下文和栈。协程调度切换时，将寄存器上下文和栈保存到其他地方，在切回来的时候，恢复先前保存的寄存器上下文和栈，直接操作栈则基本没有内核切换的开销，可以不加锁的访问全局变量，所以上下文的切换非常快。</p>
+<h5 id="协程多与线程进行比较？"><a href="#协程多与线程进行比较？" class="headerlink" title="协程多与线程进行比较？"></a>协程多与线程进行比较？</h5><details>
+<summary>展开</summary>
+
+<ol>
+<li><p>一个线程可以拥有多个协程，一个进程也可以单独拥有多个协程，这样python中则能使用多核CPU。</p>
+</li>
+<li><p>线程进程都是同步机制，而协程则是异步</p>
+</li>
+<li><p>协程能保留上一次调用时的状态，每次过程重入时，就相当于进入上一次调用的状态</p>
+</li></ol></details>
+
+<h3 id="进程的异常控制流：陷阱、中断、异常和信号"><a href="#进程的异常控制流：陷阱、中断、异常和信号" class="headerlink" title="进程的异常控制流：陷阱、中断、异常和信号"></a>进程的异常控制流：陷阱、中断、异常和信号</h3><p>陷阱是<strong>有意</strong>造成的“异常”，是执行一条指令的结果。陷阱是同步的。陷阱的主要作用是实现<strong>系统调用</strong>。比如，进程可以执行 <code>syscall n</code> 指令向内核请求服务。当进程执行这条指令后，会中断当前的控制流，<strong>陷入</strong>到内核态，执行相应的系统调用。内核的处理程序在执行结束后，会将结果返回给进程，同时退回到用户态。进程此时继续执行<strong>下一条指令</strong>。</p>
+<p>中断由处理器<strong>外部</strong>的<strong>硬件</strong>产生，不是执行某条指令的结果，也无法预测发生时机。由于中断独立于当前执行的程序，因此中断是异步事件。中断包括 I/O 设备发出的 I/O 中断、各种定时器引起的时钟中断、调试程序中设置的断点等引起的调试中断等。</p>
+<p>异常是一种错误情况，是执行当前指令的结果，可能被错误处理程序修正，也可能直接终止应用程序。异常是同步的。这里特指因为执行当前指令而产生的<strong>错误情况</strong>，比如除法异常、缺页异常等。有些书上为了区分，也将这类“异常”称为<strong>“故障”</strong>。</p>
+<p>信号是一种<strong>更高层的</strong>软件形式的异常，同样会中断进程的控制流，可以由进程进行处理。一个信号代表了一个消息。信号的作用是用来<strong>通知进程</strong>发生了某种系统事件。</p>
+<p>更详细的可以参考：<a target="_blank" rel="noopener" href="https://imageslr.github.io/2020/07/09/trap-interrupt-exception.html">https://imageslr.github.io/2020/07/09/trap-interrupt-exception.html</a></p>
+<h3 id="什么是IO多路复用？怎么实现？"><a href="#什么是IO多路复用？怎么实现？" class="headerlink" title="什么是IO多路复用？怎么实现？"></a>什么是IO多路复用？怎么实现？</h3><p>IO多路复用（IO Multiplexing）是指单个进程/线程就可以同时处理多个IO请求。</p>
+<p>实现原理：用户将想要监视的文件描述符（File Descriptor）添加到select/poll/epoll函数中，由内核监视，函数阻塞。一旦有文件描述符就绪（读就绪或写就绪），或者超时（设置timeout），函数就会返回，然后该进程可以进行相应的读/写操作。</p>
+<details>
+<summary>select/poll/epoll三者的区别？</summary>
+
+<ul>
+<li><code>select</code>：将文件描述符放入一个集合中，调用select时，将这个集合从用户空间拷贝到内核空间（缺点1：每次都要复制，<strong>开销大</strong>），由内核根据就绪状态修改该集合的内容。（缺点2）<strong>集合大小有限制</strong>，32位机默认是1024（64位：2048）；采用水平触发机制。select函数返回后，需要通过遍历这个集合，找到就绪的文件描述符（缺点3：<strong>轮询的方式效率较低</strong>），当文件描述符的数量增加时，效率会线性下降；</li>
+<li><code>poll</code>：和select几乎没有区别，区别在于文件描述符的存储方式不同，poll采用链表的方式存储，没有最大存储数量的限制；</li>
+<li><code>epoll</code>：通过内核和用户空间共享内存，避免了不断复制的问题；支持的同时连接数上限很高（1G左右的内存支持10W左右的连接数）；文件描述符就绪时，采用回调机制，避免了轮询（回调函数将就绪的描述符添加到一个链表中，执行epoll_wait时，返回这个链表）；支持水平触发和边缘触发，采用边缘触发机制时，只有活跃的描述符才会触发回调函数。</li>
+</ul>
+<p>总结，区别主要在于：</p>
+<ul>
+<li>一个线程/进程所能打开的最大连接数</li>
+<li>文件描述符传递方式（是否复制）</li>
+<li>水平触发 or 边缘触发</li>
+<li>查询就绪的描述符时的效率（是否轮询）</li></ul></details>
+
+<details>
+<summary>什么时候使用select/poll，什么时候使用epoll？</summary>
+
+<p>当连接数较多并且有很多的不活跃连接时，epoll的效率比其它两者高很多；但是当连接数较少并且都十分活跃的情况下，由于epoll需要很多回调，因此性能可能低于其它两者。</p>
+</details>
+
+<details>
+<summary>什么是文件描述符？</summary>
+
+<p>文件描述符在形式上是一个非负整数。实际上，它是一个索引值，指向内核为每一个进程所维护的该进程打开文件的记录表。当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。</p>
+<p>内核通过文件描述符来访问文件。文件描述符指向一个文件。</p>
+</details>
+
+<h5 id="什么是水平触发？什么是边缘触发？"><a href="#什么是水平触发？什么是边缘触发？" class="headerlink" title="什么是水平触发？什么是边缘触发？"></a>什么是水平触发？什么是边缘触发？</h5><details>
+<summary>展开</summary>
+
+<ul>
+<li>水平触发（LT，Level Trigger）模式下，只要一个文件描述符就绪，就会触发通知，如果用户程序没有一次性把数据读写完，下次还会通知；</li>
+<li>边缘触发（ET，Edge Trigger）模式下，当描述符从未就绪变为就绪时通知一次，之后不会再通知，直到再次从未就绪变为就绪（缓冲区从不可读/写变为可读/写）。</li>
+<li>区别：边缘触发效率更高，减少了被重复触发的次数，函数不会返回大量用户程序可能不需要的文件描述符。</li>
+<li>为什么边缘触发一定要用非阻塞（non-block）IO：避免由于一个描述符的阻塞读/阻塞写操作让处理其它描述符的任务出现饥饿状态。</li></ul></details>
+
+<h5 id="有哪些常见的IO模型？"><a href="#有哪些常见的IO模型？" class="headerlink" title="有哪些常见的IO模型？"></a>有哪些常见的IO模型？</h5><details>
+<summary>展开</summary>
+
+<ul>
+<li>同步阻塞IO（Blocking IO）：用户线程发起IO读/写操作之后，线程阻塞，直到可以开始处理数据；对CPU资源的利用率不够；</li>
+<li>同步非阻塞IO（Non-blocking IO）：发起IO请求之后可以立即返回，如果没有就绪的数据，需要不断地发起IO请求直到数据就绪；不断重复请求消耗了大量的CPU资源；</li>
+<li>IO多路复用</li>
+<li>异步IO（Asynchronous IO）：用户线程发出IO请求之后，继续执行，由内核进行数据的读取并放在用户指定的缓冲区内，在IO完成之后通知用户线程直接使用。</li></ul></details>
+
+<h3 id="什么是用户态和内核态？"><a href="#什么是用户态和内核态？" class="headerlink" title="什么是用户态和内核态？"></a>什么是用户态和内核态？</h3><p>为了限制不同程序的访问能力，防止一些程序访问其它程序的内存数据，CPU划分了用户态和内核态两个权限等级。</p>
+<ul>
+<li>用户态只能受限地访问内存，且不允许访问外围设备，没有占用CPU的能力，CPU资源可以被其它程序获取；</li>
+<li>内核态可以访问内存所有数据以及外围设备，也可以进行程序的切换。</li>
+</ul>
+<p>所有用户程序都运行在用户态，但有时需要进行一些内核态的操作，比如从硬盘或者键盘读数据，这时就需要进行系统调用，使用<strong>陷阱指令</strong>，CPU切换到内核态，执行相应的服务，再切换为用户态并返回系统调用的结果。</p>
+<h5 id="为什么要分用户态和内核态？"><a href="#为什么要分用户态和内核态？" class="headerlink" title="为什么要分用户态和内核态？"></a>为什么要分用户态和内核态？</h5><details>
+<summary>展开</summary>
+
+<p>（我自己的见解：）</p>
+<ul>
+<li>安全性：防止用户程序恶意或者不小心破坏系统/内存/硬件资源；</li>
+<li>封装性：用户程序不需要实现更加底层的代码；</li>
+<li>利于调度：如果多个用户程序都在等待键盘输入，这时就需要进行调度；统一交给操作系统调度更加方便。</li></ul></details>
+
+<h5 id="如何从用户态切换到内核态？"><a href="#如何从用户态切换到内核态？" class="headerlink" title="如何从用户态切换到内核态？"></a>如何从用户态切换到内核态？</h5><details>
+<summary>展开</summary>
+
+<ul>
+<li>系统调用：比如读取命令行输入。本质上还是通过中断实现</li>
+<li>用户程序发生异常时：比如缺页异常</li>
+<li>外围设备的中断：外围设备完成用户请求的操作之后，会向CPU发出中断信号，这时CPU会转去处理对应的中断处理程序</li></ul></details>
+
+<h3 id="什么是死锁？"><a href="#什么是死锁？" class="headerlink" title="什么是死锁？"></a>什么是死锁？</h3><p>在两个或者多个并发进程中，每个进程持有某种资源而又等待其它进程释放它们现在保持着的资源，在未改变这种状态之前都不能向前推进，称这一组进程产生了死锁(deadlock)。</p>
+<h3 id="死锁产生的必要条件？"><a href="#死锁产生的必要条件？" class="headerlink" title="死锁产生的必要条件？"></a>死锁产生的必要条件？</h3><ul>
+<li><strong>互斥</strong>：一个资源一次只能被一个进程使用；</li>
+<li><strong>占有并等待</strong>：一个进程至少占有一个资源，并在等待另一个被其它进程占用的资源；</li>
+<li><strong>非抢占</strong>：已经分配给一个进程的资源不能被强制性抢占，只能由进程完成任务之后自愿释放；</li>
+<li><strong>循环等待</strong>：若干进程之间形成一种头尾相接的环形等待资源关系，该环路中的每个进程都在等待下一个进程所占有的资源。</li>
+</ul>
+<h3 id="死锁有哪些处理方法？"><a href="#死锁有哪些处理方法？" class="headerlink" title="死锁有哪些处理方法？"></a>死锁有哪些处理方法？</h3><details>
+<summary>鸵鸟策略</summary>
+
+<p>直接忽略死锁。因为解决死锁问题的代价很高，因此鸵鸟策略这种不采取任务措施的方案会获得更高的性能。当发生死锁时不会对用户造成多大影响，或发生死锁的概率很低，可以采用鸵鸟策略。</p>
+</details>
+
+<details>
+<summary>死锁预防</summary>
+
+<p>基本思想是破坏形成死锁的四个必要条件：</p>
+<ul>
+<li>破坏互斥条件：允许某些资源同时被多个进程访问。但是有些资源本身并不具有这种属性，因此这种方案实用性有限；</li>
+<li>破坏占有并等待条件：<ul>
+<li>实行资源预先分配策略（当一个进程开始运行之前，必须一次性向系统申请它所需要的全部资源，否则不运行）；</li>
+<li>或者只允许进程在没有占用资源的时候才能申请资源（申请资源前先释放占有的资源）；</li>
+<li>缺点：很多时候无法预知一个进程所需的全部资源；同时，会降低资源利用率，降低系统的并发性；</li>
+</ul>
+</li>
+<li>破坏非抢占条件：允许进程强行抢占被其它进程占有的资源。会降低系统性能；</li>
+<li>破坏循环等待条件：对所有资源统一编号，所有进程对资源的请求必须按照序号递增的顺序提出，即只有占有了编号较小的资源才能申请编号较大的资源。这样避免了占有大号资源的进程去申请小号资源。</li></ul></details>
+
+<details>
+<summary>死锁避免</summary>
+
+<p>动态地检测资源分配状态，以确保系统处于安全状态，只有处于安全状态时才会进行资源的分配。所谓安全状态是指：即使所有进程突然请求需要的所有资源，也能存在某种对进程的资源分配顺序，使得每一个进程运行完毕。</p>
+<blockquote>
+<p>银行家算法</p>
+</blockquote></details>
+
+<details>
+<summary>死锁解除</summary>
+
+<blockquote>
+<p>如何检测死锁：检测有向图是否存在环；或者使用类似死锁避免的检测算法。</p>
+</blockquote>
+<p>死锁解除的方法：</p>
+<ul>
+<li>利用抢占：挂起某些进程，并抢占它的资源。但应防止某些进程被长时间挂起而处于饥饿状态；</li>
+<li>利用回滚：让某些进程回退到足以解除死锁的地步，进程回退时自愿释放资源。要求系统保持进程的历史信息，设置还原点；</li>
+<li>利用杀死进程：强制杀死某些进程直到死锁解除为止，可以按照优先级进行。</li></ul></details>
+
+<h3 id="分页和分段有什么区别？"><a href="#分页和分段有什么区别？" class="headerlink" title="分页和分段有什么区别？"></a>分页和分段有什么区别？</h3><ul>
+<li>页式存储：用户空间划分为大小相等的部分称为页（page），内存空间划分为同样大小的区域称为页框，分配时以页为单位，按进程需要的页数分配，逻辑上相邻的页物理上不一定相邻；</li>
+<li>段式存储：用户进程地址空间按照自身逻辑关系划分为若干个段（segment）（如代码段，数据段，堆栈段），内存空间被动态划分为长度不同的区域，分配时以段为单位，每段在内存中占据连续空间，各段可以不相邻；</li>
+<li>段页式存储：用户进程先按段划分，段内再按页划分，内存划分和分配按页。</li>
+</ul>
+<p>区别：</p>
+<ul>
+<li>目的不同：分页的目的是管理内存，用于虚拟内存以获得更大的地址空间；分段的目的是满足用户的需要，使程序和数据可以被划分为逻辑上独立的地址空间；</li>
+<li>大小不同：段的大小不固定，由其所完成的功能决定；页的大小固定，由系统决定；</li>
+<li>地址空间维度不同：分段是二维地址空间（段号+段内偏移），分页是一维地址空间（每个进程一个页表/多级页表，通过一个逻辑地址就能找到对应的物理地址）；</li>
+<li>分段便于信息的保护和共享；分页的共享收到限制；</li>
+<li>碎片：分段没有内碎片，但会产生外碎片；分页没有外碎片，但会产生内碎片（一个页填不满）</li>
+</ul>
+<h3 id="什么是虚拟内存？"><a href="#什么是虚拟内存？" class="headerlink" title="什么是虚拟内存？"></a>什么是虚拟内存？</h3><p>每个程序都拥有自己的地址空间，这个地址空间被分成大小相等的页，这些页被映射到物理内存；但不需要所有的页都在物理内存中，当程序引用到不在物理内存中的页时，由操作系统将缺失的部分装入物理内存。这样，对于程序来说，逻辑上似乎有很大的内存空间，只是实际上有一部分是存储在磁盘上，因此叫做虚拟内存。</p>
+<p>虚拟内存的优点是让程序可以获得更多的可用内存。</p>
+<p>虚拟内存的实现方式、页表/多级页表、缺页中断、不同的页面淘汰算法：<a target="_blank" rel="noopener" href="https://imageslr.github.io/2020/07/08/tech-interview.html#virtual-memory">答案</a>。</p>
+<h5 id="如何进行地址空间到物理内存的映射？"><a href="#如何进行地址空间到物理内存的映射？" class="headerlink" title="如何进行地址空间到物理内存的映射？"></a>如何进行地址空间到物理内存的映射？</h5><details>
+<summary>展开</summary>
+
+<p><strong>内存管理单元</strong>（MMU）管理着逻辑地址和物理地址的转换，其中的页表（Page table）存储着页（逻辑地址）和页框（物理内存空间）的映射表，页表中还包含包含有效位（是在内存还是磁盘）、访问位（是否被访问过）、修改位（内存中是否被修改过）、保护位（只读还是可读写）。逻辑地址：页号+页内地址（偏移）；每个进程一个页表，放在内存，页表起始地址在PCB/寄存器中。</p>
+</details>
+
+<h3 id="有哪些页面置换算法？"><a href="#有哪些页面置换算法？" class="headerlink" title="有哪些页面置换算法？"></a>有哪些页面置换算法？</h3><p>在程序运行过程中，如果要访问的页面不在内存中，就发生缺页中断从而将该页调入内存中。此时如果内存已无空闲空间，系统必须从内存中调出一个页面到磁盘中来腾出空间。页面置换算法的主要目标是使页面置换频率最低（也可以说缺页率最低）。</p>
+<ul>
+<li><strong>最佳页面置换算法</strong>OPT（Optimal replacement algorithm）：置换以后不需要或者最远的将来才需要的页面，是一种理论上的算法，是最优策略；</li>
+<li><strong>先进先出</strong>FIFO：置换在内存中驻留时间最长的页面。缺点：有可能将那些经常被访问的页面也被换出，从而使缺页率升高；</li>
+<li><strong>第二次机会算法</strong>SCR：按FIFO选择某一页面，若其访问位为1，给第二次机会，并将访问位置0；</li>
+<li><strong>时钟算法</strong> Clock：SCR中需要将页面在链表中移动（第二次机会的时候要将这个页面从链表头移到链表尾），时钟算法使用环形链表，再使用一个指针指向最老的页面，避免了移动页面的开销；</li>
+<li><strong>最近未使用算法</strong>NRU（Not Recently Used）：检查访问位R、修改位M，优先置换R=M=0，其次是（R=0, M=1）；</li>
+<li><strong>最近最少使用算法</strong>LRU（Least Recently Used）：置换出未使用时间最长的一页；实现方式：维护时间戳，或者维护一个所有页面的链表。当一个页面被访问时，将这个页面移到链表表头。这样就能保证链表表尾的页面是最近最久未访问的。</li>
+<li><strong>最不经常使用算法</strong>NFU：置换出访问次数最少的页面</li>
+</ul>
+<details>
+<summary>局部性原理</summary>
+
+<ul>
+<li>时间上：最近被访问的页在不久的将来还会被访问；</li>
+<li>空间上：内存中被访问的页周围的页也很可能被访问。</li></ul></details>
+
+<details>
+<summary>什么是颠簸现象</summary>
+
+<p>颠簸本质上是指频繁的页调度行为。进程发生缺页中断时必须置换某一页。然而，其他所有的页都在使用，它置换一个页，但又立刻再次需要这个页。因此会不断产生缺页中断，导致整个系统的效率急剧下降，这种现象称为颠簸。内存颠簸的解决策略包括：</p>
+<ul>
+<li>修改页面置换算法；</li>
+<li>降低同时运行的程序的数量；</li>
+<li>终止该进程或增加物理内存容量。</li></ul></details>
+
+<h3 id="缓冲区溢出问题"><a href="#缓冲区溢出问题" class="headerlink" title="缓冲区溢出问题"></a>缓冲区溢出问题</h3><details>
+<summary>什么是缓冲区溢出？</summary>
+C 语言使用运行时栈来存储过程信息。每个函数的信息存储在一个栈帧中，包括寄存器、局部变量、参数、返回地址等。C 对于数组引用不进行任何边界检查，因此**对越界的数组元素的写操作会破坏存储在栈中的状态信息**，这种现象称为缓冲区溢出。缓冲区溢出会破坏程序运行，也可以被用来进行攻击计算机，如使用一个指向攻击代码的指针覆盖返回地址。
+</details>
+
+<details>
+<summary>缓冲区溢出的防范方式</summary>
+
+<p>防范缓冲区溢出攻击的机制有三种：随机化、栈保护和限制可执行代码区域。</p>
+<ul>
+<li>随机化：包括栈随机化（程序开始时在栈上分配一段随机大小的空间）和地址空间布局随机化（Address-Space Layout Randomization，ASLR，即每次运行时程序的不同部分，包括代码段、数据段、栈、堆等都会被加载到内存空间的不同区域），但只能增加攻击一个系统的难度，不能完全保证安全。</li>
+<li>栈保护：在每个函数的栈帧的局部变量和栈状态之间存储一个<strong>随机产生的</strong>特殊的值，称为金丝雀值（canary）。在恢复寄存器状态和函数返回之前，程序检测这个金丝雀值是否被改变了，如果是，那么程序异常终止。</li>
+<li>限制可执行代码区域：内存页的访问形式有三种：可读、可写、可执行，只有编译器产生的那部分代码所处的内存才是可执行的，其他页限制为只允许读和写。</li>
+</ul>
+</details>
+
+<p>更详细的可以参考：<a target="_blank" rel="noopener" href="https://imageslr.github.io/2020/07/08/tech-interview.html#stackoverflow">https://imageslr.github.io/2020/07/08/tech-interview.html#stackoverflow</a></p>
+<h3 id="磁盘调度"><a href="#磁盘调度" class="headerlink" title="磁盘调度"></a>磁盘调度</h3><p>过程：磁头（找到对应的盘面）；磁道（一个盘面上的同心圆环，寻道时间）；扇区（旋转时间）。为减小寻道时间的调度算法：</p>
+<ul>
+<li>先来先服务</li>
+<li>最短寻道时间优先</li>
+<li>电梯算法：电梯总是保持一个方向运行，直到该方向没有请求为止，然后改变运行方向。</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c1015f5ffa74">进程间通信IPC – 简书</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/justloveyou_/article/details/78304294">面试/笔试第二弹 —— 操作系统面试问题集锦 - CSDN博客</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018970361">线程同步与并发 - - SegmentFault</a></li>
+<li><a target="_blank" rel="noopener" href="http://baijiahao.baidu.com/s?id=1641172494287388070&wfr=spider&for=pc">彻底搞懂epoll高效运行的原理</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lirong21/p/4213028.html">用户态与内核态的切换</a></li>
+</ul>
+<h3 id="待完成"><a href="#待完成" class="headerlink" title="待完成"></a>待完成</h3><ul>
+<li><input disabled type="checkbox"> IPC</li>
+<li><input disabled type="checkbox"> 进程同步问题：生产者-消费者问题…</li>
+<li><input disabled type="checkbox"> 银行家算法</li>
+<li><input disabled type="checkbox"> 文件与文件系统、文件管理？<div>
+<img src="_v_images/20191202162008435_14938.png" width="540px">
+</div></li>
+</ul>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-22T08:51:31.000Z" title="2021/11/22 下午4:51:31">2021-11-22</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:43.853Z" title="2022/2/14 上午10:50:43">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">16 minutes read (About 2338 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/22/HighFrequencyIssue/">HighFrequencyIssue</a></h1><div class="content"><h2 id="操作系统："><a href="#操作系统：" class="headerlink" title="操作系统："></a>操作系统：</h2><p>（1）线程和进程的区别？</p>
+<p>（2）线程之间怎么共享资源？</p>
+<p>（3）进程之间怎么通信？</p>
+<p>（4）进程池的原理是什么？</p>
+<h4 id="进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的"><a href="#进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的" class="headerlink" title="进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的?"></a>进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的?</h4><h5 id="1-基本概念："><a href="#1-基本概念：" class="headerlink" title="1. 基本概念："></a>1. 基本概念：</h5><p>进程是对运行时程序的封装，是<strong>系统进行资源调度和分配的的基本单位，实现了操作系统的并发</strong>；</p>
+<p>线程是进程的子任务，<strong>是CPU调度和分派的基本单位</strong>，<strong>用于保证程序的实时性，实现进程内部的并发；线程是操作系统可识别的最小执行和调度单位</strong>。每个线程都独自占用一个<strong>虚拟处理器</strong>：独自的<strong>寄存器组</strong>，<strong>指令计数器和处理器状态</strong>。每个线程完成不同的任务，但是<strong>共享同一地址空间</strong>（也就是同样的<strong>动态内存，映射文件，目标代码等等</strong>），<strong>打开的文件队列和其他内核资源</strong>。</p>
+<h5 id="2-区别："><a href="#2-区别：" class="headerlink" title="2. 区别："></a>2. 区别：</h5><ol>
+<li> <strong>一个线程只能属于一个进程，而一个进程可以有多个线程</strong>，但至少有一个线程。线程依赖于进程而存在。 </li>
+<li> <strong>进程在执行过程中拥有独立的内存单元，而多个线程共享进程的内存</strong>。（资源分配给进程，同一进程的所有线程共享该进程的所有资源。同一进程中的多个线程共享代码段（代码和常量），数据段（全局变量和静态变量），扩展段（堆存储）。但是每个线程拥有自己的栈段，栈段又叫运行时段，用来存放所有局部变量和临时变量。） </li>
+<li> <strong>进程是资源分配的最小单位，线程是CPU调度的最小单位</strong>； </li>
+<li> 系统开销： 由于在创建或撤消进程时，系统都要为之分配或回收资源，如内存空间、I／o设备等。因此，操作系统所付出的开销将显著地大于在创建或撤消线程时的开销。类似地，在进行进程切换时，涉及到整个当前进程CPU环境的保存以及新被调度运行的进程的CPU环境的设置。而线程切换只须保存和设置少量寄存器的内容，并不涉及存储器管理方面的操作。可见，<strong>进程切换的开销也远大于线程切换的开销</strong>。 </li>
+<li> 通信：由于同一进程中的多个线程具有相同的地址空间，致使它们之间的同步和通信的实现，也变得比较容易。<strong>进程间通信IPC，线程间可以直接读写进程数据段（如全局变量）来进行通信——需要进程同步和互斥手段的辅助，以保证数据的一致性</strong>。在有的系统中，线程的切换、同步和通信都无须操作系统内核的干预 </li>
+<li> <strong>进程编程调试简单可靠性高，但是创建销毁开销大；线程正相反，开销小，切换速度快，但是编程调试相对复杂</strong>。 </li>
+<li> <strong>进程间不会相互影响 ；线程一个线程挂掉将导致整个进程挂掉</strong> </li>
+<li> <strong>进程适应于多核、多机分布；线程适用于多核</strong> </li>
+</ol>
+<h5 id="进程间通信的方式："><a href="#进程间通信的方式：" class="headerlink" title="进程间通信的方式："></a>进程间通信的方式：</h5><p>进程间通信主要包括<strong>管道、系统IPC（包括</strong><a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/cmq?from=10680"><strong>消息队列</strong></a><strong>、信号量、信号、共享内存等）、以及套接字socket</strong>。</p>
+<h6 id="1-管道："><a href="#1-管道：" class="headerlink" title="1.管道："></a>1.管道：</h6><p>管道主要包括<strong>匿名管道和命名管道</strong>:管道可用于具有亲缘关系的父子进程间的通信，命名管道除了具有管道所具有的功能外，它还允许无亲缘关系进程间的通信</p>
+<ul>
+<li>1.1 <strong>匿名管道PIPE</strong>：</li>
+</ul>
+<ol>
+<li>它是<strong>半双工</strong>的（即数据只能在一个方向上流动），具有固定的读端和写端</li>
+<li>它<strong>只能用于具有亲缘关系的进程之间的通信</strong>（也是父子进程或者兄弟进程之间）</li>
+<li>它可以看成是一种特殊的文件，<strong>对于它的读写也可以使用普通的read、write等函数</strong>。但是它不是普通的文件，并不属于其他任何文件系统，并且只存在于内存中。</li>
+</ol>
+<ul>
+<li>1.2 命名管道FIFO：</li>
+</ul>
+<ol>
+<li>FIFO<strong>可以在无关的进程之间交换数据</strong></li>
+<li>FIFO有路径名与之相关联，它<strong>以一种特殊设备文件形式存在于文件系统中</strong>。</li>
+</ol>
+<h6 id="2-系统IPC："><a href="#2-系统IPC：" class="headerlink" title="2. 系统IPC："></a>2. 系统IPC：</h6><ul>
+<li>2.1 消息队列 消息队列，<strong>是消息的链接表，存放在内核中</strong>。一个消息队列由一个标识符（即队列ID）来标记。 (<strong>消息队列克服了信号传递信息少，管道只能承载无格式字节流以及缓冲区大小受限等特点</strong>)具有写权限得进程可以按照一定得规则向消息队列中添加新信息；对消息队列有读权限得进程则可以从消息队列中读取信息；</li>
+</ul>
+<p>特点：</p>
+<ol>
+<li>消息队列是<strong>面向记录的</strong>，其中的消息具有特定的格式以及特定的优先级。</li>
+<li>消息队列<strong>独立于发送与接收进程</strong>。进程终止时，消息队列及其内容并不会被删除。</li>
+<li>消息队列<strong>可以实现消息的随机查询</strong>,消息不一定要以先进先出的次序读取,也可以按消息的类型读取。</li>
+</ol>
+<ul>
+<li>2.2 信号量semaphore 信号量（semaphore）与已经介绍过的 IPC 结构不同，它是一个<strong>计数器，可以用来控制多个进程对共享资源的访问</strong>。信号量用于实现进程间的互斥与同步，而不是用于存储进程间通信数据。</li>
+</ul>
+<p>特点：</p>
+<ol>
+<li>信号量用于<strong>进程间同步</strong>，若要在进程间传递数据需要结合共享内存。</li>
+<li>信号量<strong>基于操作系统的 PV 操作</strong>，程序对信号量的操作都是原子操作。</li>
+<li><strong>每次对信号量的 PV 操作不仅限于对信号量值加 1 或减 1，而且可以加减任意正整数</strong>。</li>
+<li><strong>支持信号量组</strong>。</li>
+</ol>
+<h6 id="2-3-信号signal"><a href="#2-3-信号signal" class="headerlink" title="2.3 信号signal"></a>2.3 信号signal</h6><p>信号是一种比较复杂的通信方式，用于通知接收进程某个事件已经发生。</p>
+<h6 id="2-4-共享内存（Shared-Memory）"><a href="#2-4-共享内存（Shared-Memory）" class="headerlink" title="2.4 共享内存（Shared Memory）"></a>2.4 共享内存（Shared Memory）</h6><p>它使得<strong>多个进程可以访问同一块内存空间，不同进程可以及时看到对方进程中对共享内存中数据得更新</strong>。这种方式需要依靠某种同步操作，如互斥锁和信号量等</p>
+<p>特点：</p>
+<ol>
+<li>共享内存是最快的一种IPC，因为进程是直接对内存进行存取</li>
+<li>因为多个进程可以同时操作，所以需要进行同步</li>
+<li>信号量+共享内存通常结合在一起使用，信号量用来同步对共享内存的访问</li>
+</ol>
+<h5 id="3-套接字SOCKET："><a href="#3-套接字SOCKET：" class="headerlink" title="3.套接字SOCKET："></a>3.套接字SOCKET：</h5><p>socket也是一种进程间通信机制，与其他通信机制不同的是，它可用于不同主机之间的进程通信。</p>
+<ul>
+<li>线程间通信的方式: 临界区：通过多线程的串行化来访问公共资源或一段代码，速度快，适合控制数据访问； 互斥量Synchronized/Lock：采用互斥对象机制，只有拥有互斥对象的线程才有访问公共资源的权限。因为互斥对象只有一个，所以可以保证公共资源不会被多个线程同时访问 信号量Semphare：为控制具有有限数量的用户资源而设计的，它允许多个线程在同一时刻去访问同一个资源，但一般需要限制同一时刻访问此资源的最大线程数目。 事件(信号)，Wait/Notify：通过通知操作的方式来保持多线程同步，还可以方便的实现多线程优先级的比较操作进程间通信的方式： 进程间通信主要包括管道、系统IPC（包括消息队列、信号量、信号、共享内存等）、以及套接字socket。</li>
+</ul>
+<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><h4 id="105-从前序与中序遍历序列构造二叉树-LeetCode"><a href="#105-从前序与中序遍历序列构造二叉树-LeetCode" class="headerlink" title="105. 从前序与中序遍历序列构造二叉树 - LeetCode"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/">105. 从前序与中序遍历序列构造二叉树 - LeetCode</a></h4><h4 id="用栈实现队列"><a href="#用栈实现队列" class="headerlink" title=" 用栈实现队列"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/implement-queue-using-stacks/"> 用栈实现队列</a></h4><h4 id="二叉树层序遍历"><a href="#二叉树层序遍历" class="headerlink" title="二叉树层序遍历"></a>二叉树层序遍历</h4><h4 id="K个一组翻转链表https-leetcode-cn-com-problems-reverse-nodes-in-k-group"><a href="#K个一组翻转链表https-leetcode-cn-com-problems-reverse-nodes-in-k-group" class="headerlink" title="K个一组翻转链表https://leetcode-cn.com/problems/reverse-nodes-in-k-group/"></a>K个一组翻转链表<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-nodes-in-k-group/">https://leetcode-cn.com/problems/reverse-nodes-in-k-group/</a></h4><h4 id="LeetCode-680-验证回文字符串-Ⅱ"><a href="#LeetCode-680-验证回文字符串-Ⅱ" class="headerlink" title="LeetCode 680. 验证回文字符串 Ⅱ"></a>LeetCode 680. 验证回文字符串 Ⅱ</h4><p>Leetcode easy 617. 合并二叉树</p>
+<p>求根节点到叶节点数字之和</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-19T09:20:14.000Z" title="2021/11/19 下午5:20:14">2021-11-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:43.856Z" title="2022/2/14 上午10:50:43">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 9249 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/19/HttpProtocol/">HttpProtocol</a></h1><div class="content"><h1 id="Http-缓存"><a href="#Http-缓存" class="headerlink" title="Http 缓存"></a>Http 缓存</h1><p>在请求一个静态文件的时候（图片，css，js）等，这些文件的特点是文件不经常变化，将这些不经常变化的文件存储起来，对客户端来说是一个优化用户浏览体验的方法。那么这个就是客户端缓存的意义了。</p>
+<p>简述：</p>
+<ul>
+<li><p>强制缓存是根据上次响应header中的Max-age或是Expries，<strong>客户端直接判断缓存</strong>是否能用该资源缓存；</p>
+</li>
+<li><p>协商缓存需要<strong>客户端</strong>用记录下来的上次响应header中的ETag或是Last-Modified，通过与向服务器的请求request的header中赋值If-None-Match或If-Modified-Since，由<strong>服务器判断资源是否更新</strong>，结果由code和是否存在body明确是否命中缓存；</p>
+</li>
+</ul>
+<p>优先级排序：从上到下</p>
+<p>具体点说： 强制缓存 &gt; 协商缓存；Cache-Control &gt; Expries；ETag &amp; If-None-Match &gt; Last-Modified &amp; If-Modified-Since </p></div><a class="article-more button is-small is-size-7" href="/2021/11/19/HttpProtocol/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T12:20:27.000Z" title="2021/11/11 下午8:20:27">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:44.301Z" title="2022/2/14 上午10:50:44">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">an hour read (About 10636 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/concurrent/">Concurrent</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://www.wwwbuild.net/JavaAmazing/112187.html">https://www.wwwbuild.net/JavaAmazing/112187.html</a></p>
+<p>并发操作：原子性、可见性、有序性</p>
+<h1 id="Volatile-和synchronized的区别："><a href="#Volatile-和synchronized的区别：" class="headerlink" title="Volatile 和synchronized的区别："></a>Volatile 和synchronized的区别：</h1><p><strong>volatile关键字能保证数据的可见性、有序性，但不能保证数据的原子性。synchronized关键字三者都能保证。</strong></p>
+<h2 id="1：并发特性比较："><a href="#1：并发特性比较：" class="headerlink" title="1：并发特性比较："></a>1：并发特性比较：</h2><p>volatile关键字能保证数据的可见性，但不能保证数据的原子性（即volatile int x; x++ 是三步操作：一取x值，二加一，三赋值回x）。synchronized关键字两者都能保证。</p>
+<p>有序性则volatile和synchronized都能保证，volatile关键字禁止JVM编译器已及处理器对其进行重排序,</p>
+<p>synchronized保证顺序性是串行化的结果，但同步块里的语句是会发生指令从排。</p>
+<h2 id="2：volatile-的原理"><a href="#2：volatile-的原理" class="headerlink" title="2：volatile 的原理"></a>2：volatile 的原理</h2><p>  1).  修改volatile变量时会强制将修改后的值刷新的主内存中。</p>
+<p>  2).  修改volatile变量后会导致其他线程工作内存中对应的变量值失效。因此，再读取该变量值的时候就需要重新从读取主内存中的值。</p>
+<p>（Intel 的MESI协议：当CPU写数据时，如果发现操作的变量是共享变量，即在其他CPU中也存在该变量的副本，会发出信号通知其他CPU将该变量的高速缓存置为无效状态，因此当其他CPU需要读取这个变量时，发现自己缓存中缓存该变量的缓存行是无效的，那么它就会从内存重新读取重新加载到高速缓存。）</p>
+<h2 id="3：阻塞与否"><a href="#3：阻塞与否" class="headerlink" title="3：阻塞与否"></a>3：阻塞与否</h2><p>多线程访问volatile关键字不会发生阻塞（2所述原理），而synchronized关键字可能会发生阻塞(重量级锁时会阻塞)</p>
+<h2 id="4：性能"><a href="#4：性能" class="headerlink" title="4：性能"></a>4：性能</h2><p>volatile关键字是线程同步的轻量级实现，所以volatile性能肯定比synchronized关键字要好。但是volatile关键字只能用于变量而synchronized关键字可以修饰方法以及代码块。synchronized关键字在JavaSE1.6之后进行了主要包括为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁以及其它各种优化之后执行效率有了显著提升，实际开发中使用synchronized关键字的场景还是更多一些。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/11/concurrent/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T12:20:27.000Z" title="2021/11/11 下午8:20:27">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:44.346Z" title="2022/2/14 上午10:50:44">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 10226 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/tcp/">tcp</a></h1><div class="content"><p>简述：</p>
+<p>Tcp是</p>
+<p>面向链接的<br>面向字节流的<br>可靠的（几个点）</p>
+<p>保证可靠的手段：</p>
+<p>数据分块——握手时协商确定MSS，大于MSS的tcp数据包分段（也就是拆包）；序列号；校验和；<u>确认ack包</u>；</p>
+<p>超时重传——发送方使用一个保守估计的时间作为收到数据包的确认的超时上限。如果超过这个上限仍未收到确认包，发送方将重传这个数据包。每当发送方收到确认包后，会重置这个重传定时器。</p>
+<p>滑动窗口实现的流量控制；</p>
+<p>拥塞控制算法——小于阈值之前从1开始每轮往返拥塞窗口倍增（慢开始），拥塞窗口大于阈值后步长为一的递增（拥塞避免），接收方收到失序报文段后立即发出<u>重复确认ack包</u>发送方连续三次重复确认则直接把阈值减半并调整拥塞窗口为新阈值而后执行拥塞避免算法（快速重传快速恢复）；</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减半，执行慢启动每轮往返拥塞倍增；</p>
+<p>三次重复确认会执行快速重传快速恢复，阈值减半，拥塞窗口为新阈值值，执行拥塞避免每轮往返递增；</p></div><a class="article-more button is-small is-size-7" href="/2021/11/11/tcp/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T02:54:51.000Z" title="2021/11/11 上午10:54:51">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:44.263Z" title="2022/2/14 上午10:50:44">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">12 minutes read (About 1813 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Socket/">Socket</a></h1><div class="content"><h1 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h1><h2 id="1-什么是Socket"><a href="#1-什么是Socket" class="headerlink" title="1 什么是Socket"></a>1 什么是Socket</h2><ul>
+<li><p>网络上的两个程序通过一个双向的通讯连接实现数据的交换，这个双向链路的一端称为一个Socket。Socket通常用来实现客户方和服务方的连接。Socket是TCP/IP协议的一个十分流行的编程界面，一个Socket由一个IP地址和一个端口号唯一确定。</p>
+</li>
+<li><p>但是，Socket所支持的协议种类也不光TCP/IP、UDP，因此两者之间是没有必然联系的。在Java环境下，Socket编程主要是指基于TCP/IP协议的网络编程。</p>
+</li>
+<li><p>socket连接就是所谓的长连接，客户端和服务器需要互相连接，理论上客户端和服务器端一旦建立起连接将不会主动断掉的，但是有时候网络波动还是有可能的</p>
+</li>
+<li><p>Socket偏向于底层。一般很少直接使用Socket来编程，框架底层使用Socket比较多，</p></li></ul></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Socket/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-09T03:49:45.000Z" title="2021/11/9 上午11:49:45">2021-11-09</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:44.223Z" title="2022/2/14 上午10:50:44">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">13 minutes read (About 1989 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/09/MVXArchitecture/">MVXArchitecture</a></h1><div class="content"><h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><blockquote>
+<p><strong>View：</strong>XML布局文件。 <strong>Model：</strong>实体模型（数据的获取、存储、数据状态变化）。 <strong>Controller：</strong>对应于Activity，处理数据、业务和UI。</p>
+</blockquote>
+<p>从上面这个结构来看，Android本身的设计还是符合MVC架构的，但是Android中纯粹作为View的XML视图功能太弱，我们大量处理View的逻辑只能写在Activity中，这样Activity就充当了View和Controller两个角色，直接导致Activity中的代码大爆炸。相信大多数Android开发者都遇到过一个Acitivty数以千行的代码情况吧！所以，更贴切的说法是，这个MVC结构最终其实只是一个Model-View（Activity:View&amp;Controller）的结构。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/09/MVXArchitecture/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-01T12:20:27.000Z" title="2021/11/1 下午8:20:27">2021-11-01</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:43.847Z" title="2022/2/14 上午10:50:43">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">29 minutes read (About 4279 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/01/HashMap/">HashMap</a></h1><div class="content"><h2 id="常见Map类"><a href="#常见Map类" class="headerlink" title="常见Map类"></a>常见Map类</h2><p>简述：HashMap是非线程安全的，如需要线程安全的哈希隐射类，应使用实现了分段锁（1.8）的ConcurrentHashMap，而不建议使用遗留类HashTable（HashTable实现线程安全是依靠用synchronized关键字修饰put/get方法，效率较低）。</p>
+<p>如果需要保存记录插入的顺序，可使用LinkHashMap()，其内部实现了一个双向链表，即每个节点本身记录了前后节点的引用。(btw:MessageQueue是单链表)</p>
+<h3 id="1-HashMap："><a href="#1-HashMap：" class="headerlink" title="(1) HashMap："></a>(1) HashMap：</h3><p>它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap，可能会导致数据的不一致。如果需要满足线程安全，可以使用<strong>ConcurrentHashMap（synchronizedMap与HashTable都因为其实现的线程安全依靠全表锁导致性能较差，故不建议）</strong>。</p>
+<h3 id="2-不推荐的线程安全Map："><a href="#2-不推荐的线程安全Map：" class="headerlink" title="(2) 不推荐的线程安全Map："></a>(2) 不推荐的线程安全Map：</h3><h4 id="2-1-HashTable"><a href="#2-1-HashTable" class="headerlink" title="(2.1)HashTable"></a>(2.1)HashTable</h4><p>​    Hashtable是遗留类，很多映射的常用功能与HashMap类似，不同的是它承自Dictionary类，并且是线程安全的，<strong>HashTable的get/put方法都被synchronized关键字修饰，说明它们是方法级别阻塞的，它们占用共享资源锁，所以导致同时只能一个线程操作get或者put，而且get/put操作不能同时执行，所以这种同步的集合效率非常低，一般不建议使用这个集合。</strong></p>
+<h4 id="2-2-SynchronizedMap"><a href="#2-2-SynchronizedMap" class="headerlink" title="(2.2)SynchronizedMap"></a>(2.2)SynchronizedMap</h4><p>​    <strong>Collections.synchronizedMap</strong>类似，如果传入的是 HashMap 对象，其实也是对 HashMap 做的方法做了一层包装，里面使用对象锁来保证多线程场景下操作安全，<strong>本质也是对 HashMap 进行全表锁！</strong>，性能低下</p>
+<h3 id="3-ConcurrentHashMap"><a href="#3-ConcurrentHashMap" class="headerlink" title="(3) ConcurrentHashMap:"></a>(3) ConcurrentHashMap:</h3><p>这个也是最推荐使用的线程安全的Map，也是实现方式最复杂的一个集合，每个版本的实现方式也不一样，在jdk8之前是使用分段加锁的一个方式，分成16个segment，每次只加锁其中一个segment，而在jdk8加入了红黑树和CAS算法后，又改用synchronized锁住哈希数组的头结点作为线程安全来实现。</p>
+<h3 id="4-LinkedHashMap："><a href="#4-LinkedHashMap：" class="headerlink" title="(4) LinkedHashMap："></a>(4) LinkedHashMap：</h3><p>LinkedHashMap是HashMap的一个子类，保存了记录的插入顺序，在用Iterator遍历LinkedHashMap时，先得到的记录肯定是先插入的，也可以在构造时带参数，按照访问次序排序。</p>
+<h3 id="5-TreeMap："><a href="#5-TreeMap：" class="headerlink" title="(5) TreeMap："></a>(5) TreeMap：</h3><p>TreeMap实现SortedMap接口，能够把它保存的记录根据键排序，默认是按键值的升序排序，也可以指定排序的比较器，当用Iterator遍历TreeMap时，得到的记录是排过序的。如果使用排序的映射，建议使用TreeMap。在使用TreeMap时，key必须实现Comparable接口或者在构造TreeMap传入自定义的Comparator，否则会在运行时抛出java.lang.ClassCastException类型的异常。</p>
+<p>对于上述四种Map类型的类，要求映射中的key是不可变对象。不可变对象是该对象在创建后它的哈希值不会被改变。如果对象的哈希值发生变化，Map对象很可能就定位不到映射的位置了。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/01/HashMap/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-06-15T13:11:21.000Z" title="2021/6/15 下午9:11:21">2021-06-15</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:42.765Z" title="2022/2/14 上午10:50:42">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">4 minutes read (About 591 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/06/15/CpuArch/">CpuArch</a></h1><div class="content"><p><img src="/2021/06/15/CpuArch/image-20210615211220037.png" alt="image-20210615211220037"></p></div><a class="article-more button is-small is-size-7" href="/2021/06/15/CpuArch/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-05-14T02:43:27.000Z" title="2021/5/14 上午10:43:27">2021-05-14</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:44.280Z" title="2022/2/14 上午10:50:44">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">5 minutes read (About 815 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/05/14/ThreadLocal/">ThreadLocal</a></h1><div class="content"><h1 id="ThreadLocal："><a href="#ThreadLocal：" class="headerlink" title="ThreadLocal："></a>ThreadLocal：</h1><p><strong>ThreadLocal</strong>： 线程本地存储区（Thread Local Storage，简称为TLS），每个线程都有自己的私有的本地存储区域，不同线程之间彼此不能访问对方的TLS区域。</p>
+<p>ThreadLocal类不过是为了执行set/get，确定泛型的工具人而已。真正数据是靠的每个Thread内部维护。</p>
+<p><strong>实际上就是 每个Thread对象中 维护了一个</strong></p>
+<p><strong>叫ThreadLocal.ThreadLocalMap的</strong></p>
+<p>**key为 <em>ThreadLocal对象</em>,    value为 <em>存储的值</em> **</p>
+<p><strong>的key-vale映射结构，(实际上是一个键值对组成entry的唯一环形数组，线性探测，初始值3/4容量扩容)</strong></p>
+<p><strong>当调用threadLocalInstance.set(value)时，其实时调用的CurrentThread.threadLocalMap.set(threadLocalInstance, value)</strong></p></div><a class="article-more button is-small is-size-7" href="/2021/05/14/ThreadLocal/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-30T06:18:14.000Z" title="2021/4/30 下午2:18:14">2021-04-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-02-14T02:50:43.024Z" title="2022/2/14 上午10:50:43">2022-02-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Jvm/">Jvm</a></span><span class="level-item">a few seconds read (About 65 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/30/Gc/">Gc</a></h1><div class="content"><blockquote>
+<p>现代VM：”引用计数法，不行。可达性分析法，行！”<br>JVM：”可达分析法，很行”</p>
+</blockquote></div><a class="article-more button is-small is-size-7" href="/2021/04/30/Gc/#more">Read more</a></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">52</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">11</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">2</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2022 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
