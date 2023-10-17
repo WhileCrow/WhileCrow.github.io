@@ -114,16 +114,20 @@
 <p> 答案是会造成另一个严重的问题：lag，响应延迟</p>
 </blockquote>
 <p>这里结合 view 的一生，我们可以把两个流程合在一起，让我们的视角再高一层：</p>
-<p><img src="/2022/03/10/RenderBlock/52a7e6f5fd734b1db159b76a0b21d3ba~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp" alt="图片"></p></div><a class="article-more button is-small is-size-7" href="/2022/03/10/RenderBlock/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-24T09:33:41.000Z" title="2/24/2022, 5:33:41 PM">2022-02-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2023-10-11T03:45:04.992Z" title="10/11/2023, 11:45:04 AM">2023-10-11</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/AAC/">AAC</a></span><span class="level-item">25 minutes read (About 3699 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/24/LiveData/">LiveData</a></h1><div class="content"><h1 id="LiveData"><a href="#LiveData" class="headerlink" title="LiveData"></a>LiveData</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/593472898">https://zhuanlan.zhihu.com/p/593472898</a></p>
+<p><img src="/2022/03/10/RenderBlock/52a7e6f5fd734b1db159b76a0b21d3ba~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp" alt="图片"></p></div><a class="article-more button is-small is-size-7" href="/2022/03/10/RenderBlock/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-24T09:33:41.000Z" title="2/24/2022, 5:33:41 PM">2022-02-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2023-10-17T08:57:55.116Z" title="10/17/2023, 4:57:55 PM">2023-10-17</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/AAC/">AAC</a></span><span class="level-item">26 minutes read (About 3917 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/24/LiveData/">LiveData</a></h1><div class="content"><h1 id="LiveData"><a href="#LiveData" class="headerlink" title="LiveData"></a>LiveData</h1><p>简述：</p>
+<p>数据实时更新、安全更新：当liveData的setValue被调用时，会遍历自身所有observer并considerNotify，此时会判断observer的活跃状态（shouldBeActive）和内部版本，决定是否向其发送通知。</p>
+<p>避免内存泄漏：传入lifeCycleOwner即走observe()的LiveData会在lifeCycleOwner回调onStateChanged为DESTROYED的时候移除掉observer防止内存泄露，而相对的observeForever则由于没有owner而无此特性。</p>
+<p>解决Configuration Change问题、粘性数据：一般而言observer是在onCreate中调用的，liveData.observer方法在调用时也会立即被推送liveData中最后一次数据。（会导致所谓的数据倒灌）。Configuration Change时会ViewModel会从当前Activity或fragmentManager的viewModelStore的缓存中重新取出，而ViewModel中的liveData自然也会保留。</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/593472898">https://zhuanlan.zhihu.com/p/593472898</a></p>
 <h3 id="接入"><a href="#接入" class="headerlink" title="接入"></a>接入</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val lifecycle_version = <span class="string">&quot;2.4.0-alpha02&quot;</span></span><br><span class="line"><span class="comment">// LiveData</span></span><br><span class="line">implementation(<span class="string">&quot;androidx.lifecycle:lifecycle-livedata:$lifecycle_version&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <h3 id="Featrue"><a href="#Featrue" class="headerlink" title="Featrue"></a>Featrue</h3><ul>
-<li><strong>UI和实时数据保持一致</strong> 因为LiveData采用的是观察者模式，这样一来就可以在数据发生改变时获得通知，更新UI。</li>
-<li><strong>避免内存泄漏</strong> 观察者被绑定到组件的生命周期上，当被绑定的组件销毁（destroy）时，观察者会立刻自动清理自身的数据。</li>
-<li><strong>不会再产生由于Activity处于stop状态而引起的崩溃</strong></li>
-</ul>
-<p>例如：当Activity处于后台状态时，是不会收到LiveData的任何事件的。</p>
-<ul>
+<li><p><strong>UI和实时数据保持一致</strong> 因为LiveData采用的是观察者模式，这样一来就可以在数据发生改变时获得通知，更新UI。</p>
+</li>
+<li><p><strong>避免内存泄漏</strong> 观察者被绑定到组件的生命周期上，当被绑定的组件销毁（destroy）时，观察者会立刻自动清理自身的数据。</p>
+</li>
+<li><p><strong>不会再产生由于Activity处于stop状态而引起的崩溃</strong>，例如：当Activity处于后台状态时，是不会收到LiveData的任何事件的。</p>
+</li>
 <li><p><strong>不需要再解决生命周期带来的问题</strong> LiveData可以感知被绑定的组件的生命周期，只有在活跃状态才会通知数据变化。</p>
 </li>
 <li><p><strong>实时数据刷新</strong> 当组件处于活跃状态或者从不活跃状态到活跃状态时总是能收到最新的数据。</p>
@@ -139,7 +143,8 @@
 <li>在系统启动过程中，通过**PackageManagerService(PKMS)*<em>对特定系统文件(如package.list, package.xml)进行扫描解析后，将所有app的信息整合存储，通过</em>IPackageManger*对外暴露</li>
 <li>通过<strong>PackageInstallerService</strong>提供Apk/Apex的安装、更新、卸载等操作(<em>IPackageInstaller</em>)</li>
 <li>应用运行过程中的权限检查</li>
-</ol></div><a class="article-more button is-small is-size-7" href="/2022/02/16/PackageManager/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-16T08:45:15.000Z" title="2/16/2022, 4:45:15 PM">2022-02-16</time></span><span class="level-item">Updated&nbsp;<time dateTime="2023-10-11T03:38:01.719Z" title="10/11/2023, 11:38:01 AM">2023-10-11</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">16 minutes read (About 2457 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/16/WindowManger/">WindowManger</a></h1><div class="content"><p><img src="https://staticcdn1-5.umiwi.com/epms_ebook/cb91e2b1769009c7192441573bbd902b.jpg?x-oss-process=image/resize,w_1792,m_lfit" alt="img"></p>
+</ol></div><a class="article-more button is-small is-size-7" href="/2022/02/16/PackageManager/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-16T08:45:15.000Z" title="2/16/2022, 4:45:15 PM">2022-02-16</time></span><span class="level-item">Updated&nbsp;<time dateTime="2023-10-17T07:55:41.718Z" title="10/17/2023, 3:55:41 PM">2023-10-17</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">17 minutes read (About 2484 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/16/WindowManger/">WindowManger</a></h1><div class="content"><p>一个Activity或一个Dialog对应一个PhoneWindow，一个PhoneWindow对应一个WindowManger，对应一个WindowManagerImpl</p>
+<p><img src="https://staticcdn1-5.umiwi.com/epms_ebook/cb91e2b1769009c7192441573bbd902b.jpg?x-oss-process=image/resize,w_1792,m_lfit" alt="img"></p>
 <p><img src="/2022/02/16/WindowManger/resize,w_1792,m_lfit.jpeg" alt="img"></p>
 <ul>
 <li>mChoreographer，Choreographer的实例，在SampleWindow的例子中已经见过了。Choreographer的意思是编舞指导。它拥有从显示子系统获取VSYNC同步事件的能力，从而可以在合适的时机通知渲染动作，避免在渲染的过程中因为发生屏幕重绘而导致的画面撕裂。从这个意义上讲，Choreographer的确是指导Android翩翩起舞的大师。WMS使用Choreographer负责驱动所有的窗口动画、屏幕旋转动画、墙纸动画的渲染。</li>
