@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>TaskPerFrame - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="16ms 内都需要完成什么？from :  https:&amp;#x2F;&amp;#x2F;juejin.cn&amp;#x2F;post&amp;#x2F;7062552765117136903  &amp;#x2F;&amp;#x2F; Vsync顶层 Vsync 调度：硬件每隔16.6ms发出硬件Vsync信号，需要经过软件调度，类似注册，才能收到回调  消息调度：主要是 doframe 的消息调度，如果消息被阻塞，会直接造成卡顿；  input 处理：触摸事件的处理；  动画处理：anima"><meta property="og:type" content="blog"><meta property="og:title" content="TaskPerFrame"><meta property="og:url" content="http://example.com/2022/03/16/TaskPerFrame/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="16ms 内都需要完成什么？from :  https:&amp;#x2F;&amp;#x2F;juejin.cn&amp;#x2F;post&amp;#x2F;7062552765117136903  &amp;#x2F;&amp;#x2F; Vsync顶层 Vsync 调度：硬件每隔16.6ms发出硬件Vsync信号，需要经过软件调度，类似注册，才能收到回调  消息调度：主要是 doframe 的消息调度，如果消息被阻塞，会直接造成卡顿；  input 处理：触摸事件的处理；  动画处理：anima"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2022/03/16/TaskPerFrame/039f2506191a4c738fba6fb40545123e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp"><meta property="og:image" content="http://example.com/2022/03/16/TaskPerFrame/image-20220310164850814.png"><meta property="article:published_time" content="2022-03-16T08:02:24.000Z"><meta property="article:modified_time" content="2024-03-25T07:35:03.410Z"><meta property="article:author" content="White Crow"><meta property="article:tag" content="Graphic"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2022/03/16/TaskPerFrame/039f2506191a4c738fba6fb40545123e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2022/03/16/TaskPerFrame/"},"headline":"TaskPerFrame","image":["http://example.com/2022/03/16/TaskPerFrame/image-20220310164850814.png"],"datePublished":"2022-03-16T08:02:24.000Z","dateModified":"2024-03-25T07:35:03.410Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"16ms 内都需要完成什么？from :  https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;7062552765117136903  &#x2F;&#x2F; Vsync顶层 Vsync 调度：硬件每隔16.6ms发出硬件Vsync信号，需要经过软件调度，类似注册，才能收到回调  消息调度：主要是 doframe 的消息调度，如果消息被阻塞，会直接造成卡顿；  input 处理：触摸事件的处理；  动画处理：anima"}</script><link rel="canonical" href="http://example.com/2022/03/16/TaskPerFrame/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-03-16T08:02:24.000Z" title="3/16/2022, 4:02:24 PM">2022-03-16</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.410Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">4 minutes read (About 614 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">TaskPerFrame</h1><div class="content"><h3 id="16ms-内都需要完成什么？"><a href="#16ms-内都需要完成什么？" class="headerlink" title="16ms 内都需要完成什么？"></a><strong>16ms 内都需要完成什么</strong>？</h3><p>from :  <a target="_blank" rel="noopener" href="https://juejin.cn/post/7062552765117136903">https://juejin.cn/post/7062552765117136903</a></p>
+<p><img src="/2022/03/16/TaskPerFrame/039f2506191a4c738fba6fb40545123e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp" alt="图片"></p>
+<h4 id="Vsync顶层"><a href="#Vsync顶层" class="headerlink" title="// Vsync顶层"></a>// Vsync顶层</h4><ol>
+<li><p><strong>Vsync 调度</strong>：硬件每隔16.6ms发出硬件Vsync信号，需要经过软件调度，类似注册，才能收到回调</p>
+</li>
+<li><p><strong>消息调度</strong>：主要是 doframe 的消息调度，如果消息被阻塞，会直接造成卡顿；</p>
+</li>
+<li><p><strong>input 处理</strong>：触摸事件的处理；</p>
+</li>
+<li><p><strong>动画处理</strong>：animator 动画执行和渲染；</p>
+</li>
+<li><p><strong>view 处理</strong>：主要是 view 相关的遍历和三大流程；</p>
+</li>
+<li><p><strong>measure、layout、draw</strong>：view 三大流程的执行；</p>
+<h4 id="Vsync底层"><a href="#Vsync底层" class="headerlink" title="//Vsync底层"></a>//Vsync底层</h4></li>
+<li><p><strong>DisplayList 更新</strong>：view 硬件加速后的 draw op；</p>
+</li>
+<li><p><strong>OpenGL 指令转换</strong>：canvas指令转换为 OpenGL 指令；</p>
+</li>
+<li><p><strong>指令 buffer 交换</strong>：OpenGL 的指令交换到 GPU 内部执行；</p>
+</li>
+<li><p><strong>GPU 处理</strong>：GPU 对数据的处理过程；</p>
+</li>
+<li><p><strong>layer 合成</strong>：surface buffer 合成屏幕显示 buffer 的流程；</p>
+</li>
+<li><p><strong>光栅化</strong>：将矢量图转换为位图；</p>
+</li>
+<li><p><strong>Display</strong>：显示控制；</p>
+</li>
+<li><p><strong>buffer 切换</strong>：切换屏幕显示的帧 buffer；</p>
+<span id="more"></span></li>
+</ol>
+<p>Google 将这个过程划分为：其他时间/VSync 延迟、输入处理、动画、测量/布局、绘制、同步和上传、命令问题、交换缓冲区。也就是我们常用的 GPU 严格模式，其实道理是一样的。到这里，我们也就回答出来了第二个问题：</p>
+<blockquote>
+<p>准确地说，这里仍可以进一步细化：16ms 内完成 APP 侧数据的生产；16ms 内完成 sf layer 的合成</p>
+</blockquote>
+<p><img src="/2022/03/16/TaskPerFrame/image-20220310164850814.png" alt="image-20220310164850814"></p>
+<p>View 的视觉效果正是通过这一整条复杂的链路一步步展示出来的，有了这个前提，那就可以得出一个结论：<strong>上述任意链路发生卡顿，均会造成卡顿</strong>。</p>
+<h4 id="常见问题："><a href="#常见问题：" class="headerlink" title="*常见问题："></a>*常见问题：</h4><p>红色（Command Issue）：太多display lists </p>
+<p>浅蓝色（upload）：加载了大量图形(bitmap, graphics)</p>
+<p>深蓝色（Draw）：大概率在onDraw中执行了有点耗时的任务</p>
+<p>最浅的绿色（测绘）:需要排查view树层级 view hierarchy 过深</p>
+<p>浅绿色（处理输入和动画）：需要排查滚动中的view Binding，如RV 的onBindViewHolder</p>
+<p>深绿色（延迟VSync）：直接在主线程中执行了耗时任务</p>
+<p> </p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>TaskPerFrame</p><p><a href="http://example.com/2022/03/16/TaskPerFrame/">http://example.com/2022/03/16/TaskPerFrame/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-03-16</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-03-25</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Graphic/">Graphic</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/07/05/Full-QA/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Full-QA</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/03/10/RenderBlock/"><span class="level-item">RenderBlock</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#16ms-内都需要完成什么？"><span class="level-left"><span class="level-item">1</span><span class="level-item">16ms 内都需要完成什么？</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Vsync顶层"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">// Vsync顶层</span></span></a></li><li><a class="level is-mobile" href="#Vsync底层"><span class="level-left"><span class="level-item">1.2</span><span class="level-item">//Vsync底层</span></span></a></li><li><a class="level is-mobile" href="#常见问题："><span class="level-left"><span class="level-item">1.3</span><span class="level-item">*常见问题：</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

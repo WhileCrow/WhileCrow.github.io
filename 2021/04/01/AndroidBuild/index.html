@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Android Build - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Apk总构建流程简述Aapt 会将主工程、依赖库中的资源(res、assets)和androidManifest都合并，产出R.java、资源及资源索引resources.arsc； 之后javac编译包括R.java文件、主工程的java文件、aidl产生的java文件，产出class文件；如果需要插桩的话就插桩 之后使用Proguard&amp;#x2F;R8混淆工具对.class文件脱糖、压缩、混淆等，产出新"><meta property="og:type" content="blog"><meta property="og:title" content="Android Build"><meta property="og:url" content="http://example.com/2021/04/01/AndroidBuild/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="Apk总构建流程简述Aapt 会将主工程、依赖库中的资源(res、assets)和androidManifest都合并，产出R.java、资源及资源索引resources.arsc； 之后javac编译包括R.java文件、主工程的java文件、aidl产生的java文件，产出class文件；如果需要插桩的话就插桩 之后使用Proguard&amp;#x2F;R8混淆工具对.class文件脱糖、压缩、混淆等，产出新"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/v2-58a01f65fd8e9dfbde154ad2a7e28ed8_720w.jpg"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/0003-1617347508291.webp"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/640"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/image-20210402161114621.png"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/0001.png"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/image-20210402142211305.png?lastModify=1634545185.png"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/image-20210402142104030.png?lastModify=1634545185.png"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/91f70a8db8094d48abb72b75715d0eda_tplv-k3u1fbpfcp-watermark.jpg"><meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e4d13fc2f83a4386bffd632b19e5a7b3~tplv-k3u1fbpfcp-watermark.awebp"><meta property="og:image" content="http://example.com/2021/04/01/AndroidBuild/640-20211025114353114"><meta property="article:published_time" content="2021-04-01T10:44:13.000Z"><meta property="article:modified_time" content="2024-03-25T07:35:02.875Z"><meta property="article:author" content="White Crow"><meta property="article:tag" content="CoreProcess"><meta property="article:tag" content="Core"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2021/04/01/AndroidBuild/v2-58a01f65fd8e9dfbde154ad2a7e28ed8_720w.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2021/04/01/AndroidBuild/"},"headline":"Android Build","image":["http://example.com/2021/04/01/AndroidBuild/v2-58a01f65fd8e9dfbde154ad2a7e28ed8_720w.jpg","http://example.com/2021/04/01/AndroidBuild/0003-1617347508291.webp","http://example.com/2021/04/01/AndroidBuild/image-20210402161114621.png","http://example.com/2021/04/01/AndroidBuild/0001.png","http://example.com/2021/04/01/AndroidBuild/image-20210402142211305.png?lastModify=1634545185.png","http://example.com/2021/04/01/AndroidBuild/image-20210402142104030.png?lastModify=1634545185.png","http://example.com/2021/04/01/AndroidBuild/91f70a8db8094d48abb72b75715d0eda_tplv-k3u1fbpfcp-watermark.jpg"],"datePublished":"2021-04-01T10:44:13.000Z","dateModified":"2024-03-25T07:35:02.875Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"Apk总构建流程简述Aapt 会将主工程、依赖库中的资源(res、assets)和androidManifest都合并，产出R.java、资源及资源索引resources.arsc； 之后javac编译包括R.java文件、主工程的java文件、aidl产生的java文件，产出class文件；如果需要插桩的话就插桩 之后使用Proguard&#x2F;R8混淆工具对.class文件脱糖、压缩、混淆等，产出新"}</script><link rel="canonical" href="http://example.com/2021/04/01/AndroidBuild/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-01T10:44:13.000Z" title="4/1/2021, 6:44:13 PM">2021-04-01</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.875Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Other/">Other</a><span> / </span><a class="link-muted" href="/categories/Android/Other/BuildTool/">BuildTool</a></span><span class="level-item">25 minutes read (About 3802 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Android Build</h1><div class="content"><h1 id="Apk总构建流程"><a href="#Apk总构建流程" class="headerlink" title="Apk总构建流程"></a>Apk总构建流程</h1><h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p><strong>Aapt 会将主工程、依赖库中的资源(res、assets)和androidManifest都合并，产出R.java、资源及资源索引resources.arsc；</strong></p>
+<p><strong>之后javac编译包括R.java文件、主工程的java文件、aidl产生的java文件，产出class文件；如果需要插桩的话就插桩</strong></p>
+<p><strong>之后使用Proguard/R8混淆工具对.class文件脱糖、压缩、混淆等，产出新的class文件；</strong></p>
+<p><strong>之后使用Dx/D8编译工具将新的class文件再转换成dex文件，</strong></p>
+<p><strong>之后打包成apk，然后签名、zipalign优化。</strong></p>
+<p><strong>工具：aapt/aapt2、javac、Proguard/R8、Dx/D8、ApkBuilder、zipalign</strong></p>
+<p><img src="/2021/04/01/AndroidBuild/v2-58a01f65fd8e9dfbde154ad2a7e28ed8_720w.jpg" alt="img"></p>
+<span id="more"></span>
+
+<p><strong>典型的APK中内容</strong></p>
+<ul>
+<li><code>AndroidManifest.xml</code> 程序全局配置文件</li>
+<li><code>classes.dex</code>   Dalvik字节码</li>
+<li><code>resources.arsc</code>   资源索引表</li>
+<li><code>META-INF</code>该目录下存放的是签名信息</li>
+<li><code>res</code>  该目录存放资源文件</li>
+<li><code>assets</code>该目录可以存放一些配置或资源文件</li>
+</ul>
+<p>流程大致总结为：</p>
+<p>1、<strong>资源编译</strong>：主工程和三方库中的Mainifest、资源（res和assets）的合并，而后由aapt编译构建后产生<u>R.java、resources.arsc（资源索引表）。如果是AAPT2的话会将资源编译成二进制文件.flat</u></p>
+<p>2、**.aidl编译生成.java文件**</p>
+<p>3、<strong>java源码编译</strong>：AIDL产生的.java文件、主工程中的java文件、上述的<u>R.java</u>文件  一起经过javac工具编译后，产生.class文件</p>
+<p>3又1/2、 <strong>Tramform插桩 &amp; ASM修改字节码</strong></p>
+<p>4、<strong>Proguard/新为R8</strong>：脱糖、压缩、优化、混淆</p>
+<p>5、<strong>转化为dex</strong>：调用dx.bat（新为D8）将所有的class文件（上一个Transform的结果，包括3、java源码编译和第三方库中的.class）转化为 classes.dex文件（如果是multiDex的话就是classesN.dex），dx会将class转换为Dalvik字节码</p>
+<p>6、<strong>打包生成apk</strong>：通过sdklib.jar的ApkBuilder类进行打包，生成apk</p>
+<p>7、<strong>签名</strong>：签名过程主要利用apksign.jar或者jarsinger.jar两个工具</p>
+<p>8、<strong>zipalign优化</strong>：通过 zipalign工具进行内存对齐工作。</p>
+<p><img src="/2021/04/01/AndroidBuild/0003-1617347508291.webp" alt="0003"></p>
+<p><img src="/2021/04/01/AndroidBuild/640" alt="aapt2编译简要过程"></p>
+<h2 id="资源文件编译（AAPT2）"><a href="#资源文件编译（AAPT2）" class="headerlink" title="资源文件编译（AAPT2）"></a>资源文件编译（AAPT2）</h2><h3 id="resource（-res）目录-："><a href="#resource（-res）目录-：" class="headerlink" title="resource（/res）目录 ："></a>resource（/res）目录 ：</h3><p><strong>res/ 目录下的所有资源文件</strong>  和 <strong>AndroidManifest.xml</strong> 都会被编译成 .flat 的二进制文件（体积更小，解析速度更快），同时会被映射到<strong>R.java</strong>文件，<strong>resource.arsc</strong>文件，访问的时候直接使用资源ID即 <strong>R.id.filename</strong> （另外，依赖库中的resource也会被引入而assets不会）</p>
+<p><strong>//如果是AAPT则是直接合并AndroidMenifest，直接使用res。而不会将这两者编译成二进制文件。</strong></p>
+<img src="/2021/04/01/AndroidBuild/image-20210402161114621.png" alt="image-20210402161114621" style="zoom:50%;">
+
+
+
+
+
+<h3 id="assets（-assets）目录："><a href="#assets（-assets）目录：" class="headerlink" title="assets（ /assets）目录："></a>assets（ /assets）目录：</h3><p>会被原封不动打包进apk中，没有R文件映射，访问的时候需要AssetManager类。</p>
+<h2 id="java文件编译"><a href="#java文件编译" class="headerlink" title="java文件编译"></a>java文件编译</h2><p>javac 是将 .java 文件编译成 .class文件的工具，是JRE提供的工具。</p>
+<h3 id="Tramform插桩-amp-ASM修改字节码"><a href="#Tramform插桩-amp-ASM修改字节码" class="headerlink" title="Tramform插桩 &amp; ASM修改字节码"></a>Tramform插桩 &amp; ASM修改字节码</h3><p>在javac执行完成，生成.class文件之后，会经过desugar脱糖、shrinker压缩、optimizer优化、等transform，而我们可以通过自定义Transform，自定义Transform会插到整个Transform链条的最前面，并且<strong>除了<u>主工程java文件编译后的class文件</u>，也能拉去到<u>第三方依赖包jar/aar</u>，及<u>asset文件</u>。</strong>  然后我们在自定义Transform中拿到的字节码（主工程和三方库）可以用ASM进行修改，最后结果产物又会传递给Transform链后面的脱糖、压缩、优化等Transform继续处理。</p>
+<h2 id="混淆-Proguard-gt-R8"><a href="#混淆-Proguard-gt-R8" class="headerlink" title="混淆(Proguard-&gt;R8)"></a>混淆(Proguard-&gt;R8)</h2><p>简述：</p>
+<p>R8之后：.class文件会在一个步骤中执行：脱糖、摇树、混淆、Dex处理</p>
+<ul>
+<li><p> 脱糖(<strong>Desugar</strong>)：去除语法糖，还原原有代码，kt很多语法糖比如拓展函数之类；</p>
+</li>
+<li><p>摇树(<strong>Code shrinking</strong>)：tree shaking，从AndroidMainifest中的所有入口(Activity、Serivce等)入手，构建运行所需要的所有类，形成一张图，不在图上的类都可能被移除；</p>
+</li>
+<li><p>资源缩减(<strong>Resource shrinking</strong>)：只有在打开了minifyEnabled才有效，配合摇树，删除所有不被引用的资源，包括依赖的库资源。</p>
+</li>
+<li><p>混淆(<strong>Obfuscation</strong>)：缩短应用的所有非保留代码(@Keep)中的类名、方法名、字段名</p>
+</li>
+<li><p>Dex处理：.class转.dex</p>
+</li>
+<li><p>优化(<strong>Optimization</strong>)：</p>
+<ul>
+<li>如果您的代码从未采用过给定 if/else 语句的 <code>else &#123;&#125;</code> 分支，R8 可能会移除 <code>else &#123;&#125;</code> 分支的代码。</li>
+<li>如果您的代码只在一个位置调用某个方法，R8 可能会移除该方法并将其内嵌在这一个调用点。</li>
+<li>如果 R8 确定某个类只有一个唯一子类且该类本身未实例化（例如，一个仅由一个具体实现类使用的抽象基类），它就可以将这两个类组合在一起并从应用中移除一个类。</li>
+</ul>
+</li>
+</ul>
+<p>简述：</p>
+<p>引入R8前，.class文件得先由Proguard压缩、摇树、混淆、预校验后生成新的.class文件，再经过D8编译成.dex</p>
+<p>引入R8后，.class文件会在一个步骤中压缩、摇树、混淆、预校验、D8编译后直接生成.dex</p>
+<p>Proguard </p>
+<p>如果打开了混淆（minifyEnabled = true）</p>
+<p>那么在上述编译过程中， 工程项目和R.java 文件编成 .class 文件后，R8（旧Progurad 新R8）即会对 .class文件进行 脱糖、压缩、混淆、优化。 之后形成 新的 .class文件后再交给 D8 编译器 编译成.dex文件 ，之后继续走下一步构建流程。</p>
+<p>ProGuard 与 R8 都提供了压缩（shrinker）、优化（optimizer）、混淆（obfuscator）、预校验（preverifier）四大功能：</p>
+<ol>
+<li><p>压缩（也称为摇树优化，tree shaking）：从 应用及依赖项 中移除 未使用 的类、方法和字段，有助于规避 64 方法数的瓶颈</p>
+</li>
+<li><p>优化：通过代码分析移除更多未使用的代码，甚至重写代码</p>
+</li>
+<li><p>混淆：使用无意义的简短名称 重命名 类/方法/字段，增加逆向难度</p>
+</li>
+<li><p>预校验：对于面向 Java 6 或者 Java 7 JVM 的 class 文件，编译时可以把 预校验信息 添加到类文件中（StackMap 和 StackMapTable属性），从而加快类加载效率。预校验对于 Java 7 JVM 来说是必须的，但是对于 Android 平台 无效</p>
+</li>
+</ol>
+<p><img src="/2021/04/01/AndroidBuild/0001.png"></p>
+<p>minifyEnabled只对<strong>代码</strong>进行<strong>压缩、优化、混淆</strong></p>
+<h3 id="shrinkResources"><a href="#shrinkResources" class="headerlink" title="shrinkResources"></a>shrinkResources</h3><p>Ps:shrink  美  [ʃrɪŋk]</p>
+<p>如需启用资源缩减功能，请将 <code>build.gradle</code> 文件中的 <code>shrinkResources</code> 属性（若为代码缩减，则还包括 <code>minifyEnabled</code>）设为 <code>true</code>。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            shrinkResources <span class="literal">true</span></span><br><span class="line">            minifyEnabled <span class="literal">true</span></span><br><span class="line">            proguardFiles</span><br><span class="line">                getDefaultProguardFile(<span class="string">&#x27;proguard-android.txt&#x27;</span>),</span><br><span class="line">                <span class="string">&#x27;proguard-rules.pro&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>资源缩减只有在与代码缩减配合使用时才能发挥作用。在代码缩减器移除所有不使用的代码后，资源缩减器便可确定应用仍要使用的资源，当您添加包含资源的代码库时尤其如此。您必须移除不使用的库代码，使库资源变为未引用资源，因而可由资源缩减器移除。</p>
+<h2 id="class文件编译-DX-gt-D8"><a href="#class文件编译-DX-gt-D8" class="headerlink" title=".class文件编译(DX-&gt;D8)"></a>.class文件编译(DX-&gt;D8)</h2><p>DX和D8就是将 .class 文件转成 .dex文件的工具</p>
+<!--dex：Dalvik EXecutable 把 class 打包在⼀起，⼀个 dex 可以包含多个 class ⽂件 （如classes.dex）--> 
+
+
+
+<p>资源文件编译后产出的R.java 和 工程中的其他.java 文件一起，先通过 <strong>javac</strong>命令编译成**.class**文件，然后所有产出的 <strong>.class</strong> 文件再通过 <strong>dx</strong>指令（现默认D8编译器） 编译成 <strong>.dex</strong>文件 ，</p>
+<p>class转换为Dalvik字节码，生成常量池，消除冗余数据等，目的是其中各个类能够共享数据，在一定程度上降低了冗余，同时也是文件结构更加经凑，实验表明，dex文件是传统jar文件大小的50%左右。class文件结构和dex文件结构比对。</p>
+<p><img src="/2021/04/01/AndroidBuild/image-20210402142211305.png?lastModify=1634545185.png" alt="image-20210402142211305"></p>
+<p><img src="/2021/04/01/AndroidBuild/image-20210402142104030.png?lastModify=1634545185.png" alt="image-20210402142104030"></p>
+<h2 id="打包成Apk"><a href="#打包成Apk" class="headerlink" title="打包成Apk"></a>打包成Apk</h2><p>打包生成APK文件。旧的apkbuilder脚本已经废弃，现在都已经通过sdklib.jar的ApkBuilder类进行打包了。输入为我们之前生成的包含resources.arcs的.ap_文件，上一步生成的dex文件，以及其他资源如jni、jar包内的资源。</p>
+<p>大致步骤为<br>以包含resources.arcs的.ap_文件为基础，new一个ApkBuilder，设置debugMode<br>apkBuilder.addZipFile(f);<br>apkBuilder.addSourceFolder(f);<br>apkBuilder.addResourcesFromJar(f);<br>apkBuilder.addNativeLibraries(nativeFileList);<br>apkBuilder.sealApk(); // 关闭apk文件<br>generateDependencyFile(depFile, inputPaths, outputFile.getAbsolutePath());</p>
+<h2 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h2><p>对一个APK文件签名之后，APK文件根目录下会增加META-INF目录，该目录下增加三个文件：</p>
+<ul>
+<li><code>MANIFEST.MF</code></li>
+<li><code>[CERT].RSA</code></li>
+<li><code>[CERT]</code></li>
+</ul>
+<p>Android系统就是根据这三个文件的内容对APK文件进行签名检验的。</p>
+<h2 id="zipalign优化"><a href="#zipalign优化" class="headerlink" title="zipalign优化"></a>zipalign优化</h2><p>调用buildtoolszipalign，对签名后的apk文件进行对齐处理，使apk中所有资源文件距离文件起始偏移为4字节的整数倍，从而在通过内存映射访问apk文件时会更快。同时也减少了在设备上运行时的内存消耗。</p>
+<h2 id="附录："><a href="#附录：" class="headerlink" title="附录："></a>附录：</h2><h3 id="版本迭代，R8、D8引入"><a href="#版本迭代，R8、D8引入" class="headerlink" title="版本迭代，R8、D8引入"></a>版本迭代，R8、D8引入</h3><p><img src="/2021/04/01/AndroidBuild/91f70a8db8094d48abb72b75715d0eda_tplv-k3u1fbpfcp-watermark.jpg"></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装方式<br>系统程序安装，开机时安装，没有安装界面。<br>第一步，将apk文件解压复制到程序目录下（/data/app/）；第二步，为应用创建数据目录（/data/data/package name/）、提取dex文件到指定目录（/data/dalvik-cache/）、修改系统包管理信息。<br>由开机时启动的PackageManagerService服务完成，会在启动时扫描/system/app, vender/app, /data/app, /data/app-private并安装。<br>PackageInstallerActivity<br>当Android系统请求安装apk程序时，会启动这个Activity，并通过Intent读取传来的apk信息。下面是apk安装的具体过程。</p>
+<ol>
+<li>解析过程会首先读取AndroidManifest.xml获取程序包名以构建Package对象，然后再处理manifest的其他标签包括四大组件，并把信息全都存到Package对象里面。</li>
+<li>首先检测该程序是否已安装，是则弹框提示是否替换程序，否则直接调用startInstallConfirm()，做UI初始化和事件绑定，于是当我们点击安装的时候则会触发onClick下的OK按钮事件:</li>
+<li>无论是替换还是新安装，都会调用scanPackageLI()，然后跑去scanPackageDirtyLI，它会判断是否为系统程序，解析apk程序包，检查依赖库，验证签名，检查sharedUser签名、权限冲突、ContentProvider冲突，更新native库目录文件（检测abi），进行dexopt，杀掉现有进程（仅对覆盖安装的场景）等等，最后调用createDataDirsLI()进行实际安装:<br>4.执行完毕后，通过socket回传结果，而PackageInstaller根据返回结果做对应处理并显示给用户，至此为止，整个apk安装过程结束。</li>
+</ol>
+<blockquote>
+<p><strong>包名签名相关</strong><br>android系统使用包名(package name)来判定应用程序的同一性，但是由于包名可以由开发者自由设置，为了保护应用程序不被其他开发者开发的同包名应用覆盖，用于发布的Android应用程序需要加上开发者签名。在应用程序被升级的时候，Android系统将会验证被升级的应用程序包与升级后的应用程序包是否使用了同样的开发者签名，如果一致，该应用程序可以被升级；如果不一致，那么将被视为非同一开发者开发的应用程序，用户需要先卸载已经安装的应用然后再安装新应用，在卸载的过程中，应用在android系统中所保存的设置信息（SavedPreferences）将被删除，以保护应用本地保存的资料不被盗取。综上，应用是否可以覆盖的方式是对于包名的判断，然后是对于该APK签名的判断。</p>
+</blockquote>
+<h3 id="AOP原理"><a href="#AOP原理" class="headerlink" title="AOP原理"></a>AOP原理</h3><p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e4d13fc2f83a4386bffd632b19e5a7b3~tplv-k3u1fbpfcp-watermark.awebp" alt="AOP原理"></p>
+<p>在确定好技术选型以后我们来看下ASM的相关原理。其实通过上图我们已经能够大概了解其大致的原理。AS Gradle的编译会将我们的java class文件、jar包以及resource资源文件打包最为最原始的数据输出给第一个Transform，第一个transform处理完的产物再输出给第二个transform，以此类推形成完整的链路。而ASM就是作用于图中的第一个红色TransformA。它会拿到一开始的原始数据以后会进行一定的分析。并且按照JVM字节码的格式针对类、变量、方法等类型调用相关的回调方法。在相应的回调方法中我们可以对相关的字节码指令进行操作。比如新增、删除等等。中间的图片就是它具体的运行时序图。最后两者结合编译</p>
+<h3 id="手动构建-APK-aapt2"><a href="#手动构建-APK-aapt2" class="headerlink" title="手动构建 APK(aapt2)"></a><strong>手动构建 APK</strong>(aapt2)</h3><p>最后我们通过命令行来手动打包一个可执行的 APK，能让我们对 APK 构建的理解更加深入。首先需要准备下 代码、资源文件、AndroidManifest 这些构建 APK 的必要文件。</p>
+<p><img src="/2021/04/01/AndroidBuild/640-20211025114353114" alt="图片"></p>
+<p>① 通过 aapt2 compile 将 res 资源编译成 .flat 的二进制文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aapt2 compile -o build/res.zip --dir res</span><br></pre></td></tr></table></figure>
+
+<p>② 通过 aapt2 link 将 .flat 和 AndroidManifest 进行连接，转化成不包含 dex 的 apk 和 R.java：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aapt2 link build/res.zip -I $ANDROID_HOME/platforms/android-30/android.jar --java build --manifest AndroidManifest.xml -o build/app-debug.apk</span><br></pre></td></tr></table></figure>
+
+<p>③ 通过 javac 将 Java 文件编译成 .class 文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -d build -cp $ANDROID_HOME/platforms/android-30/android.jar com/**/**/**/*.java</span><br></pre></td></tr></table></figure>
+
+<p>④ 通过 d8 将 .class 文件转化成 dex 文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d8 --output build/ --lib $ANDROID_HOME/platforms/android-30/android.jar build/com/tencent/hockeyli/androidbuild/*.class</span><br></pre></td></tr></table></figure>
+
+<p>⑤ 合并 dex ⽂件和资源⽂件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zip -j build/app-debug.apk build/classes.dex</span><br></pre></td></tr></table></figure>
+
+<p>⑥ 对 apk 通过 apksigner 进行签名：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apksigner sign -ks ~/.android/debug.keystore build/appdebug.apk</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903555795517453#heading-1">10分钟了解Android项目构建流程 - 掘金 (juejin.cn)</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000004916563">APK打包安装过程 - SegmentFault 思否</a></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Android Build</p><p><a href="http://example.com/2021/04/01/AndroidBuild/">http://example.com/2021/04/01/AndroidBuild/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-04-01</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-03-25</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/CoreProcess/">CoreProcess</a><a class="link-muted mr-2" rel="tag" href="/tags/Core/">Core</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/04/01/Serializable/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">serializable</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/04/01/ScreenDraw/"><span class="level-item">ScreenDraw</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Apk总构建流程"><span class="level-left"><span class="level-item">1</span><span class="level-item">Apk总构建流程</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#简述"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">简述</span></span></a></li><li><a class="level is-mobile" href="#资源文件编译（AAPT2）"><span class="level-left"><span class="level-item">1.2</span><span class="level-item">资源文件编译（AAPT2）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#resource（-res）目录-："><span class="level-left"><span class="level-item">1.2.1</span><span class="level-item">resource（/res）目录 ：</span></span></a></li><li><a class="level is-mobile" href="#assets（-assets）目录："><span class="level-left"><span class="level-item">1.2.2</span><span class="level-item">assets（ /assets）目录：</span></span></a></li></ul></li><li><a class="level is-mobile" href="#java文件编译"><span class="level-left"><span class="level-item">1.3</span><span class="level-item">java文件编译</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Tramform插桩-amp-ASM修改字节码"><span class="level-left"><span class="level-item">1.3.1</span><span class="level-item">Tramform插桩 &amp; ASM修改字节码</span></span></a></li></ul></li><li><a class="level is-mobile" href="#混淆-Proguard-gt-R8"><span class="level-left"><span class="level-item">1.4</span><span class="level-item">混淆(Proguard-&gt;R8)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#shrinkResources"><span class="level-left"><span class="level-item">1.4.1</span><span class="level-item">shrinkResources</span></span></a></li></ul></li><li><a class="level is-mobile" href="#class文件编译-DX-gt-D8"><span class="level-left"><span class="level-item">1.5</span><span class="level-item">.class文件编译(DX-&gt;D8)</span></span></a></li><li><a class="level is-mobile" href="#打包成Apk"><span class="level-left"><span class="level-item">1.6</span><span class="level-item">打包成Apk</span></span></a></li><li><a class="level is-mobile" href="#签名"><span class="level-left"><span class="level-item">1.7</span><span class="level-item">签名</span></span></a></li><li><a class="level is-mobile" href="#zipalign优化"><span class="level-left"><span class="level-item">1.8</span><span class="level-item">zipalign优化</span></span></a></li><li><a class="level is-mobile" href="#附录："><span class="level-left"><span class="level-item">1.9</span><span class="level-item">附录：</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#版本迭代，R8、D8引入"><span class="level-left"><span class="level-item">1.9.1</span><span class="level-item">版本迭代，R8、D8引入</span></span></a></li><li><a class="level is-mobile" href="#安装"><span class="level-left"><span class="level-item">1.9.2</span><span class="level-item">安装</span></span></a></li><li><a class="level is-mobile" href="#AOP原理"><span class="level-left"><span class="level-item">1.9.3</span><span class="level-item">AOP原理</span></span></a></li><li><a class="level is-mobile" href="#手动构建-APK-aapt2"><span class="level-left"><span class="level-item">1.9.4</span><span class="level-item">手动构建 APK(aapt2)</span></span></a></li><li><a class="level is-mobile" href="#参考"><span class="level-left"><span class="level-item">1.9.5</span><span class="level-item">参考</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

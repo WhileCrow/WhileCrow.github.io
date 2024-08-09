@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Category: Android - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Crow&#039;s Sky"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"Crow's Sky","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":""}</script><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">Categories</a></li><li class="is-active"><a href="#" aria-current="page">Android</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-12-31T03:51:04.000Z" title="12/31/2021, 11:51:04 AM">2021-12-31</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-06T08:42:39.750Z" title="5/6/2024, 4:42:39 PM">2024-05-06</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">23 minutes read (About 3436 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/12/31/Generics/">Generics</a></h1><div class="content"><h1 id="Java泛型"><a href="#Java泛型" class="headerlink" title="Java泛型"></a>Java泛型</h1><p>简述：</p>
+<p>理解的泛型，其实是这样的：假如没有泛型，出现在泛型类型位置的就会是Object类，而程序员在使用该类型的时候再手动将类型强转一下，不仅代码啰嗦、而且有类型不匹配的crash可能。</p>
+<p>而java1.5提供泛型同时为了兼容旧版，本质上也是用了Object，只不过<strong>编译器将.java编译成.class时</strong>进行“泛型擦除”时会把泛型类型替代成<strong>Object</strong>或<strong>上限类型</strong>（字节码中就不存在泛型了），再自动地使用处前加上原始类型的强转，之后再加载到JVM中。而在编译期存在的泛型可以借由IDE有效的进行<strong>类型检测</strong>和<strong>可读的扩展</strong>，防止类型不匹配。</p>
+<p>//<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/28665443/answer/118148143">java伪泛型的设计原因主要为了兼容老版本的java。真泛型并非做不到，而是因为如果用真泛型（即类型保留），老程序都需要修改。</a></p>
+<p>//另外泛型类中基础数据类型需要使用Integer、Long等封装类的原因也是因为“擦除后会把泛型类型替代成<strong>Object</strong>或<strong>上限类型</strong>”</p>
+<p>而kotlin的泛型是跟java一样的，在编译时会被擦除。但是kotlin提供了新的特性可以保留类型，就是**内联函数+reified(ˈriːɪfʌɪ/)**，泛型实化，可以说是真泛型：内联函数(inline)会把方法体copy到调用处（即不会创建新的虚拟机栈帧），</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;<span class="keyword">reified</span> C : Activity&gt;</span> Context.<span class="title">startActivityKtx</span><span class="params">()</span></span> &#123;</span><br><span class="line">    startActivity(Intent(<span class="keyword">this</span>, C::<span class="keyword">class</span>.java))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>协变：①<strong>协变</strong>：<strong>父子关系一致</strong>→<strong>子类也可以作为参数传进来</strong>→java<code>&lt;? extends Entity&gt;</code>→<strong>上界通配符</strong>→kotlin<code>&lt;out Entity&gt;</code></p>
+<p>逆变：②<strong>逆变</strong>：<strong>父子关系颠倒</strong>→<strong>父类也可以作为参数传进来</strong>→java<code>&lt;? super Article&gt;</code>→<strong>下界通配符</strong>→kotlin<code>&lt;in Entiry&gt;</code></p>
+<p>不变：③不变：只能</p>
+<p>无限通配符<code>&lt;?&gt;</code> == java <code>&lt;? extend Object&gt;</code> == kotlin<code>&lt;*&gt;</code> == kotlin<code>&lt;out Any&gt;</code></p></div><a class="article-more button is-small is-size-7" href="/2021/12/31/Generics/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-12-13T08:01:11.000Z" title="12/13/2021, 4:01:11 PM">2021-12-13</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.416Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">18 minutes read (About 2716 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/12/13/VirtualMemory/">VirtualMemory</a></h1><div class="content"><p><img src="/2021/12/13/VirtualMemory/1620.jpeg" alt="img"></p>
+<p>简述：cpu以虚拟内存，通过MMU查询 页表， 映射 高4位(页号) 到页表中查询得到 页框号 和 有效位。</p>
+<p>如果有效位 为1， 则直接将页框号和虚拟内存低12位（偏移量）组合返回即为物理地址</p>
+<p>如果有效位为0（意味着该页表项不存在MMU中，即未向MMU注册或相关页未被加载如内存中），则产生缺页中断，系统处理中断，通过内存置换swap算法（LRU，OPT，FIFO），之后重走一遍以上逻辑</p></div><a class="article-more button is-small is-size-7" href="/2021/12/13/VirtualMemory/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-15T09:45:04.000Z" title="11/15/2021, 5:45:04 PM">2021-11-15</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.500Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">39 minutes read (About 5825 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/15/SharePreference/">sharePreference</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://leo-wxy.github.io/images/SharedPreferences%E5%8E%9F%E7%90%86.png"><img src="/2021/11/15/SharePreference/SharedPreferences%E5%8E%9F%E7%90%86.png" alt="SharedPreferences原理-xmind"></a></p>
+<p><a target="_blank" rel="noopener" href="https://leo-wxy.github.io/images/SharedPreferences%E5%8E%9F%E7%90%86.png">SharedPreferences原理-xmind</a></p>
+<p><code>SharedPreferences</code>是系统提供的一种简易数据持久化的手段，适合<strong>单进程、小批量</strong>的数据存储与访问。以键值对的形式存储在<code>xml</code>文件中。<br>文件存储路径为<code>data/data/package_name/shared_prefs/</code>目录。</p>
+<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><p><a target="_blank" rel="noopener" href="https://leo-wxy.github.io/images/SP-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.png"><img src="/2021/11/15/SharePreference/SP-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.png" alt="源码解析"></a></p>
+<p><a target="_blank" rel="noopener" href="https://leo-wxy.github.io/images/SP-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.png">源码解析</a></p></div><a class="article-more button is-small is-size-7" href="/2021/11/15/SharePreference/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-02T08:21:50.000Z" title="11/2/2021, 4:21:50 PM">2021-11-02</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.863Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">2 minutes read (About 231 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/02/ANR/">ANR</a></h1><div class="content"><p>机制描述：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/5EcwYhllQOjcQTvzGicrZfZGVCBmXt6j0QtLShpFAbzqwasf8JWjSPJAJqDpbXNCsKnMvURKb4YXBficiajr1stog/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="图片"></p>
+<p>（//ps：AOSP源码中Service的前台Service的TIMEOUT时间是20s，后台Service的TIMEOUT时间是200s）</p>
+<blockquote>
+<p>android-10   </p>
+<p>// How long we wait for a service to finish executing.</p>
+<p>​    static final int SERVICE_TIMEOUT = 20*1000;</p>
+<p>​    // How long we wait for a service to finish executing.</p>
+<p>​    static final int SERVICE_BACKGROUND_TIMEOUT = SERVICE_TIMEOUT * 10;原理：</p>
+</blockquote>
+<h3 id="Service："><a href="#Service：" class="headerlink" title="Service："></a>Service：</h3><p>前台Service启动超过20s没有启动完成：在Service启动时发送一个延迟20s的消息（该消息内部即为 报ANR并分析ANR栈），之后在Service的启动完成时将这个消息remove掉。如果成功remove那就啥事没有，如果超过20s没有remove就消息触发，执行消息体内的ANR动作。（后台消息）</p></div><a class="article-more button is-small is-size-7" href="/2021/11/02/ANR/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-02T03:51:57.000Z" title="11/2/2021, 11:51:57 AM">2021-11-02</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.999Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">24 minutes read (About 3570 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/02/Coroutines-Principle/">Coroutines_Principle</a></h1><div class="content"><h1 id="Kotlin协程使用"><a href="#Kotlin协程使用" class="headerlink" title="Kotlin协程使用"></a>Kotlin协程使用</h1></div><a class="article-more button is-small is-size-7" href="/2021/11/02/Coroutines-Principle/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-28T05:58:06.000Z" title="10/28/2021, 1:58:06 PM">2021-10-28</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.499Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">3 minutes read (About 393 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/28/Mmkv/">mmkv</a></h1><div class="content"><p>MMKV 是基于 <strong>mmap</strong> 内存映射的 key-value 组件，底层序列化/反序列化使用 <strong>protobuf</strong> 实现，性能高，稳定性强。多进程同步实现是依靠<strong>文件锁</strong></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903914119102472#heading-21">Android 存储优化 —— MMKV 集成与原理 - 掘金 (juejin.cn)</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Tencent/MMKV/wiki/design">design · Tencent/MMKV Wiki (github.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Tencent/MMKV/wiki/android_ipc">android_ipc · Tencent/MMKV Wiki (github.com)</a></p>
+<p>一些对比：</p>
+<p>虽然 MMKV 一些场景下比 SP 稍慢(如: 首次实例化会进行数据的复写剔除重复数据, 比 SP 稍慢, 查询数据时存在 ProtocolBuffer 解码, 比 SP 稍慢), 但其<strong>逆天的数据写入速度、mmap Linux 内核保证数据的同步, 以及 ProtocolBuffer 编码带来的更小的本地存储空间占用等都是非常棒的闪光点</strong></p></div><a class="article-more button is-small is-size-7" href="/2021/10/28/Mmkv/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-26T06:04:52.000Z" title="10/26/2021, 2:04:52 PM">2021-10-26</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-19T02:53:39.122Z" title="4/19/2024, 10:53:39 AM">2024-04-19</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">16 minutes read (About 2418 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/26/ClassLoading/">ClassLoading</a></h1><div class="content"><p><img src="/2021/10/26/ClassLoading/1041642665584_.pic_hd_%E5%89%AF%E6%9C%AC.jpg" alt="1041642665584_.pic_hd_副本"></p>
+<p>类的生命周期：</p>
+<p><img src="/2021/10/26/ClassLoading/classloadinglifecycle.jpg" alt="classloadinglifecycle"></p>
+<p>简述：加载是字节码(.class)文件被ClassLoader装载进方法区并在堆中生成一个class对象引用；链接包括：校验二进制流是否符合JVM规范的验证、为各个变量分配内存赋值默认值的准备、将字符串表示的符号引用解析成直接将引用的解析；初始化则是static块、static变量初始化、类构造器执行的过程。</p></div><a class="article-more button is-small is-size-7" href="/2021/10/26/ClassLoading/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-19T08:34:22.000Z" title="10/19/2021, 4:34:22 PM">2021-10-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.863Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">19 minutes read (About 2808 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/19/APM/">APM</a></h1><div class="content"><h1 id="主线程卡顿监控"><a href="#主线程卡顿监控" class="headerlink" title="主线程卡顿监控"></a>主线程卡顿监控</h1><h2 id="方案一、Looper-Printer监控每次-dispatchMessage-的执行耗时："><a href="#方案一、Looper-Printer监控每次-dispatchMessage-的执行耗时：" class="headerlink" title="方案一、Looper Printer监控每次 dispatchMessage 的执行耗时："></a>方案一、Looper Printer监控每次 dispatchMessage 的执行耗时：</h2><h3 id="DoKit-amp-BlockCanary-amp-Matrix"><a href="#DoKit-amp-BlockCanary-amp-Matrix" class="headerlink" title="DoKit &amp; BlockCanary &amp; Matrix"></a>DoKit &amp; BlockCanary &amp; Matrix</h3><p><strong>滴滴的哆啦A梦的卡顿检测其实就是blockCanary，和Matrix 的EvilMethodTracer和AnrTracer （当然后来Matrix还增加了native的Signal信号监听）使用的 方案也就是Looper设置Printer监听卡顿</strong></p>
+<p>都是根据handler原理，通过给Looper.loop() 中设置printer(无论是通过反射替换Looper的<em>mLogging</em>还是通过<em>setMessageLogging</em>设置printer)，监控超过 设定阈值(matrix700ms) 的主线程消息（超过5s报为ANR），printer 中判断start和end，来获取主线程dispatch该message的开始和结束时间，并判定该时间超过阈值为主线程卡慢发生，并 打印当时堆栈 + 方法耗时(matrix/dokit)</p></div><a class="article-more button is-small is-size-7" href="/2021/10/19/APM/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-19T07:46:58.000Z" title="10/19/2021, 3:46:58 PM">2021-10-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.483Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">25 minutes read (About 3761 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/19/%E5%8D%A1%E9%A1%BF%E7%9B%91%E6%8E%A7/">卡顿监控</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3dubi2GVW_rVFZZztCpsKg">https://mp.weixin.qq.com/s/3dubi2GVW_rVFZZztCpsKg</a></p>
+<h1 id="主线程卡顿监控"><a href="#主线程卡顿监控" class="headerlink" title="主线程卡顿监控"></a>主线程卡顿监控</h1><h2 id="方案一、Looper-Printer监控每次-dispatchMessage-的执行耗时："><a href="#方案一、Looper-Printer监控每次-dispatchMessage-的执行耗时：" class="headerlink" title="方案一、Looper Printer监控每次 dispatchMessage 的执行耗时："></a>方案一、Looper Printer监控每次 dispatchMessage 的执行耗时：</h2><h3 id="DoKit-amp-BlockCanary-amp-Matrix"><a href="#DoKit-amp-BlockCanary-amp-Matrix" class="headerlink" title="DoKit &amp; BlockCanary &amp; Matrix"></a>DoKit &amp; BlockCanary &amp; Matrix</h3><p><strong>滴滴的哆啦A梦的卡顿检测其实就是blockCanary，和Matrix 的EvilMethodTracer和AnrTracer （当然后来Matrix还增加了native的Signal信号监听）使用的 方案也就是Looper设置Printer监听卡顿</strong></p>
+<p>都是根据handler原理，通过给Looper.loop() 中设置printer(无论是通过反射替换Looper的<em>mLogging</em>还是通过<em>setMessageLogging</em>设置printer)，监控超过 设定阈值(matrix700ms) 的主线程消息（超过5s报为ANR），printer 中判断start和end，来获取主线程dispatch该message的开始和结束时间，并判定该时间超过阈值为主线程卡慢发生，并 打印当时堆栈 + 方法耗时(matrix/dokit)</p></div><a class="article-more button is-small is-size-7" href="/2021/10/19/%E5%8D%A1%E9%A1%BF%E7%9B%91%E6%8E%A7/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-15T09:02:21.000Z" title="10/15/2021, 5:02:21 PM">2021-10-15</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-29T11:11:43.250Z" title="7/29/2024, 7:11:43 PM">2024-07-29</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">14 minutes read (About 2075 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/15/RecyclerView/">recyclerView</a></h1><div class="content"><h1 id="缓存机制"><a href="#缓存机制" class="headerlink" title="缓存机制"></a>缓存机制</h1><p>简述：</p>
+<p>一级缓存为屏内缓存，分为没有变化的可以直接复用的ViewHolder和被notifyXXX标记为需要重新绑定的ViewHolder；</p>
+<p>二级缓存为离屏2个的ViewHolder缓存，直接复用</p>
+<p>三级缓存为自定义缓存，较少用</p>
+<p>四级缓存为超出上述缓存的需要重新绑定的ViewHolder</p></div><a class="article-more button is-small is-size-7" href="/2021/10/15/RecyclerView/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-09-30T06:00:40.000Z" title="9/30/2021, 2:00:40 PM">2021-09-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-31T06:52:30.190Z" title="7/31/2024, 2:52:30 PM">2024-07-31</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">22 minutes read (About 3260 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/09/30/Glide/">Glide</a></h1><div class="content"><h2 id="Glide缓存"><a href="#Glide缓存" class="headerlink" title="Glide缓存"></a>Glide缓存</h2><p><strong>磁盘(DiskLruCache) -&gt; LRUCache(不活跃资源) -&gt; WeakReference(使用中资源)</strong></p>
+<p><strong>内存缓存分为弱引用的和 LruCache ，其中正在使用的图片使用弱引用缓存，暂时不使用的图片用 LruCache缓存，这一点是通过 图片引用计数器（acquired变量）来实现的</strong></p>
+<p><img src="/2021/09/30/Glide/b784f4ad31217d419faedc0d0efc595f.jpg" alt="b784f4ad31217d419faedc0d0efc595f"></p>
+<p>Glide生成key（内存缓存Key类型为EngineKey）的方式远比我们想象的要复杂，决定缓存Key的参数有8种，其中包括图片URL、宽、高。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EngineKey key = keyFactory.buildKey(model, signature, width, height, transformations,</span><br><span class="line">        resourceClass, transcodeClass, options);</span><br></pre></td></tr></table></figure>
+
+<p>这里可以得出一个结论，几乎任意配置的改变都会导致同一张图片生成多个缓存key。举个例子：同一张图片加载到2个不同大小的ImageView会生成2个缓存图片</p>
+<h2 id="Glide-QA"><a href="#Glide-QA" class="headerlink" title="Glide QA"></a>Glide QA</h2><h3 id="glide是怎么拿到的width-height（view未测绘前拿不到宽高）"><a href="#glide是怎么拿到的width-height（view未测绘前拿不到宽高）" class="headerlink" title="glide是怎么拿到的width,height（view未测绘前拿不到宽高）"></a><strong>glide是怎么拿到的width,height（view未测绘前拿不到宽高）</strong></h3><p>width,height能拿到的原因是ViewTarget会为所持有的View注册view树绘制回调</p>
+<p><code>addOnPreDrawListener(OnPreDrawListener listener)</code></p>
+<p><img src="Glide//image-20240709154704558.png" alt="image-20240709154704558"></p>
+<h3 id="Glide的缓存大小默认是多少"><a href="#Glide的缓存大小默认是多少" class="headerlink" title="Glide的缓存大小默认是多少"></a>Glide的缓存大小默认是多少</h3><p><strong>内存缓存最大空间(maxSize) = 每个进程可用的最大内存（activityManager.getMemoryClass()  *  0.4</strong></p>
+<p><strong>(低配手机的话是: 每个进程可用的最大内存 * 0.33)</strong></p>
+<blockquote>
+<p>activityManager.getMemoryClass值：</p>
+<ul>
+<li>低端设备可能在 16-32 MB 范围内。</li>
+<li>中档设备通常在 64-128 MB 范围内。</li>
+<li>高端设备和新款设备可能在 256 MB 或更高。//当设置largeHeap时，最多可申请512M</li>
+</ul>
+</blockquote>
+<p><strong>磁盘缓存大小: 默认250MB</strong></p>
+<blockquote>
+<p><strong>磁盘缓存目录: 项目/cache/image_manager_disk_cache</strong></p>
+</blockquote>
+<p>//todo </p>
+<h2 id="Glide"><a href="#Glide" class="headerlink" title="Glide"></a>Glide</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
+<li>会根据控件大小进行下采样，以解码出符合需求的大小，对内存更友好</li>
+<li>内存缓存+磁盘缓存</li>
+<li>感知生命周期，取消任务，防止内存泄漏</li>
+<li>感知内存吃紧，进行回收</li>
+<li>BitmapPool，防止内存抖动的进行bitmap��换</li>
+<li>定义请求优先级</li>
+</ol>
+<h3 id="手写一个图片库注意事项"><a href="#手写一个图片库注意事项" class="headerlink" title="手写一个图片库注意事项"></a>手写一个图片库注意事项</h3><ol>
+<li>获取资源：异步并发下载图片，最大化利用cpu资源</li>
+<li>资源解码：按实际需求异步解码，多线程并发是否能加快解码速度</li>
+<li>资源变换：使用资源池，复用变换的资源，避免内存抖动</li>
+<li>缓存：磁盘缓存原始图片，或变换的资源。内存缓存刚使用过的资源，使用lru策略控制大小</li>
+<li>感知生命周期：避免内存泄漏</li>
+<li>感知内存吃紧：清理缓存</li>
+</ol>
+<h3 id="Glide-数据加载流程"><a href="#Glide-数据加载流程" class="headerlink" title="Glide 数据加载流程"></a>Glide 数据加载流程</h3><ul>
+<li>RequestBuilder 构建 Request和 Target，将请求委托给RequestManager，RequestManager触发Request.begin(),然后调用Engine.load()加载资源，若有内存缓存则返回，否则启动异步任务加载磁盘缓存，若无则从网络加载</li>
+<li>DecodeJob 负责加载数据（可能从磁盘，或网络，onDataFetcherReady），再进行数据解码（onDataFetcherReady），再进行数据变换（Transformation），写ActiveResource，（将变换后的数据回调给Target），将变换后的资源写文件（ResourceEncoder）</li>
+</ul>
+<h3 id="预加载"><a href="#预加载" class="headerlink" title="预加载"></a>预加载</h3><p>preload，加载到一个PreloadTarget，等资源加载好了，就调用clear，将资源从ActiveResource移除存到Lrucache中</p>
+<h3 id="感知内存吃紧"><a href="#感知内存吃紧" class="headerlink" title="感知内存吃紧"></a>感知内存吃紧</h3><p>注册ComponentCallbacks2，实现细粒度内存管理：</p>
+<ol>
+<li>onLowMemory(){清除内存}</li>
+<li>onTrimMemory(){修剪内存}</li>
+</ol>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">memoryCache<span class="selector-class">.trimMemory</span>(level); <span class="comment">// 内存缓存</span></span><br><span class="line">bitmapPool<span class="selector-class">.trimMemory</span>(level); <span class="comment">// bitmap池</span></span><br><span class="line">arrayPool<span class="selector-class">.trimMemory</span>(level); <span class="comment">// 字节数组池</span></span><br></pre></td></tr></table></figure>
+
+<p>可以设置在onTrimMemory时，取消所有正在进行的请求。</p>
+<h3 id="BitmapPool"><a href="#BitmapPool" class="headerlink" title="BitmapPool"></a>BitmapPool</h3><ul>
+<li>BitmatPool 是 Glide 维护了一个图片复用池，LruBitmapPool 使用 Lru 算法保留最近使用的尺寸的 Bitmap。</li>
+<li>api19 后使用bitmap的字节数和config作为key，而之前使用宽高和congif，所以19以后复用度更高</li>
+<li>用类似LinkedHashMap存储，键值对中的值是一组Bitmap，相同字节数的Bitmap 存在一个List中（这样设计的目的是，将Lru策略运用在Bitmap大小上，而不是单个Bitmap上），控制BitmapPool大小通过删除数据组中最后一个Bitmap。</li>
+<li>BitmapPool 大部分用于Bitmap变换和gif加载时</li>
+</ul>
+<h3 id="ArrayPool"><a href="#ArrayPool" class="headerlink" title="ArrayPool"></a>ArrayPool</h3><ul>
+<li>是一个采用Lru策略的数组池，用于解码时候的字节数组的复用。</li>
+<li>清理内存意味着清理MemoryCache，BitmapPool,ArrayPool</li>
+</ul>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>默认情况下，Glide 会在开始一个新的图片请求之前检查以下多级的缓存：</p>
+<ul>
+<li>活动资源 (Active Resources) - 现在是否有另一个 View 正在展示这张图片？</li>
+<li>内存缓存 (Memory cache) - 该图片是否最近被加载过并仍存在于内存中？</li>
+<li>资源类型（Resource） - 该图片是否之前曾被解码、转换并写入过磁盘缓存？</li>
+<li>数据来源 (Data) - 构建这个图片的资源是否之前曾被写入过文件缓存？</li>
+</ul>
+<p>在 Glide v4 里，所有缓存键都包含至少两个元素 活动资源，内存缓存，资源磁盘缓存的缓存键还包含一些其他数据，包括： 必选：Model 可选：签名 宽度和高度 可选的变换（Transformation） 额外添加的任何 选项(Options) 请求的数据类型 (Bitmap, GIF, 或其他)</p>
+<h3 id="磁盘缓存策略"><a href="#磁盘缓存策略" class="headerlink" title="磁盘缓存策略"></a>磁盘缓存策略</h3><ul>
+<li>如果缓存策略是AUTOMATIC（默认），对于网络图片只缓存原始数据，加载本地资源是存储变换过的数据，如果加载不同尺寸的图片，则会获取原始缓存并在此基础上做变换。</li>
+<li>如果缓存策略是ALL，会缓存原始图片以及每个尺寸的副本，</li>
+<li>如果缓存策略是SOURCE,只会缓存变换过的资源，如果另一个界面换一个尺寸显示图片，则会重新拉取网络 可通过自定义Key实现操控缓存命中策略（混入自己的值，比如修改时间）</li>
+</ul>
+<h3 id="内存缓存"><a href="#内存缓存" class="headerlink" title="内存缓存"></a>内存缓存</h3><ul>
+<li>内存缓存分为两级<ol>
+<li>活跃图片 ActiveResource<ul>
+<li>使用HashMap存储正在使用资源的弱引用</li>
+<li>资源被包装成带引用计数的EngineResource，标记引用资源的次数（当引用数不为0时阻止被回收或降级，降级即是存储到LruCache中）</li>
+<li>这一级缓存没有大小限制，所以使用了资源的弱引用</li>
+<li>存：每当下载资源后会在onEngineJobComplete()中存入ActiveResource，或者LruCache命中后，将资源从中LruCache移除并存入ActiveResource。</li>
+<li>取：每当资源释放时，会降级到LruCache中（请求对应的context onDestroy了或者被gc了）</li>
+<li>开一个后台线程，监听ReferenceQueue，不停地从中获取被gc的资源，将其从ActiveResource中移除，并重新构建一个新资源将其降级为LruCache</li>
+<li>ActiveResource是为了缓解LruCache中缓存造成压力，因为LruCache中没有命中的缓存只有等到容量超限时才会被清除，强引用即使内存吃紧也不会被gc，现在当LruCache命中后移到ActiveResource，弱引用持有，当内存吃紧时能被回收。</li>
+</ul>
+</li>
+<li>LruCache<ul>
+<li>使用 LinkedHashMap 存储从活跃图片降级的资源，使用Lru算法淘汰最近最少使用的</li>
+<li>存：从活跃图片降级的资源（退出当前界面，或者ActiveResource资源被回收）</li>
+<li>取：网络请求资源之前，从缓存中取，若命中则直接从LruCache中移除了。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>内存缓存只会缓存经过转换后的图片</li>
+<li>内存缓存键根据10多个参数生成，url，宽高</li>
+</ul>
+<h3 id="磁盘缓存"><a href="#磁盘缓存" class="headerlink" title="磁盘缓存"></a>磁盘缓存</h3><ul>
+<li>会将源数据或经过变换的数据存储在磁盘，在内存中用LinkedHashMap记录一组Entry，Entry内部包含一组文件，文件名即是key，并且有开启后台线程执行删除文件操作以控制磁盘缓存大小。</li>
+<li>写磁盘缓存即是触发Writer将数据写入磁盘，并在内存构建对应的File缓存在LinkedHashMap中</li>
+<li>根据缓存策略的不同，可能存储源数据和经过变换的数据。</li>
+</ul>
+<h3 id="感知生命周期"><a href="#感知生命周期" class="headerlink" title="感知生命周期"></a>感知生命周期</h3><ul>
+<li>构造RequestManager时传入context，可以是app的，activity的，或者是view的</li>
+<li>向界面添加无界面Fragment（SupportRequestManagerFragment），Fragment把生命周期传递给Lifecycle，Fragment持有RequestManager，RequestManager监听Lifecycle，RequestManager向RequestTracker传递生命周期以暂停加载，RequestTracker遍历所有正在进行的请求，并暂停他们（移除回调resourceReady回调）</li>
+<li>当绑定context destroy时，RequestManager会将该事件传递给RequestTracker，然后触发该请求Resource的clear，再调用Engine.release，将resource降级到LruCache</li>
+<li>通过HashMap结构保存无界面Fragment以避免重复创建</li>
+</ul>
+<h3 id="取消请求"><a href="#取消请求" class="headerlink" title="取消请求"></a>取消请求</h3><p>通过移除回调，设置取消标志位实现：无法取消已经发出的请求，会在DecodeJob的异步任务的run()方法中判断，如果cancel，则返回。移除各种回调，会传递到DataFetcher，httpUrlConnection 读取数据后会判断是否cancel，如果是则返回null。并没有断开链接</p>
+<h3 id="感知网络变化"><a href="#感知网络变化" class="headerlink" title="感知网络变化"></a>感知网络变化</h3><ul>
+<li>通过 ConnectivityManager 监听网络变化，当网络恢复时，遍历请求列表，将没有完成的任务继续开始</li>
+</ul>
+<h3 id="Transformation"><a href="#Transformation" class="headerlink" title="Transformation"></a>Transformation</h3><ul>
+<li>所有的BitmapTransformation 都是从BitmapPool 拿到一个bitmap，然后将在原有bitmap基础上应用一个matrix再画到新bitmap上。</li>
+<li>变换也是一个key，用以在缓存的时候做区别</li>
+</ul>
+<h3 id="RecycleView图片错乱"><a href="#RecycleView图片错乱" class="headerlink" title="RecycleView图片错乱"></a>RecycleView图片错乱</h3><ul>
+<li>异步任务+视图复用导致</li>
+<li>解决方案：设置占位图+回收表项时取消图片加载（或者新得加载开始时取消旧的加载）+imageview加tag判断是否是自己的图片如果不是则先调用clear</li>
+</ul>
+<h3 id="Glide-缓存失效"><a href="#Glide-缓存失效" class="headerlink" title="Glide 缓存失效"></a>Glide 缓存失效</h3><ul>
+<li>是因为 Key 发生变化，Url是生成key的依据，Url可能发生变化比如把token追加在后面</li>
+<li>自定义生成key的方式，继承GlideUrl重写getCacheKey()</li>
+</ul>
+<h3 id="自定义加载"><a href="#自定义加载" class="headerlink" title="自定义加载"></a>自定义加载</h3><ul>
+<li>定义一个Model类用于包装需要加载的数据</li>
+<li>定义一个Key的实现类，用于实现第一步的Model中的数据的签名用于区分缓存</li>
+<li>定义一个DataFetcher的实现类，用于告诉Glide音频封面如何加载，并把加载结果回调出去</li>
+<li>定义一个ModelLoader的实现类用于包装DataFetcher</li>
+<li>定义一个ModelLoaderFactory的实现类用于生成ModelLoader实例</li>
+<li>将自定义加载配置到AppGlideModule中</li>
+</ul>
+<h3 id="Glide线程池"><a href="#Glide线程池" class="headerlink" title="Glide线程池"></a>Glide线程池</h3><ol>
+<li>磁盘缓存线程池，一个核心线程：用于io图片编码</li>
+<li>加载资源线程池，最多不超过4个核心线程数，用于处理网络请求，图片解码转码</li>
+<li>动画线程池，最多不超过2个线程</li>
+<li>磁盘缓存清理线程池</li>
+<li>ActiveResource 开启一个后台线程监听ReferenceQueue 所有线程池都默认采用优先级队列</li>
+</ol>
+<h3 id="加载Gif流程"><a href="#加载Gif流程" class="headerlink" title="加载Gif流程"></a>加载Gif流程</h3><p>读取流的前三个字节，若判断是gif，则会命中gif解码器-将资源解码成GifDrawable，它持有GifFrameLoader会将资源解码成一张张Bitmap并且传递给DelayTarget的对象，该对象每次资源加载完毕都会通过handler发送延迟消息回调 onFrameReady() 以触发GifDrawable.invalidataSelf()重绘。加载下一帧时会重新构建DelayTarget</p>
+<h3 id="请求优先级"><a href="#请求优先级" class="headerlink" title="请求优先级"></a>请求优先级</h3><p>通过给加载线程池配置优先级队列，加载任务DecodeJob 实现了 compareTo 方法，将priority相减</p>
+<h3 id="图片加载优化"><a href="#图片加载优化" class="headerlink" title="图片加载优化"></a>图片加载优化</h3><ol>
+<li>服务器存多种尺寸的图片</li>
+<li>自定义 AppGlideModule，按设备性能好坏设定MemoryCategory.HIGH,LOW,NORMAL，内存缓存和bitmapPool的大小系数，以及图片解码格式，ARGB_8888，RGB_565</li>
+<li>RecyclerView 在onViewRecycled 中调用clear ，因为recyclerView会默认会缓存5个同类表项，如果类型很多，内存中会持有表项，如果这些表项都包含图片，Glide 的ActiveResource会膨胀。导致gc</li>
+<li>如果 RecyclerView 包含一个很长的itemView，超过一屏，其中包含很多照片，最好把长itemView拆成多个itemView</li>
+<li>使用thumbnail，加载一个缩略图，最好是一个独立的链接，如果是本地的也不差</li>
+<li>使用preload，将资源提前加载到内存中。</li>
+<li>大部分情况下 RESOURCE ，即缓存经过变换的图片上是最好选择，节约内存和磁盘。对于gif资源只缓存原始资源DATA，因为gif是多张图每次编码解码反而耗时</li>
+<li>使用Glide实现变换，因为有BitmapPool供复用</li>
+</ol>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-30T09:32:40.000Z" title="7/30/2021, 5:32:40 PM">2021-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.864Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">an hour read (About 6885 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/30/ActivityStart/">ActivityStart</a></h1><div class="content"><p><img src="/2021/07/30/ActivityStart/%E5%BD%93%E6%89%8B%E6%8C%87%E7%82%B9%E5%87%BB%E4%BA%86%E6%A1%8C%E9%9D%A2%E7%9A%84App%E5%9B%BE%E6%A0%87%E6%97%B6.jpg" alt="当手指点击了桌面的App图标时"></p>
+<p><img src="/2021/07/30/ActivityStart/%E5%BD%93%E6%89%8B%E6%8C%87%E7%82%B9%E5%87%BB%E4%BA%86%E6%A1%8C%E9%9D%A2%E7%9A%84App%E5%9B%BE%E6%A0%87%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88.jpg" alt="当手指点击了桌面的App图标时发生了什么"></p>
+<p><img src="/2021/07/30/ActivityStart/1929518181.jpg" alt="startActivity_onCreate.jpg"></p></div><a class="article-more button is-small is-size-7" href="/2021/07/30/ActivityStart/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-30T09:32:40.000Z" title="7/30/2021, 5:32:40 PM">2021-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-11T06:18:15.656Z" title="5/11/2024, 2:18:15 PM">2024-05-11</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">10 minutes read (About 1490 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/30/Emty/">empty</a></h1><div class="content"><ul>
+<li><p>PackageManagerService</p>
+</li>
+<li><p>WindowManagerService(done?)</p>
+</li>
+<li><p>ActivityManagerService(done?)</p>
+</li>
+<li><p>ServiceManager(done?)</p>
+</li>
+</ul>
+<ul>
+<li>Binder</li>
+<li>ANR</li>
+</ul>
+<h1 id="1、review"><a href="#1、review" class="headerlink" title="1、review"></a>1、review</h1><h3 id="kernel-bright-spots"><a href="#kernel-bright-spots" class="headerlink" title="kernel bright spots"></a>kernel bright spots</h3><ul>
+<li>Apm监控</li>
+<li>fresco深入优化</li>
+<li>性能优化工作/工具</li>
+</ul>
+<h3 id="skills-pool"><a href="#skills-pool" class="headerlink" title="skills pool"></a>skills pool</h3><ul>
+<li><p>recyclerview缓存和优化</p>
+</li>
+<li><p>app、android启动流程</p>
+</li>
+<li><p>编译流程</p>
+</li>
+<li><p>编舞者以及屏幕刷新原理（与耗时方法监听之）</p>
+</li>
+<li><p>插件化（代理和hook两种方式）</p>
+</li>
+<li><p>handler</p>
+</li>
+<li><p>https&amp;http（http version）</p>
+</li>
+<li><p>hashmap</p>
+</li>
+<li><p>Matrix为主，Dokit、blockcanary等APM框架</p>
+</li>
+<li><p>Jmm与GC算法（深入理解java虚拟机-标记清除之类）</p>
+</li>
+<li><p>tcp滑动窗口之类（就找一篇文章like腾讯之前的那篇tcp ip问题<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6LiZGMt2KRiIoMaLwx-lkQ">彻底弄懂TCP协议：从三次握手说起 (qq.com)</a>）</p>
+</li>
+<li><p>leakCanary、retrofit、okhttp、glide、</p>
+</li>
+<li><p>threadLocal、Rv四级缓存</p>
+</li>
+</ul>
+<h1 id="2、TODO"><a href="#2、TODO" class="headerlink" title="2、TODO"></a>2、TODO</h1><ul>
+<li>kotlin协程</li>
+<li>锁</li>
+<li>算法（1~2）</li>
+<li>View测绘，事件分发（事件系列只能被整一个处理）</li>
+<li>SurfaceView, TextureView及View的区别。SurfaceView怎么控制它处于的层级</li>
+<li>SMTP了解下</li>
+</ul>
+<h1 id="3、Optimize-Experience"><a href="#3、Optimize-Experience" class="headerlink" title="3、Optimize Experience"></a>3、Optimize Experience</h1><ul>
+<li><p>图片内存优化工作：fresco关于gif缓存问题修复，dokit图片闪烁缓存失效问题的修复、基于dokit框架（ASM）下尺寸过大图片识别实现。（基于业务做的一些图片加载的优化，如cdn链接统一域名，regex（String.replace）耗时200us）</p>
+</li>
+<li><p>耗时方法，两种常见的监听方式：looper.printer 以及 编舞者回调监听</p>
+</li>
+<li><p>recyclerview优化</p>
+</li>
+</ul>
+<h1 id="4、Other"><a href="#4、Other" class="headerlink" title="4、Other"></a>4、Other</h1><ul>
+<li>h5图片缓存共用的优化思路</li>
+<li>阿里patron和Metrix做的native hook 减少32bit模式下app内存占用</li>
+</ul>
+<h1 id="Project-Experience"><a href="#Project-Experience" class="headerlink" title="Project Experience"></a>Project Experience</h1><h2 id="从购物车重构到购物车预加载"><a href="#从购物车重构到购物车预加载" class="headerlink" title="从购物车重构到购物车预加载"></a>从购物车重构到购物车预加载</h2><p>ps:我并不想抽象的去将购物车的架构之类的东西，而是更具体的讲遇到的问题及解决方案。不过还是得简单讲一下设计</p>
+<p>购物车代码十分屎山，难以维护。在23年时做了一次历经一个月的重构，边开车边换轮子。使用多数业务在用的协议架构奥创重构：先说收益：奥创加购以组件为单位，职责清晰，易于复用维护，端侧组件使用MVVM架构进一步解耦逻辑：</p>
+<p>举个例子，请求在<strong>model</strong>层（共用的Repository，维护于Engine层），每个组件通过注册组件的ViewHolder获得独立的<strong>View</strong>，注册组件的Parser获得独立的<strong>ViewModel</strong>解析数据及进行业务逻辑处理。view与vm之间使用liveData进行数据更新后的通知view状态渲染。</p>
+<p>遇到的问题：</p>
+<ol>
+<li>奥创冗余数据及后端接口慢 -&gt; 购物车本地数据缓存 + （detail/购物车进下单页）的数据预加载 + 购物车预加载的根据abtest下做的精细运营。 </li>
+<li>LiveData的使用：购物车提供给MainActiivty的其他Tab由于时机问题导致的刷新问题</li>
+<li>多国家配置不同组件 -&gt; 问题：一些组件不同国家需要配置不同的样式和逻辑，但是下发的组件名是一致的。那么当时有两种做法：一种是直接在解析是篡改掉网络数据中的组件名，本地正常映射。但是这个评估完认为直接修改了数据，风险更不好控。于是我在注册组件名时根据依靠 <strong>同名Parser后注册的Parser优先匹配的机制 实现</strong> 的特性，在注册Parser时提供将多国家的parser后置接口，于是当解析完多国家组件parser后即不会再映射通用组件了，即不影响原数据，也实现了多国家不新增后端组件。</li>
+</ol>
+<h2 id="RTL-adapte"><a href="#RTL-adapte" class="headerlink" title="RTL adapte"></a>RTL adapte</h2><ol>
+<li>What: Ltr下不同币种导致的显示顺序错乱；</li>
+<li>How: 服务端配置下发特殊符号</li>
+<li>More: </li>
+</ol>
+<ol>
+<li><p>做过印象比较深的事情 ，有挑战的事情</p>
+</li>
+<li><p>弱网环境优化：业务和技术的手段，有什么很技术的手段来做吗</p>
+</li>
+<li><p>当前团队的优劣点</p>
+</li>
+<li><p>遇到不合理需求你会怎么拒绝</p>
+</li>
+<li><p>有用过新的东西吗</p>
+</li>
+<li><p>线上问题怎么解决，因为不能用动态字节码技术</p>
+</li>
+<li><p>遇到啥有意思的问题吗，crash。window</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalArgumentException: View&#x3D;android.widget.PopupWindow$PopupDecorView&#123;2a10009 V.E...... R.....I. 0,0-0,0&#125; not attached to window manager</span><br><span class="line">	at android.view.WindowManagerGlobal.findViewLocked(WindowManagerGlobal.java:544)</span><br><span class="line">	at android.view.WindowManagerGlobal.updateViewLayout(WindowManagerGlobal.java:433)</span><br><span class="line">	at android.view.WindowManagerImpl.updateViewLayout(WindowManagerImpl.java:162)</span><br><span class="line">	at android.widget.PopupWindow.update(PopupWindow.java:2226)</span><br><span class="line">	at android.widget.PopupWindow.update(PopupWindow.java:2347)</span><br><span class="line">	at android.widget.PopupWindow.alignToAnchor(PopupWindow.java:2517)</span><br><span class="line">	at android.widget.PopupWindow.-$$Nest$malignToAnchor(Unknown Source:0)</span><br><span class="line">	at android.widget.PopupWindow$1.onViewAttachedToWindow(PopupWindow.java:243)</span><br><span class="line">	at android.view.View.dispatchAttachedToWindow(View.java:21423)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3502)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewRootImpl.performTraversals(ViewRootImpl.java:3011)</span><br><span class="line">	at android.view.ViewRootImpl.doTraversal(ViewRootImpl.java:2518)</span><br><span class="line">	at android.view.ViewRootImpl$TraversalRunnable.run(ViewRootImpl.java:9389)</span><br><span class="line">	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1451)</span><br><span class="line">	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1459)</span><br><span class="line">	at android.view.Choreographer.doCallbacks(Choreographer.java:1089)</span><br><span class="line">	at android.view.Choreographer.doFrame(Choreographer.java:1003)</span><br><span class="line">	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1431)</span><br><span class="line">	at android.os.Handler.handleCallback(Handler.java:942)</span><br><span class="line">	at android.os.Handler.dispatchMessage(Handler.java:99)</span><br><span class="line">	at android.os.Looper.loopOnce(Looper.java:210)</span><br><span class="line">	at android.os.Looper.loop(Looper.java:299)</span><br><span class="line">	at android.app.ActivityThread.main(ActivityThread.java:8261)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Native Method)</span><br><span class="line">	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:559)</span><br><span class="line">	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:954)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>OOM的治理：crash率在一次架构组的升级后由万4涨到万6，其中新增了很多的OOM。1：修复了EventCenter的内存泄露；2：搜推服务造成的泄露；</p>
+<p>内存兜底措施：2g设备直接改为RGB565，其他才开ARGB8888；同时降低起设备图片内存池大小;</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-30T09:32:40.000Z" title="7/30/2021, 5:32:40 PM">2021-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-15T03:50:46.355Z" title="7/15/2024, 11:50:46 AM">2024-07-15</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Kotlin/">Kotlin</a></span><span class="level-item">18 minutes read (About 2736 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/30/Kotlin/">Kotlin</a></h1><div class="content"><h1 id="kotlin-data-class"><a href="#kotlin-data-class" class="headerlink" title="kotlin data class"></a>kotlin data class</h1><h2 id="data-class会自动生成以下方法："><a href="#data-class会自动生成以下方法：" class="headerlink" title="data class会自动生成以下方法："></a>data class会自动生成以下方法：</h2><ul>
+<li><p>equals()</p>
+</li>
+<li><p>hashCode()</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> int hashCode() &#123;</span><br><span class="line">   int var10000 = Integer.hashCode(<span class="keyword">this</span>.age) * <span class="number">31</span>;</span><br><span class="line">   String var10001 = <span class="keyword">this</span>.name;</span><br><span class="line">   <span class="keyword">return</span> var10000 + (var10001 != <span class="literal">null</span> ? var10001.hashCode() : <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>toString()</p>
+</li>
+<li><p>copy()</p>
+</li>
+<li><p>componentN()</p>
+<p>编译器会为数据类生成 <em>组件函数(Component function)</em>, 有了这些组件函数, 就可以在 <a target="_blank" rel="noopener" href="https://kotlin.liying-cn.net/docs/reference_zh/destructuring-declarations.html">解构声明(destructuring declaration)</a> 中使用数据类:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> jane = User(<span class="string">&quot;Jane&quot;</span>, <span class="number">35</span>)</span><br><span class="line"><span class="keyword">val</span> (name, age) = jane</span><br><span class="line">println(<span class="string">&quot;<span class="variable">$name</span>, <span class="variable">$age</span> years of age&quot;</span>) </span><br><span class="line"><span class="comment">// 输出结果为 Jane, 35 years of age</span></span><br></pre></td></tr></table></figure></li>
+<li><p>属性的get()/set()</p>
+<p>val的属性不会有setter</p>
+</li>
+<li><p>constructor()  </p>
+<p>只有有参构造函数，没有无参构造函数。fastJson解析会抛该异常，需升级到高版本并引入kotlin-reflect依赖</p>
+</li>
+</ul></div><a class="article-more button is-small is-size-7" href="/2021/07/30/Kotlin/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-29T09:45:07.000Z" title="7/29/2021, 5:45:07 PM">2021-07-29</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.404Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">24 minutes read (About 3625 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/29/Surface/">Surface</a></h1><div class="content"><ul>
+<li>SurfaceView: View 的子类，但不与宿主 Window 共享 Surface, 而是有自己独立的 Surface, 且可以在一个独立的线程中进行绘制，因此 SurfaceView 一般用来实现比较复杂的图像或动画/视频的显示。可以参考 <a target="_blank" rel="noopener" href="https://juejin.cn/post/6897029276752625671">Android双缓存与SurfaceView</a>。由于其内容是绘制在一个独立的 Surface 上，因此无法用 scrollTo/By 等方法去移动操作 Canvas 里的内容，但是可对整个 View 进行平移，缩放，旋转等变换操作。</li>
+<li>GLSurfaceView: 基于 SurfaceView 再次进行扩展，在 SurfaceView 基础上封装了 EGL 环境管理以及 Render 线程，专门为 OpenGl 显示渲染使用。参考 <a target="_blank" rel="noopener" href="https://ljd1996.github.io/2019/08/19/Android-OpenGL-ES%E7%AC%94%E8%AE%B0/">Android-OpenGL-ES笔记</a>。</li>
+<li>TextrueView: Android 4.0 后引入 TextureView, 它将 SurfaceTexture 和 View 结合到了一起。与 SurfaceView 相比，它并没有创建一个单独的 Surface 来绘制，解决了 SurfaceView 无法在 Canvas 内容上做动画的问题。另外 TextureView 必须在硬件加速开启的窗口中使用。</li>
+</ul></div><a class="article-more button is-small is-size-7" href="/2021/07/29/Surface/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-06-30T08:45:09.000Z" title="6/30/2021, 4:45:09 PM">2021-06-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.405Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">38 minutes read (About 5739 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/06/30/SystemStartProcess/">SystemStartProcess</a></h1><div class="content"><p><img src="/2021/06/30/SystemStartProcess/image-20210730142407367.png" alt="image-20210730142407367"></p>
+<p>简述：</p>
+<p>开机后系统将Rom文件加载进Ram内存中，loader检查Ram，kernel启动Swapper进程和kthreadd进程（创建<strong>内核守护进程</strong>）。</p>
+<p>NativeFramework中init.cpp运行后启动init进程，init进程解析init.rc文件后，孵化如installd、logd、adbd等<strong>用户守护进程</strong>、启动<strong>servicemanager、surfaceflinger、bootanim</strong>等服务、孵化出<strong>Zygote</strong>虚拟机进程(java进程)。</p>
+<p>JavaFramework中Zygote注册<strong>ZygoteSocket</strong>、<strong>加载虚拟机、预加载通用类、资源</strong>；之后孵化<strong>system_server</strong>进程，启动如<strong>AMS</strong>(startService可监听<strong>RootPhase</strong>)、<strong>WMS</strong>、<strong>PKMS</strong>、PMS等服务。</p>
+<p>App：由Zygote孵化的第一个App——<strong>Launcher</strong>(桌面)，用户点击Launcher上的app图片，通过<strong>JNI</strong>调用AMS从<strong>Zygote</strong>进程中fork出新的App。</p></div><a class="article-more button is-small is-size-7" href="/2021/06/30/SystemStartProcess/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-05-26T06:51:55.000Z" title="5/26/2021, 2:51:55 PM">2021-05-26</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.379Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/ThirdPartyLib/">ThirdPartyLib</a></span><span class="level-item">5 minutes read (About 714 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/05/26/Matrix/">matrix</a></h1><div class="content"><h1 id="Matrix-Tencent"><a href="#Matrix-Tencent" class="headerlink" title="Matrix Tencent"></a>Matrix Tencent</h1><h2 id="一：TraceCanary"><a href="#一：TraceCanary" class="headerlink" title="一：TraceCanary"></a>一：TraceCanary</h2><p><strong>插桩</strong>：通过插桩，在除了get/set、默认或匿名构造函数等简单函数外的所有方法，入口/出口插入MethodBeat.i()/MethodBeat.o()。</p>
+<p><img src="file:///Users/liuqingrui/Hexo/BlackCrow/source/_posts/Matrix/image-20210729175300794.png?lastModify=1635146713" alt="image-20210729175300794"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;AppMethodBeat.java</span><br><span class="line">private static void mergeData(int methodId, int index, boolean isIn) &#123;</span><br><span class="line">    if (methodId &#x3D;&#x3D; AppMethodBeat.METHOD_ID_DISPATCH) &#123;</span><br><span class="line">        sCurrentDiffTime &#x3D; SystemClock.uptimeMillis() - sDiffTime;</span><br><span class="line">    &#125;</span><br><span class="line">    long trueId &#x3D; 0L;</span><br><span class="line">    if (isIn) &#123;</span><br><span class="line">        trueId |&#x3D; 1L &lt;&lt; 63;</span><br><span class="line">    &#125;</span><br><span class="line">    trueId |&#x3D; (long) methodId &lt;&lt; 43;</span><br><span class="line">    trueId |&#x3D; sCurrentDiffTime &amp; 0x7FFFFFFFFFFL;</span><br><span class="line">    sBuffer[index] &#x3D; trueId;</span><br><span class="line">    checkPileup(index);</span><br><span class="line">    sLastIndex &#x3D; index;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用一个64位的long型来存储方法的：方法开始/方法结束(最高位63位)、方法id(递增，43到62位)、当前与MethodBeat模块初始化时差（0到42位） </p></div><a class="article-more button is-small is-size-7" href="/2021/05/26/Matrix/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-10T08:54:43.000Z" title="4/10/2021, 4:54:43 PM">2021-04-10</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.017Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">34 minutes read (About 5102 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/10/EventDispatch/">EventDispatch</a></h1><div class="content"><p><img src="/2021/04/10/EventDispatch/image-20220127160157749.png" alt="image-20220127160157749"></p>
+<h1 id="Core"><a href="#Core" class="headerlink" title="Core"></a>Core</h1><p>事件分发中有一个重要的规则：一个触控点的一个事件序列只能给一个view处理</p>
+<p>分析：以DOWN事件为序列分发判定，ViewGroup为消费DOWN事件的View生成一个TouchTarget（这个TouchTarget就包含了该view的实例与触控id，id可以是多个以应对多指触控），后续MOVE、UP都会交给这个TouchTarget。如果TouchTarget为空则ViewGroup自己处理。如果viewGroup消费了down事件，那么子view将无法收到任何事件。</p></div><a class="article-more button is-small is-size-7" href="/2021/04/10/EventDispatch/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-10T08:41:23.000Z" title="4/10/2021, 4:41:23 PM">2021-04-10</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.381Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">16 minutes read (About 2338 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/10/Pluggable-Hotfix/">插件化/热修复</a></h1><div class="content"><p><img src="/2021/04/10/Pluggable-Hotfix/image-20210410164426213-0696377.png" alt="image-20210410164426213"></p>
+<p>插件化和热修复不是同一个概念，虽然站在技术实现的角度来说，他们都是从系统加载器的角度出发，无论是采用hook方式，亦或是代理方式或者是其他底层实现，都是通过“欺骗”Android 系统的方式来让宿主正常的加载和运行插件（补丁）中的内容；但是二者的出发点是不同的。插件化顾名思义，更多是想把需要实现的模块或功能当做一个独立的提取出来，减少宿主的规模，当需要使用到相应的功能时再去加载相应的模块。热修复则往往是从修复bug的角度出发，强调的是在不需要二次安装应用的前提下修复已知的bug。</p>
+<ul>
+<li>PathClassLoader：只能加载已经安装到Android系统中的apk文件（/data/app目录），是Android默认使用的类加载器。</li>
+<li>DexClassLoader：可以加载任意目录下的dex/jar/apk/zip文件，也就是我们一开始提到的补丁。</li>
+<li>BaseDexClassLoader: 是 PathClassLoader 和 DexClassLoader 的父类，其内有一个 DexPathList 属性，实现了 findClass 方法逻辑，PathClassLoader 和 DexClassLoader 都只是在构造函数上对其做了简单封装而已。</li>
+</ul></div><a class="article-more button is-small is-size-7" href="/2021/04/10/Pluggable-Hotfix/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-10T08:40:26.000Z" title="4/10/2021, 4:40:26 PM">2021-04-10</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.889Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">4 minutes read (About 589 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/10/AndroidVm/">AndroidVm</a></h1><div class="content"><p>热知识：java常见的虚拟机如Hotspot虚拟机是基于栈结构的，而Dalvik是基于寄存器结构的。</p>
+<p>常见的java虚拟机跑的是.class文件，而Dalvik跑的是.dex（.odex）文件。</p>
+<p><img src="/2021/04/10/AndroidVm/image-20210602170532688.png" alt="image-20210602170532688"></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/jINCbTJ5qMaD6NdeGBHEwQ">BoostMultiDex优化Dalvik虚拟机多Dex启动速度</a></p>
+<p>Android 4.4 及以下采用的是 Dalvik 虚拟机，在通常情况下，Dalvik 虚拟机只能执行做过 OPT 优化的 DEX 文件，也就是我们常说的 ODEX 文件。</p>
+<p>一个 APK 在安装的时候，其中的classes.dex会自动做 ODEX 优化，并在启动的时候由系统默认直接加载到 APP 的PathClassLoader里面，因此classes.dex中的类肯定能直接访问，不需要我们操心。</p>
+<p>除它之外的 DEX 文件，也就是classes2.dex、classes3.dex、classes4.dex等 DEX 文件（这里我们统称为 Secondary DEX 文件），这些文件都需要靠我们自己进行 ODEX 优化，并加载到 ClassLoader 里，才能正常使用其中的类。否则在访问这些类的时候，就会抛出ClassNotFound异常从而引起崩溃。</p>
+<p>因此，Android 官方推出了 MultiDex 方案。只需要在 APP 程序执行最早的入口，也就是Application.attachBaseContext里面直接调MultiDex.install，它会解开 APK 包，对第二个以后的 DEX 文件做 ODEX 优化并加载。这样，带有多个 DEX 文件的 APK 就可以顺利执行下去了。</p>
+<p>这个操作会在 APP 安装或者更新后首次冷启动的时候发生，正是由于这个过程耗时漫长，才导致了我们最开始提到的耗时黑屏问题。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &lt;= <span class="number">19</span>) &#123; </span><br><span class="line">    BoostMultiDex.install(<span class="keyword">this</span>); </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    MultiDex.install(<span class="keyword">this</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><a class="article-more button is-small is-size-7" href="/2021/04/10/AndroidVm/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-10T08:37:21.000Z" title="4/10/2021, 4:37:21 PM">2021-04-10</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.950Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">a few seconds read (About 32 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/10/ByteCode/">ByteCode</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://tech.meituan.com/2019/09/05/java-bytecode-enhancement.html">美团文章</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40147863/article/details/99655005">java字节码操作码手册</a></p>
+<p><img src="/2021/04/10/ByteCode/image-20210410163744971.png" alt="image-20210410163744971"></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-10T07:54:01.000Z" title="4/10/2021, 3:54:01 PM">2021-04-10</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.370Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Other/">Other</a></span><span class="level-item">a minute read (About 152 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/10/JsBridage/">JsBridage</a></h1><div class="content"><h1 id="Js与原生交互的方式："><a href="#Js与原生交互的方式：" class="headerlink" title="Js与原生交互的方式："></a>Js与原生交互的方式：</h1><p>通过注入对象或拦截 URL SCHEME实现JSBridge</p></div><a class="article-more button is-small is-size-7" href="/2021/04/10/JsBridage/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-09T06:09:45.000Z" title="4/9/2021, 2:09:45 PM">2021-04-09</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.498Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/ThirdPartyLib/">ThirdPartyLib</a></span><span class="level-item">an hour read (About 7816 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/09/Fresco/">fresco</a></h1><div class="content"><h1 id="Fresco（2-5-0）"><a href="#Fresco（2-5-0）" class="headerlink" title="Fresco（2.5.0）"></a>Fresco（2.5.0）</h1><p>以MVC的 Fresco架构入手，层层递进分析fresco的整体思路。</p>
+<p><img src="/2021/04/09/Fresco/169321f499462590~tplv-t2oaga2asx-watermark.awebp" alt="img"></p></div><a class="article-more button is-small is-size-7" href="/2021/04/09/Fresco/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-08T06:35:26.000Z" title="4/8/2021, 2:35:26 PM">2021-04-08</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.500Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/ThirdPartyLib/">ThirdPartyLib</a></span><span class="level-item">5 minutes read (About 746 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/08/Retrofit/">retrofit</a></h1><div class="content"><h2 id="原理-动态代理"><a href="#原理-动态代理" class="headerlink" title="原理-动态代理"></a>原理-动态代理</h2><p>*<em>Retrofit通过 反射构建一个 接口的 实现类（动态代理本质就是反射），其中每个重写方法被调用时，都会回调到InvocationHandler.invoke中，invoke回调时（只要是不是object类中的方法）都会通过 <em>获取到的方法的注解、方法的名称、方法的返回值、方法参数的注解、方法参数类型</em>等等所需信息， 解析成一个ServiceMethod对象(放入缓存池)，ServiceMethod根据获取到的方法信息，构建OkHttp请求，并将结果通过converter转换后回调给最初传入的Callback<T></T></em>*</p></div><a class="article-more button is-small is-size-7" href="/2021/04/08/Retrofit/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-07T08:14:03.000Z" title="4/7/2021, 4:14:03 PM">2021-04-07</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.499Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/ThirdPartyLib/">ThirdPartyLib</a></span><span class="level-item">36 minutes read (About 5373 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/07/Okhttp/">okhttp</a></h1><div class="content"><p>链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6887896333685161992">https://juejin.cn/post/6887896333685161992</a></p>
+<p><strong>简述：</strong></p>
+<p><strong>通过对外提供的OkHttpClient和Request的builder实现基础信息和必要信息的配置，直到封装构建成了<u>RealCall对象（RealCall implement Call）</u>并新建CallBack实例传入realCall.equeue(callback)，才真正完成了请求实体的实例化。</strong></p>
+<p><strong>之后realCall.enqueue(call)方法的调用才是实际上开始进行请求：先判断是否call已经执行过了（executed = AtomicBoolean()），若未执行则继续</strong></p>
+<p><strong>之后由Dispatcher调用enqueue进行判断当前正在执行的请求数及当前网络请求的主机数是否超过了最大值。要是超过了最大值，就将请求放到等待队列中，要是没超过，就放到正在执行的队列中，然后调用线程池（默认单例初始化了一个缓存线程池(即无核心线程、无限线程池数量、SynchronousQueue<Runnable>)）执行它调度，执行的过程也就是asyncCall的run()方法通过责任链五大拦截器进行层层处理的过程。</Runnable></strong></p></div><a class="article-more button is-small is-size-7" href="/2021/04/07/Okhttp/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-06T08:52:47.000Z" title="4/6/2021, 4:52:47 PM">2021-04-06</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-23T02:36:53.744Z" title="7/23/2024, 10:36:53 AM">2024-07-23</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/ThirdPartyLib/">ThirdPartyLib</a></span><span class="level-item">26 minutes read (About 3942 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/06/Leakcanary/">leakcanary</a></h1><div class="content"><ol>
+<li><p>线程栈中的局部变量表引用的所有变量，即运行线程中引用到的所有变量，包括线程中方法参数和局部变量</p>
+</li>
+<li><p>存活的线程对象</p>
+</li>
+<li><p>native 的 jni引用</p>
+</li>
+<li><p>class 对象  （classLoader 不会卸载class）</p>
+</li>
+<li><p>引用类型的静态变量</p>
+</li>
+</ol>
+<p>// 1跟2其实说的是一个东西</p>
+<blockquote>
+<p>Reference queues, to which registered reference objects are appended by the garbage collector after the appropriate reachability changes are detected.</p>
+<p>在检测到适当的可达性改变后，垃圾收集器将注册的引用对象（WeakReference）追加到引用队列（ReferenceQueue）。</p>
+</blockquote>
+<p>​    核心思路是：<br>​    leakCanary做法是ondestory后手动出发GC，GC过后对象WeakReference一直不被加入 ReferenceQueue，它可能存在内存泄漏。</p>
+<p>​    利用 <strong>双参初始化的弱引用 WeakReference(T referent, ReferenceQueue&lt;? super T&gt; q) 在object对象变成弱可达的时候（可视为已被回收/(其他非强引用也一样)），会将该WeakReference对象入队q中</strong> 的特性（也就是queque中最后会存在已经被回收了的weakreference对象），通过在Activity和Fragment的onDestroy()中，将该Activity或Fragment实例的弱引用初始化（双参object,<strong>queue</strong>）后放入<u>map</u>中（key随机固定uuid），GC后 把<u>map</u>中的 <strong>queue包含的对象</strong> 移除，map中剩余的即为可能泄露的对象</p></div><a class="article-more button is-small is-size-7" href="/2021/04/06/Leakcanary/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-02T08:35:43.000Z" title="4/2/2021, 4:35:43 PM">2021-04-02</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-16T03:56:25.459Z" title="7/16/2024, 11:56:25 AM">2024-07-16</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Other/">Other</a><span> / </span><a class="link-muted" href="/categories/Android/Other/BuildTool/">BuildTool</a></span><span class="level-item">15 minutes read (About 2217 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/02/Gradle/">Gradle</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://doc.yonyoucloud.com/doc/wiki/project/GradleUserGuide-Wiki/index.html">Gradle 用户指南官方文档中文版</a></p>
+<h2 id="Gradle基础"><a href="#Gradle基础" class="headerlink" title="Gradle基础"></a>Gradle基础</h2><p><img src="/2021/04/02/Gradle/gradle-basic-5.png" alt="gradle basic 5"></p>
+<p><img src="/2021/04/02/Gradle/gradle-basic-7.png" alt="gradle basic 7"></p>
+<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p><img src="/2021/04/02/Gradle/ba94f072cd15433194f201853a1ed3c1~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp" alt="img"></p></div><a class="article-more button is-small is-size-7" href="/2021/04/02/Gradle/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-01T13:52:19.000Z" title="4/1/2021, 9:52:19 PM">2021-04-01</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.259Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Other/">Other</a></span><span class="level-item">25 minutes read (About 3775 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/01/Image/">Image</a></h1><div class="content"><h1 id="内存所在位置"><a href="#内存所在位置" class="headerlink" title="内存所在位置"></a>内存所在位置</h1><p>Android 2.3 之前： 像素数据存在于native heap</p>
+<p>Android 3.0 ~ 7.1 之间： 存在于 java heap</p>
+<p>Android 8.0及之后： 存在于 native</p></div><a class="article-more button is-small is-size-7" href="/2021/04/01/Image/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-01T10:44:13.000Z" title="4/1/2021, 6:44:13 PM">2021-04-01</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.875Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Other/">Other</a><span> / </span><a class="link-muted" href="/categories/Android/Other/BuildTool/">BuildTool</a></span><span class="level-item">25 minutes read (About 3802 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/01/AndroidBuild/">Android Build</a></h1><div class="content"><h1 id="Apk总构建流程"><a href="#Apk总构建流程" class="headerlink" title="Apk总构建流程"></a>Apk总构建流程</h1><h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p><strong>Aapt 会将主工程、依赖库中的资源(res、assets)和androidManifest都合并，产出R.java、资源及资源索引resources.arsc；</strong></p>
+<p><strong>之后javac编译包括R.java文件、主工程的java文件、aidl产生的java文件，产出class文件；如果需要插桩的话就插桩</strong></p>
+<p><strong>之后使用Proguard/R8混淆工具对.class文件脱糖、压缩、混淆等，产出新的class文件；</strong></p>
+<p><strong>之后使用Dx/D8编译工具将新的class文件再转换成dex文件，</strong></p>
+<p><strong>之后打包成apk，然后签名、zipalign优化。</strong></p>
+<p><strong>工具：aapt/aapt2、javac、Proguard/R8、Dx/D8、ApkBuilder、zipalign</strong></p>
+<p><img src="/2021/04/01/AndroidBuild/v2-58a01f65fd8e9dfbde154ad2a7e28ed8_720w.jpg" alt="img"></p></div><a class="article-more button is-small is-size-7" href="/2021/04/01/AndroidBuild/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-01T07:44:13.000Z" title="4/1/2021, 3:44:13 PM">2021-04-01</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-29T07:29:51.105Z" title="4/29/2024, 3:29:51 PM">2024-04-29</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">25 minutes read (About 3807 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/01/ScreenDraw/">ScreenDraw</a></h1><div class="content"><p><img src="/2021/04/01/ScreenDraw/%E4%BB%8EonCreate%E5%88%B0%E9%A1%B5%E9%9D%A2%E7%BB%98%E5%88%B6-2660260.jpg" alt="从onCreate到页面绘制"></p>
+<p><a target="_blank" rel="noopener" href="https://www.processon.com/diagraming/61e7d27b7d9c0806a8b8fd93">当手指点击了桌面的App图标时发生了什么 - ProcessOn</a></p>
+<h1 id="Android-屏幕刷新机制"><a href="#Android-屏幕刷新机制" class="headerlink" title="Android 屏幕刷新机制"></a>Android 屏幕刷新机制</h1><p>主要参考 <a target="_blank" rel="noopener" href="https://juejin.cn/post/6863756420380196877#heading-12">https://juejin.cn/post/6863756420380196877#heading-12</a></p>
+<p>省流版：</p>
+<p><strong>双缓存：</strong>为了解决画面撕裂；画面撕裂来自于只有一个buffer时，正在display的那一帧数据被后一帧的数据覆盖了</p>
+<p><strong>Vsync：</strong>系统在收到VSync pulse（Vsync脉冲）后，将马上开始下一帧的渲染，（CPU开始计算数据）。</p>
+<p><strong>三缓冲</strong>：当<u>显示器正在写入FrameBuffer</u>同时<u>GPU也正在写入BackBuffer</u>时，下一次渲染开始了，此时CPU可以使用新增的GraphicBuffer进行计算。减少了Jank。（更多缓冲需要耗费更大的内存）</p>
+<p><strong>ChoreoGrapher机制：</strong>规定了数据计算开始（measure、layout、draw）的时机（vsync信号），使计算到渲染图像数据能有一个完整的16.6ms：更新ui（request()/invalidate()）后编舞者注册vsync信号回调，在下一个vsync信号到时候立刻进行view的测量布局绘制</p></div><a class="article-more button is-small is-size-7" href="/2021/04/01/ScreenDraw/#more">Read more</a></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous"><a href="/categories/Android/">Previous</a></div><div class="pagination-next is-invisible is-hidden-mobile"><a href="/categories/Android/page/3/">Next</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link" href="/categories/Android/">1</a></li><li><a class="pagination-link is-current" href="/categories/Android/page/2/">2</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

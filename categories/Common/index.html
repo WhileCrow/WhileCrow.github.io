@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Category: Common - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Crow&#039;s Sky"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"Crow's Sky","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":""}</script><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">Categories</a></li><li class="is-active"><a href="#" aria-current="page">Common</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="+020214-07-26T00:20:27.000Z" title="7/26/20214, 8:20:27 AM">20214-07-26</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-26T09:37:25.947Z" title="7/26/2024, 5:37:25 PM">2024-07-26</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">29 minutes read (About 4385 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/20214/07/26/Tread/">Thread</a></h1><div class="content"><h1 id="线程-进程"><a href="#线程-进程" class="headerlink" title="线程/进程"></a>线程/进程</h1><p><strong>进程</strong>：进程是系统进行资源分配和调度的一个独立单位 (拥有独立内存空间)，一个app就是一个进程，进程包含线程。</p>
+<p><strong>线程</strong>：是进程的一个实体,是CPU调度和分派的基本单位,它是比进程更小的能独立运行的基本单位。线程自己基本上不拥有系统资源,只拥有一些在运行中必不可少的资源(如程序计数器,一组寄存器和栈)，但是它可与同属一个进程的其他的线程共享进程所拥有的全部资源。</p>
+<p><strong>静态</strong>的是资源和<strong>动态</strong>的是计算</p>
+<ol>
+<li><p>进程是一个资源的容器，为进程里的所有线程提供共享资源，是对程序的一种静态描述</p>
+</li>
+<li><p>线程是计算机最小的<u>调度和运行</u>（计算）单位，是对程序的一种动态描述</p>
+</li>
+</ol>
+<h2 id="Java里的线程有哪些状态？"><a href="#Java里的线程有哪些状态？" class="headerlink" title="Java里的线程有哪些状态？"></a>Java里的线程有哪些状态？</h2><p>JDK中，线程（Thread）定义了6种状态： NEW（新建）、RUNNABLE（可执行）、BLOCKED（阻塞）、WAITING（等待）、TIMED_WAITING（限时等待）、TERMINATED（结束）。</p>
+<p>源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * A thread state.  A thread can be in one of the following  states:</span><br><span class="line"> * &lt;ul&gt;</span><br><span class="line"> * &lt;li&gt;&#123;@link #NEW&#125;</span><br><span class="line"></span><br><span class="line"> *     A thread that has not yet started is in this state.</span><br><span class="line"> *     &lt;&#x2F;li&gt;</span><br><span class="line"> * &lt;li&gt;&#123;@link #RUNNABLE&#125;</span><br><span class="line"></span><br><span class="line"> *     A thread executing in the Java virtual machine is in  this state.</span><br><span class="line"> *     &lt;&#x2F;li&gt;</span><br><span class="line"> * &lt;li&gt;&#123;@link #BLOCKED&#125;</span><br><span class="line"></span><br><span class="line"> *     A thread that is blocked waiting for a monitor lock</span><br><span class="line"> *     is in this state.</span><br><span class="line"> *     &lt;&#x2F;li&gt;</span><br><span class="line"> * &lt;li&gt;&#123;@link #WAITING&#125;</span><br><span class="line"></span><br><span class="line"> *     A thread that is waiting indefinitely for another  thread to</span><br><span class="line"> *     perform a particular action is in this state.</span><br><span class="line"> *     &lt;&#x2F;li&gt;</span><br><span class="line"> * &lt;li&gt;&#123;@link #TIMED_WAITING&#125;</span><br><span class="line"></span><br><span class="line"> *     A thread that is waiting for another thread to perform  an action</span><br><span class="line"> *     for up to a specified waiting time is in this state.</span><br><span class="line"> *     &lt;&#x2F;li&gt;</span><br><span class="line"> * &lt;li&gt;&#123;@link #TERMINATED&#125;</span><br><span class="line"></span><br><span class="line"> *     A thread that has exited is in this state.</span><br><span class="line"> *     &lt;&#x2F;li&gt;</span><br><span class="line"> * &lt;&#x2F;ul&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;</span><br><span class="line"> * A thread can be in only one state at a given point in  time.</span><br><span class="line"> * These states are virtual machine states which do not  reflect</span><br><span class="line"> * any operating system thread states.</span><br><span class="line"> *</span><br><span class="line"> * @since   1.5</span><br><span class="line"> * @see #getState</span><br><span class="line"> *&#x2F;</span><br><span class="line">public enum State &#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Thread state for a thread which has not yet started.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    NEW,</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Thread state for a runnable thread.  A thread in the  runnable</span><br><span class="line">     * state is executing in the Java virtual machine but it  may</span><br><span class="line">     * be waiting for other resources from the operating  system</span><br><span class="line">     * such as processor.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    RUNNABLE,</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Thread state for a thread blocked waiting for a  monitor lock.</span><br><span class="line">     * A thread in the blocked state is waiting for a monitor  lock</span><br><span class="line">     * to enter a synchronized block&#x2F;method or</span><br><span class="line">     * reenter a synchronized block&#x2F;method after calling</span><br><span class="line">     * &#123;@link Object#wait() Object.wait&#125;.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    BLOCKED,</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Thread state for a waiting thread.</span><br><span class="line">     * A thread is in the waiting state due to calling one of  the</span><br><span class="line">     * following methods:</span><br><span class="line">     * &lt;ul&gt;</span><br><span class="line">     *   &lt;li&gt;&#123;@link Object#wait() Object.wait&#125; with no  timeout&lt;&#x2F;li&gt;</span><br><span class="line">     *   &lt;li&gt;&#123;@link #join() Thread.join&#125; with no timeout&lt;&#x2F;li&gt;</span><br><span class="line">     *   &lt;li&gt;&#123;@link LockSupport#park() LockSupport.park&#125;&lt;&#x2F;li&gt;</span><br><span class="line">     * &lt;&#x2F;ul&gt;</span><br><span class="line">     *</span><br><span class="line">     * &lt;p&gt;A thread in the waiting state is waiting for  another thread to</span><br><span class="line">     * perform a particular action.</span><br><span class="line">     *</span><br><span class="line">     * For example, a thread that has called  &lt;tt&gt;Object.wait()&lt;&#x2F;tt&gt;</span><br><span class="line">     * on an object is waiting for another thread to call</span><br><span class="line">     * &lt;tt&gt;Object.notify()&lt;&#x2F;tt&gt; or  &lt;tt&gt;Object.notifyAll()&lt;&#x2F;tt&gt; on</span><br><span class="line">     * that object. A thread that has called  &lt;tt&gt;Thread.join()&lt;&#x2F;tt&gt;</span><br><span class="line">     * is waiting for a specified thread to terminate.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    WAITING,</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Thread state for a waiting thread with a specified  waiting time.</span><br><span class="line">     * A thread is in the timed waiting state due to calling  one of</span><br><span class="line">     * the following methods with a specified positive  waiting time:</span><br><span class="line">     * &lt;ul&gt;</span><br><span class="line">     *   &lt;li&gt;&#123;@link #sleep Thread.sleep&#125;&lt;&#x2F;li&gt;</span><br><span class="line">     *   &lt;li&gt;&#123;@link Object#wait(long) Object.wait&#125; with  timeout&lt;&#x2F;li&gt;</span><br><span class="line">     *   &lt;li&gt;&#123;@link #join(long) Thread.join&#125; with  timeout&lt;&#x2F;li&gt;</span><br><span class="line">     *   &lt;li&gt;&#123;@link LockSupport#parkNanos  LockSupport.parkNanos&#125;&lt;&#x2F;li&gt;</span><br><span class="line">     *   &lt;li&gt;&#123;@link LockSupport#parkUntil  LockSupport.parkUntil&#125;&lt;&#x2F;li&gt;</span><br><span class="line">     * &lt;&#x2F;ul&gt;</span><br><span class="line">     *&#x2F;</span><br><span class="line">    TIMED_WAITING,</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Thread state for a terminated thread.</span><br><span class="line">     * The thread has completed execution.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    TERMINATED;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://assets.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<h3 id="状态说明"><a href="#状态说明" class="headerlink" title="状态说明"></a>状态说明</h3><p>线程在一个给定的时间点只能处于下面其中一种状态：</p>
+<p>这些状态是虚拟机状态，并不能反映任何操作系统的线程状态。</p>
+<ul>
+<li><p>NEW：尚未启动的线程处于这个状态。Thread thread = new Thread(new Runnable(){…});处于这个状态。</p>
+</li>
+<li><p>RUNNABLE：可运行的线程处于这个状态。对应操作系统中的两种状态：ready和running，也就是说RUNNABLE状态既可以是可运行的，也可以是实际运行中的，有可能正在执行，也有可能没有正在执行。关于这个问题的理解，可以对比想一下，thread.start()调用之后线程会立刻执行吗？</p>
+</li>
+<li><p>BLOCKED：阻塞，<strong>进入synchronized修饰的方法或者代码块，等待监视器锁的线程</strong>处于这个状态。</p>
+</li>
+<li><p>WAITING：无限期等待另一个线程执行特定操作的线程处于这种状态。</p>
+</li>
+<li><p>TIMED_WAITING：正在等待另一个线程执行某个操作的线程在指定的等待时间内处于这种状态。</p>
+</li>
+<li><p>TERMINATED：已经退出的线程处于这个状态。</p>
+</li>
+</ul>
+<h3 id="状态转移"><a href="#状态转移" class="headerlink" title="状态转移"></a>状态转移</h3><p>NEW：线程尚未启动的线程状态。当在程序中创建一个线程的时候Thread t = new Thread(Runnable);，线程处于NEW状态。</p>
+<p>RUNNABLE：可运行线程的线程状态。处于可运行状态的线程正在Java虚拟机中执行，但它可能正在等待操作系统中的其他资源，比如处理器。也就是说， 这个状态就是可运行也可不运行的状态。注意Runnable ≠ Running。</p>
+<p>BLOCKED：进入synchronized修饰的方法或者代码块，等待监视器锁的阻塞线程的线程状态。比如，线程试图通过synchronized去获取监视器锁，但是其他线程已经独占了，那么当前线程就会处于阻塞状态。等到获得了监视器锁之后会再次进入RUNNABLE状态。</p>
+<p>WAITING：调用以下方法之一，线程会处于等待状态：</p>
+<ul>
+<li>Object.wait()注意：括号内不带参数；</li>
+<li>Thread.join()注意：扩号内不带参数；</li>
+<li>LockSupport.park()；</li>
+</ul>
+<p>其实wait()方法有多重形式，可以不带参数，可以带参数，参数表示等待时间（单位ms），如图所示：</p>
+<p><img src alt="img"><img src="/20214/07/26/Tread/1538609-20220626174204766-251050442.png" alt="img"></p>
+<p>“BLOCKED（阻塞状态）”和“WAITING（等待状态）”的区别：阻塞状态在等待获取一个排它锁，这个事件将会在另外一个线程放弃这个锁的时候发生，然后由阻塞状态变为可执行状态；而等待状态则是在等待一段时间，或者等待唤醒动作的发生。</p>
+<p>TIMED_WAITING：一个线程调用了以下方法之一（方法需要带具体的等待时间），会处于定时等待状态：</p>
+<ul>
+<li>Thread.sleep(long timeout)</li>
+<li>Object.wait(long timeout)</li>
+<li>Thread.join(long timeout)</li>
+<li>LockSupport.parkNanos()</li>
+<li>LockSupport.parkUntil()</li>
+</ul>
+<p>TERMINATED：  该线程已经执行完毕。执行完毕指的是线程正常执行完了run方法之后退出，也可以是遇到了未捕获的异常而退出。</p>
+<p><img src="/20214/07/26/Tread/1538609-20220626174204590-1253779990.png" alt="img"></p>
+<h3 id="初始-NEW"><a href="#初始-NEW" class="headerlink" title="初始(NEW)"></a>初始(NEW)</h3><p>新创建了一个线程对象，但还没有调用start()方法。</p>
+<h3 id="运行-RUNNABLE"><a href="#运行-RUNNABLE" class="headerlink" title="运行(RUNNABLE)"></a>运行(RUNNABLE)</h3><h4 id="Ready"><a href="#Ready" class="headerlink" title="Ready"></a>Ready</h4><h4 id="Running"><a href="#Running" class="headerlink" title="Running"></a>Running</h4><p>Java线程中将就绪（ready）和运行中（running）两种状态笼统 的称为“运行”。线程对象创建后，其他线程(比如main线程）调用了该对象的start()方 法。该状态的线程位于可运行线程池中，等待被线程调度选中，获取CPU的使用权，此 时处于就绪状态（ready）。就绪状态的线程在获得CPU时间片后变为运行中状态 （running）。</p>
+<h3 id="阻塞-BLOCKED"><a href="#阻塞-BLOCKED" class="headerlink" title="阻塞(BLOCKED)"></a>阻塞(BLOCKED)</h3><p>表示线程阻塞于锁。或称“挂起”</p>
+<blockquote>
+<p>阻塞或唤醒一个Java线程需要操作系统切换CPU状态来完成，这种状态转换需要耗费处理器时间</p>
+</blockquote>
+<h3 id="等待-WAITING"><a href="#等待-WAITING" class="headerlink" title="等待(WAITING)"></a>等待(WAITING)</h3><p>等待状态，处于等待状态的线程是由于执行了<strong>Thread.join</strong>或<strong>Object.wait</strong>方法</p>
+<p> 处于waiting状态的线程会等待另外一个线程处理特殊的行为。 再举个例子，如果一个线程调用了一个对象的wait方法，那么这个线程就会处于waiting状态直到另外一个线程调用这个对象的notify或者notifyAll方法后才会解除这个状态</p>
+<h3 id="超时等待-TIMED-WAITING"><a href="#超时等待-TIMED-WAITING" class="headerlink" title="超时等待(TIMED_WAITING)"></a>超时等待(TIMED_WAITING)</h3><p>有等待时间的等待状态，比如调用了**Thread.sleep(long timeout)、Thread.join(long timeout)、Object.wait(long timeout)**，并且指定了等待时间，线程就会处于这个状态。 </p>
+<h3 id="终止-TERMINATED"><a href="#终止-TERMINATED" class="headerlink" title="终止(TERMINATED)"></a>终止(TERMINATED)</h3><p>表示该线程已经执行完毕。</p>
+<blockquote>
+<p>对比分析Java中的各个线程相关的wait()、notify()、sleep()、interrupt()方法</p>
+</blockquote>
+<h1 id="线程相关方法"><a href="#线程相关方法" class="headerlink" title="线程相关方法"></a>线程相关方法</h1><h3 id="Thread类"><a href="#Thread类" class="headerlink" title="Thread类"></a>Thread类</h3><h4 id="sleep：暂停当前正在执行的线程；（类方法）"><a href="#sleep：暂停当前正在执行的线程；（类方法）" class="headerlink" title="sleep：暂停当前正在执行的线程；（类方法）"></a>sleep：暂停当前正在执行的线程；（<strong>类方法</strong>）</h4><p>​    是Thread的静态方法，很显然它是让当前线程按照指定的时间休眠，其休眠时间的精度取决于处理器的计时器和调度器。需要注意的是如果当前线程获得了锁，sleep方法并不会失去锁。sleep方法经常拿来与Object.wait()方法进行比价，这也是面试经常被问的地方。</p>
+<blockquote>
+<p><strong>sleep() VS wait()</strong></p>
+</blockquote>
+<p>  两者主要的区别：</p>
+<pre><code>1. sleep()方法是Thread的静态方法，而wait是Object实例方法
+2. wait()方法必须要在同步方法或者同步块中调用，也就是必须已经获得对象锁。而sleep()方法没有这个限制可以在任何地方种使用。另外，wait()方法会释放占有的对象锁，使得该线程进入等待池中，等待下一次获取资源。而sleep()方法只是会让出CPU并不会释放掉对象锁；
+3. sleep()方法在休眠时间达到后如果再次获得CPU时间片就会继续执行，而wait()方法必须等待Object.notift/Object.notifyAll通知后，才会离开等待池，并且再次获得CPU时间片才会继续执行。
+</code></pre>
+<h4 id="yield：暂停当前正在执行的线程，并执行其他线程；（类方法）"><a href="#yield：暂停当前正在执行的线程，并执行其他线程；（类方法）" class="headerlink" title="yield：暂停当前正在执行的线程，并执行其他线程；（类方法）"></a>yield：暂停当前正在执行的线程，并执行其他线程；（<strong>类方法</strong>）</h4><p>​    是Thread的静态方法，一旦执行，它会是当前线程让出CPU，但是，需要注意的是，让出的CPU并不是代表当前线程不再运行了，如果在下一次竞争中，又获得了CPU时间片当前线程依然会继续运行。另外，让出的时间片只会分配<strong>给当前线程相同优先级</strong>的线程。</p>
+<p>​    yield()方法使当前线程出让CPU执行时间，但并不会释放当前线程所持有的锁。执行完yield()方法后，线程从Running状态转变为Runnable状态，既然是Runnable状态，那么也很可能马上会被CPU调度再次进入Running状态。</p>
+<blockquote>
+<p>什么是线程优先级了？下面就来具体聊一聊。</p>
+<p>现代操作系统基本采用时分的形式调度运行的线程，操作系统会分出一个个时间片，线程会分配到若干时间片，当前时间片用完后就会发生线程调度，并等待这下次分配。线程分配到的时间多少也就决定了线程使用处理器资源的多少，而线程优先级就是决定线程需要或多或少分配一些处理器资源的线程属性。</p>
+<p>在Java程序中，通过一个<strong>整型成员变量Priority</strong>来控制优先级，优先级的范围从1~10.在构建线程的时候可以通过**setPriority(int)**方法进行设置，默认优先级为5，优先级高的线程相较于优先级低的线程优先获得处理器时间片。需要注意的是在不同JVM以及操作系统上，线程规划存在差异，有些操作系统甚至会忽略线程优先级的设定。</p>
+<p>另外需要注意的是，sleep()和yield()方法，同样都是当前线程会交出处理器资源，而它们不同的是，sleep()交出来的时间片其他线程都可以去竞争，也就是说都有机会获得当前线程让出的时间片。而yield()方法只允许与当前线程具有相同优先级的线程能够获得释放出来的CPU时间片。</p>
+</blockquote>
+<h4 id="join：等待该线程终止；"><a href="#join：等待该线程终止；" class="headerlink" title="join：等待该线程终止；"></a>join：等待该线程终止；</h4><p>​    join()方法的作用，是等待这个线程结束，是主线程等待子线程的终止。也就是说主线程的代码块中，如果碰到了t.join()方法，此时主线程需要等待（阻塞），等待子线程结束了(Waits for this thread to die.),才能继续执行t.join()之后的代码块。</p>
+<h4 id="interrupt：中断该线程，"><a href="#interrupt：中断该线程，" class="headerlink" title="interrupt：中断该线程，"></a>interrupt：中断该线程，</h4><p>interrupt()方法的工作仅仅是改变中断状态，并不是直接中断正在运行的线程。中断的真正原理是当线程被Object.wait(),Thread.join()或sleep()方法阻塞时，调用interrupt()方法后改变中断状态，而wait/join/sleep这些方法内部会不断地检查线程的中断状态值，当发现中断状态值改变时则抛出InterruptedException异常；对于没有阻塞的线程，调用interrupt()方法是没有任何作用。</p>
+<h3 id="Object类"><a href="#Object类" class="headerlink" title="Object类"></a>Object类</h3><ul>
+<li>wait：暂停当前正在执行的线程，直到调用notify()或notifyAll()方法或超时，退出等待状态；</li>
+<li>notify：唤醒在该对象上等待的一个线程；</li>
+<li>notifyAll：唤醒在该对象上等待的所有线程；</li>
+</ul>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><h3 id="sleep-VS-wait"><a href="#sleep-VS-wait" class="headerlink" title="sleep VS wait"></a>sleep VS wait</h3><p>sleep()和wait()方法都是暂停当前正在执行的线程，出让CPU资源。</p>
+<table>
+<thead>
+<tr>
+<th align="left">方法</th>
+<th align="left">所属类</th>
+<th align="left">方法类型</th>
+<th align="left">锁</th>
+<th align="left">解除方法</th>
+<th align="left">场景</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">sleep</td>
+<td align="left">Thread</td>
+<td align="left">静态方法</td>
+<td align="left">不释放锁</td>
+<td align="left">timeout,interrupt</td>
+<td align="left">无限制</td>
+<td align="left">线程内的控制</td>
+</tr>
+<tr>
+<td align="left">wait</td>
+<td align="left">Object</td>
+<td align="left">非静态方法</td>
+<td align="left">释放锁</td>
+<td align="left">timeout,notify,interrupt</td>
+<td align="left">同步语句块</td>
+<td align="left">线程间的通信</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sleep</span><span class="params">(<span class="keyword">long</span> millis)</span> <span class="keyword">throws</span> InterruptedException </span></span><br><span class="line"><span class="function">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sleep</span><span class="params">(<span class="keyword">long</span> millis, <span class="keyword">int</span> nanos)</span> <span class="keyword">throws</span> InterruptedException </span></span><br><span class="line"><span class="function">   </span></span><br><span class="line"><span class="function"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span></span><br><span class="line"><span class="function"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout)</span> <span class="keyword">throws</span> InterruptedException </span></span><br><span class="line"><span class="function"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout, <span class="keyword">int</span> nanos)</span> <span class="keyword">throws</span> InterruptedException</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="wait-amp-amp-notify"><a href="#wait-amp-amp-notify" class="headerlink" title="wait &amp;&amp; notify"></a>wait &amp;&amp; notify</h3><p>调用对象的wait()、notify()、notifyAll()方法的线程，必须是作为此对象监视器的所有者。常见的场景便是就是synchronized关键字的语句块内部使用这3个方法，如果直接在线程中使用wait()、notify()、notifyAll()方法，那么会抛出异常IllegalMonitorStateException，抛出的异常表明某一线程已经试图等待对象的监视器，或者试图通知其他正在等待对象的监视器而本身没有指定监视器的线程。。</p>
+<p>调用wait()方法的线程，在调用该线程的interrupt()方法，则会重新尝试获取对象锁。只有当获取到对象锁，才开始抛出相应的异常，则执行该线程之后的程序。</p>
+<h2 id="怎么终止一个线程"><a href="#怎么终止一个线程" class="headerlink" title="怎么终止一个线程"></a>怎么终止一个线程</h2><p>首先，一个<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E7%BA%BF%E7%A8%8B&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:89431513%7D">线程</a>不应该由其他线程来强制中断或停止，而是应该由线程自己自行停止。</p>
+<p>所以，Thread.stop, Thread.suspend, Thread.resume 都已经被废弃了。</p>
+<h3 id="interrupt："><a href="#interrupt：" class="headerlink" title="interrupt："></a>interrupt：</h3><p>Thread.interrupt 的作用其实也不是<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E4%B8%AD%E6%96%AD%E7%BA%BF%E7%A8%8B&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:89431513%7D">中断线程</a>，而是「通知线程应该中断了」，</p>
+<p>具体到底中断还是继续运行，应该由被通知的线程自己处理。</p>
+<p>具体来说，当对一个线程，调用 interrupt() 时，</p>
+<p>① 如果线程处于被<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E9%98%BB%E5%A1%9E%E7%8A%B6%E6%80%81&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:89431513%7D">阻塞状态</a>（例如处于sleep, wait, join 等状态），那么线程将立即退出被阻塞状态，并抛出一个InterruptedException异常。仅此而已。</p>
+<p>② 如果线程处于正常活动状态，那么会将该线程的中断标志设置为 true，仅此而已。被设置<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E4%B8%AD%E6%96%AD%E6%A0%87%E5%BF%97&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:89431513%7D">中断标志</a>的线程将继续正常运行，不受影响。</p>
+<p><strong>interrupt() 并不能真正的中断线程，需要被调用的线程自己进行配合才行。</strong></p>
+<p>① 在正常运行任务时，经常检查本线程的中断标志位，如果被设置了中断标志就自行停止线程。</p>
+<p>② 在调用<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E9%98%BB%E5%A1%9E%E6%96%B9%E6%B3%95&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:89431513%7D">阻塞方法</a>时正确处理InterruptedException异常。（例如，catch异常后就结束线程。）</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Thread thread = new Thread(() -&gt; &#123;</span><br><span class="line">    while (!Thread.interrupted()) &#123;</span><br><span class="line">        // do more work.</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">thread.start();</span><br><span class="line"></span><br><span class="line">// 一段时间以后</span><br><span class="line">thread.interrupt();</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="stop"><a href="#stop" class="headerlink" title="stop():"></a>stop():</h3><p>弃用，因为在stop时会释放所有的锁，可能导致线程不同步，另一个也可能导致资源如文件文件数据库的关闭行为不被执行</p>
+<blockquote>
+<ol>
+<li>调用 stop() 方法会立刻停止 run() 方法中剩余的全部工作，包括在 catch 或 finally 语句中的，并抛出ThreadDeath异常(通常情况下此异常不需要显示的捕获)，因此可能会导致一些清理性的工作的得不到完成，如文件，数据库等的关闭。</li>
+<li>调用 stop() 方法会立即释放该线程所持有的所有的锁，导致数据得不到同步，出现数据不一致的问题。</li>
+</ol>
+</blockquote>
+<h3 id="使用volatile标志位"><a href="#使用volatile标志位" class="headerlink" title="使用volatile标志位"></a>使用volatile标志位</h3><p>以标志位为循环条件 </p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-07-08T09:20:14.000Z" title="7/8/2024, 5:20:14 PM">2024-07-08</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-25T09:18:59.126Z" title="7/25/2024, 5:18:59 PM">2024-07-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">11 minutes read (About 1698 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/07/08/Https/">Https</a></h1><div class="content"><h1 id="Http和Https"><a href="#Http和Https" class="headerlink" title="Http和Https"></a>Http和Https</h1><ul>
+<li>其实HTTPS就是从 HTTP 加上 SSL/TLS （加密处理+认证+完整性保护）</li>
+</ul>
+<p>完整的https通信过程，三次RTT：tcp握手一次RTT，TLS握手两次RTT</p>
+<p><img src="/2024/07/08/Https/b25fb999193d980d1419422cea9f8eb9322855.png" alt="img"></p>
+<h2 id="HTTPS工作原理"><a href="#HTTPS工作原理" class="headerlink" title="HTTPS工作原理"></a>HTTPS工作原理</h2><p><img src="/2024/07/08/Https/141293392-2748beda-9928-4efd-97aa-ec81b38b83e2.png" alt="image"></p>
+<ul>
+<li>一、首先客户端发起连接请求，将自身支持的加密（RSA）和哈希算法（sha256）连带发给服务器（服务器端有非对称加密的公钥和私钥）</li>
+<li>二、服务器端接受请求，选取一组加密和哈希算法后，将服务器证书（含公钥）发送给客户端</li>
+<li>三、客户端收到服务器端证书并使用根证书验证证书后，从中取出公钥，然后本地生成一段随机数，将此随机数用公钥加密后发送给服务器端</li>
+<li>四、服务器端用私钥解密出这段随机数作为对称加密的秘钥。之后双方就可以进行对称加密（DES、AES等）。</li>
+</ul>
+<h2 id="证书校验过程"><a href="#证书校验过程" class="headerlink" title="证书校验过程"></a>证书校验过程</h2><p>校验证书的过程：</p>
+<p><strong>第一步是校验证书网站域名、有效期等。</strong></p>
+<p><strong>第二步是校验证书本身是否可信：主要是依靠验证证书的信任链条完成。</strong></p>
+<p>  <strong>比如根证书A-&gt;B-&gt;服务端证书C，那么首先要验证C是由B签署的，这一步的具体步骤是：</strong></p>
+<pre><code>1. **用B证书的公钥解密C证书的签名信息后拿到C证书的hash值（签署时该Hash值由B的私钥加密生成），**
+2. **然后再用hash算法（B证书上带的签名算法）计算B证书的&lt;u&gt;待签名数据&lt;/u&gt;后得到计算hash值，**
+3. **将证书解密的hash值与计算hash值比较即可。**
+</code></pre>
+<p><strong>第三步是使用CRL（证书吊销列表）或OCSP（在线证书状态协议）确认证书是否已被吊销。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">证书内容可简化为:</span><br><span class="line">待签名数据：</span><br><span class="line">  版本: v3</span><br><span class="line">  序列号: 123456</span><br><span class="line">  签名算法: SHA256withRSA</span><br><span class="line">  颁发者信息: CN&#x3D;A, O&#x3D;A Corporation, C&#x3D;US</span><br><span class="line">  有效期: 2022-01-01 至 2023-01-01</span><br><span class="line">  主题信息: CN&#x3D;B, O&#x3D;B Corporation, C&#x3D;US</span><br><span class="line">  主题公钥: (公钥数据)</span><br><span class="line">  扩展字段: (可选)</span><br><span class="line">签名：</span><br><span class="line">  签名: (签名数据)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/08/Https/image-20240703175159171.png" alt="image-20240703175159171"></p>
+<img src="/2024/07/08/Https/image-20211123141219076.png" alt="image-20211123141219076" style="zoom:30%;">
+
+<img src="/2024/07/08/Https/image-20211123141130160.png" alt="image-20211123141130160" style="zoom:50%;">
+
+
+
+
+
+<h2 id="抓包软件怎么实现的"><a href="#抓包软件怎么实现的" class="headerlink" title="抓包软件怎么实现的"></a>抓包软件怎么实现的</h2><p>以我熟悉的抓包软件<strong>whistle</strong>为例，抓包软件能抓https内容的核心是：你的手机安装了<strong>whistle的自签名根证书</strong>，同时你的<strong>请求都是代理给whistle</strong>的，然后whistle会发送给客户端<strong>经自签名根证书签署过的伪造服务器证书</strong>，故而能通过客户端的证书校验，从而拿到请求原文。</p>
+<p><strong>手机安装了抓包软件的自签名证书后，抓包工具在作为代理进行HTTPS流量捕获时，实际上充当了中间人。抓包开启后，客户端https请求的握手对象实际上是抓包软件，服务端拿到的请求地址是 抓包软件的地址。手机的请求也实际上是与抓包软件在交互，抓包软件再与服务器交互。故而抓包软件能记录并修改客户端的请求与响应</strong></p>
+<p><img src="/2024/07/08/Https/image-20240703170642767.png" alt="image-20240703170642767"></p>
+<p><strong>自签名证书</strong>：抓包软件生成一个自签名的证书（自签名证书是一种灵活且方便的SSL/TLS证书解决方案，是由证书的所有者自己签发的，适用于于开发测试环境和内部网络。然而，由于它不是由受信任的三方证书颁发机构即CA签发的，使得它无法提供可靠的身份验证，无法适用于公网）</p>
+<ol>
+<li><strong>客户端信任自签名证书</strong>：<ul>
+<li>当用户在设备上安装抓包软件的自签名证书后，这个证书被设备作为受信任的根证书。设备会信任由这个自签名证书签发的所有证书。</li>
+</ul>
+</li>
+<li><strong>中间人代理握手</strong>：<ul>
+<li>抓包软件充当“中间人”，拦截客户端的HTTPS请求。客户端发出的请求首先到达抓包软件。</li>
+<li>抓包软件向客户端提供一个由它自己的自签名根证书签署的伪造服务器证书（目标服务器的替身证书）。</li>
+<li>因为客户端已经信任抓包软件的自签名证书，所以它会信任这个伪造的服务器证书，并与抓包软件进行TLS握手。</li>
+</ul>
+</li>
+</ol>
+<p>这样，手机上的浏览器或应用程序在连接时<strong>实际上是与抓包软件建立的https握手</strong>。</p>
+<p>抓包软件的主要目的是捕获、分析和调试网络流量。其工作步骤如下：</p>
+<ol>
+<li><strong>客户端通过代理发送请求</strong>：<ul>
+<li>抓包软件配置为代理，客户端配置通过此代理发送所有网络请求。</li>
+<li>抓包软件生成一个自签名证书，客户端将其安装为受信任的根证书。</li>
+</ul>
+</li>
+<li><strong>代理解析并再发送请求</strong>：<ul>
+<li>客户端的请求首先由抓包软件接收。对于HTTPS请求，抓包软件会使用自签名证书解密这些请求。</li>
+<li>抓包软件记录和分析解密后的请求内容，然后重新加密并发送到目标服务器。</li>
+</ul>
+</li>
+<li><strong>服务器响应经过代理返回客户端</strong>：<ul>
+<li>目标服务器返回响应，抓包软件解密并记录这些响应数据。</li>
+<li>抓包软件再重新加密这些数据并发送回客户端。</li>
+</ul>
+</li>
+</ol>
+<p>VPN与抓包软件的原理类似，都是通过一层中间人，将客户端的请求实际上代理到中间人层发起请求。</p>
+<p>不同的是由于抓包软件使客户端安装的自签名证书，客户端在证书校验时遇到抓包软件自签名证书签署的伪造服务器证书会校验通过，使客户端的请求都能在中间人层解密后查看和修改，之后抓包再转发。</p>
+<p>而VPN则是通过加密隧道（加密整个传输链路）：使用协议如IPsec、OpenVPN、L2TP等），在原本就由ssl/tls加密的数据上再加密一层，之后无法感知传输内容原原本本的转发。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-07-04T06:15:34.945Z" title="7/4/2024, 2:15:34 PM">2024-07-04</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-04T06:15:34.945Z" title="7/4/2024, 2:15:34 PM">2024-07-04</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Jvm/">Jvm</a></span><span class="level-item">5 minutes read (About 736 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/07/04/LeakType/">LeakType</a></h1><div class="content"><h1 id="内存泄漏实质"><a href="#内存泄漏实质" class="headerlink" title="内存泄漏实质"></a>内存泄漏实质</h1><p>内存泄漏实质上是GC时候，被GC Root引用或间接引用着的对象无法被回收，而可以作为GC Root的对象在java中有几种：</p>
+<ol>
+<li><p>虚拟机栈或叫JVM栈（栈帧中的本地变量表）中引用的对象； （线程泄露）</p>
+<blockquote>
+<p>虚拟机栈是<strong>线程私有的</strong>，每个java方法被执行的时候都会同时创建一个栈帧（Stack Frame）用于<strong>存储局部变量表</strong>、操作栈、动态链接、方法出口等信息。每一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。</p>
+</blockquote>
+</li>
+<li><p>方法区中的类静态属性引用的对象；  （static变量）</p>
+<blockquote>
+<p>方法区存储<strong>类信息、常量、静态变量</strong>等数据，是线程共享的区域</p>
+</blockquote>
+</li>
+<li><p>本地方法栈中JNI（即一般说的Native方法）中引用的对象  （Jni持有的对象）</p>
+<blockquote>
+<p>对应虚拟机栈为虚拟机执行java方法服务，而本地方法栈为虚拟机使用到的Native方法服务</p>
+</blockquote>
+</li>
+<li><p>方法区中常量引用的对象； （final修饰的int/float/long等基本数据类型和String）   不常见</p>
+</li>
+</ol></div><a class="article-more button is-small is-size-7" href="/2024/07/04/LeakType/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-04-19T02:53:39.122Z" title="4/19/2024, 10:53:39 AM">2024-04-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-25T06:46:23.755Z" title="4/25/2024, 2:46:23 PM">2024-04-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Jvm/">Jvm</a></span><span class="level-item">37 minutes read (About 5553 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/04/19/JMM/">JvmMemoryStructure</a></h1><div class="content"><p><img src="/2024/04/19/JMM/image-20240425141403378.png" alt="image-20240425141403378"></p>
+<p>程序计数器不会OOM和StackOverflow</p>
+<p>有栈的结构（栈 java stack、navtive stack）可能发生 StackOverflowError（栈过深） 和 OOM </p>
+<blockquote>
+<p><strong>StackOverFlowError</strong> ︰若Java 虚拟机栈的内存大小不允许动态扩展，那么当线程请求栈的深度超过当前Java 虚拟机栈的最大深度的时候，就抛出StackOverFlowError错误。<br><strong>OutOfMemoryError</strong> :如果虚拟机栈可以动态扩展（当前大部分的 Java 虚拟机都可动态扩展，只不过 Java 虚拟机规范中也允许固定长度的虚拟机栈），当扩展时无法申请到足够的内存时会抛出 OutOfMemoryError 异常。</p>
+</blockquote>
+<p>没栈的结构（堆heap、方法区Method Area）只可能发生 OOM</p></div><a class="article-more button is-small is-size-7" href="/2024/04/19/JMM/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-03-25T07:35:02.998Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.998Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Code/">Code</a></span><span class="level-item">4 minutes read (About 598 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/03/25/CodeOptimization/">CodeOptimization</a></h1><div class="content"><h2 id="代码优化"><a href="#代码优化" class="headerlink" title="# 代码优化"></a># 代码优化</h2><h2 id="1：纯函数"><a href="#1：纯函数" class="headerlink" title="1：纯函数"></a>1：纯函数</h2><p>纯函数是函数编程中的一个概念，指的是一个方法函数，就像一个数学的函数式一样，同样的参数输入会得到同样的输出。<br>可以近似理解为函数内部不依赖任何的外部状态，外部变量。</p>
+<h2 id="2：空安全"><a href="#2：空安全" class="headerlink" title="2：空安全"></a>2：空安全</h2><p>java是强对象类型语言，故对于java来说我们很容易关注到类型强转的错误</p></div><a class="article-more button is-small is-size-7" href="/2024/03/25/CodeOptimization/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-22T12:59:00.000Z" title="11/22/2021, 8:59:00 PM">2021-11-22</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.380Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">an hour read (About 10880 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/22/OperatingSystem/">OperatingSystem</a></h1><div class="content"><h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><ul>
+<li>进程和线程<ul>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB">进程和线程有什么区别？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F">进程间通信有哪些方式？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98">进程同步问题</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81">进程有哪几种状态？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5%E6%9C%89%E5%93%AA%E4%BA%9B">进程调度策略有哪些？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B">什么是僵尸进程？</a></li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F">线程同步有哪些方式？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E7%A8%8B">什么是协程？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%BC%82%E5%B8%B8%E6%8E%A7%E5%88%B6%E6%B5%81%EF%BC%9A%E9%99%B7%E9%98%B1%E3%80%81%E4%B8%AD%E6%96%AD%E3%80%81%E5%BC%82%E5%B8%B8%E5%92%8C%E4%BF%A1%E5%8F%B7">进程的异常控制流：陷阱、中断、异常和信号</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFIO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0">什么是IO多路复用？怎么实现？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81">什么是用户态和内核态？</a></li>
+</ul>
+</li>
+<li>死锁<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%AD%BB%E9%94%81">什么是死锁？</a></li>
+<li><a href="#%E6%AD%BB%E9%94%81%E4%BA%A7%E7%94%9F%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6">死锁产生的必要条件？</a></li>
+<li><a href="#%E6%AD%BB%E9%94%81%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95">死锁有哪些处理方法？</a></li>
+</ul>
+</li>
+<li>内存管理<ul>
+<li><a href="#%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB">分页和分段有什么区别？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98">什么是虚拟内存？</a></li>
+<li><a href="#%E6%9C%89%E5%93%AA%E4%BA%9B%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95">有哪些页面置换算法？</a></li>
+<li><a href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E9%97%AE%E9%A2%98">缓冲区溢出问题</a></li>
+</ul>
+</li>
+<li><a href="#%E7%A3%81%E7%9B%98%E8%B0%83%E5%BA%A6">磁盘调度</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+<hr></div><a class="article-more button is-small is-size-7" href="/2021/11/22/OperatingSystem/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-22T08:51:31.000Z" title="11/22/2021, 4:51:31 PM">2021-11-22</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.239Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">16 minutes read (About 2339 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/22/HighFrequencyIssue/">HighFrequencyIssue</a></h1><div class="content"><h2 id="操作系统："><a href="#操作系统：" class="headerlink" title="操作系统："></a>操作系统：</h2><p>（1）线程和进程的区别？</p>
+<p>（2）线程之间怎么共享资源？</p>
+<p>（3）进程之间怎么通信？</p>
+<p>（4）进程池的原理是什么？</p>
+<h4 id="进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的"><a href="#进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的" class="headerlink" title="进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的?"></a>进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的?</h4><h5 id="1-基本概念："><a href="#1-基本概念：" class="headerlink" title="1. 基本概念："></a>1. 基本概念：</h5><p>进程是对运行时程序的封装，是<strong>系统进行资源调度和分配的的基本单位，实现了操作系统的并发</strong>；</p>
+<p>线程是进程的子任务，<strong>是CPU调度和分派的基本单位</strong>，<strong>用于保证程序的实时性，实现进程内部的并发；线程是操作系统可识别的最小执行和调度单位</strong>。每个线程都独自占用一个<strong>虚拟处理器</strong>：独自的<strong>寄存器组</strong>，<strong>指令计数器和处理器状态</strong>。每个线程完成不同的任务，但是<strong>共享同一地址空间</strong>（也就是同样的<strong>动态内存，映射文件，目标代码等等</strong>），<strong>打开的文件队列和其他内核资源</strong>。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/22/HighFrequencyIssue/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-19T09:20:14.000Z" title="11/19/2021, 5:20:14 PM">2021-11-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-08T09:36:08.977Z" title="7/8/2024, 5:36:08 PM">2024-07-08</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 8572 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/19/HttpProtocol/">HttpProtocol</a></h1><div class="content"><h1 id="Http-缓存"><a href="#Http-缓存" class="headerlink" title="Http 缓存"></a>Http 缓存</h1><p>在请求一个静态文件的时候（图片，css，js）等，这些文件的特点是文件不经常变化，将这些不经常变化的文件存储起来，对客户端来说是一个优化用户浏览体验的方法。那么这个就是客户端缓存的意义了。</p>
+<p>简述：</p>
+<ul>
+<li><p>强制缓存是根据上次响应header中的Cache-Control:Max-age<del>或是Expries</del>，<strong>客户端直接判断缓存</strong>是否能用该资源缓存；</p>
+</li>
+<li><p>协商缓存需要<strong>客户端</strong>用记录下来的上次响应header中的ETag或是Last-Modified，通过与向服务器的请求request的header中赋值If-None-Match或If-Modified-Since，由<strong>服务器判断资源是否更新</strong>，结果由code和是否存在body明确是否命中缓存；</p>
+</li>
+</ul>
+<p>同时出现的优先级排序： 强制缓存 &gt; 协商缓存；ETag &amp; If-None-Match &gt; Last-Modified &amp; If-Modified-Since <del>;Cache-Control &gt; Expries；</del></p></div><a class="article-more button is-small is-size-7" href="/2021/11/19/HttpProtocol/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T12:20:27.000Z" title="11/11/2021, 8:20:27 PM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-29T08:13:23.384Z" title="7/29/2024, 4:13:23 PM">2024-07-29</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">an hour read (About 8820 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Concurrent/">Concurrent</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://www.wwwbuild.net/JavaAmazing/112187.html">https://www.wwwbuild.net/JavaAmazing/112187.html</a></p>
+<h1 id="并发操作：原子性、可见性、有序性"><a href="#并发操作：原子性、可见性、有序性" class="headerlink" title="并发操作：原子性、可见性、有序性"></a>并发操作：原子性、可见性、有序性</h1><h2 id="1、原子性"><a href="#1、原子性" class="headerlink" title="1、原子性"></a><strong>1、原子性</strong></h2><p><strong>即一个操作或者多个操作，要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</strong></p>
+<p>如java.util.concurrent.atomic包下的原子类，就是用CAS(Compare And Swap)保证原子性和可见性（内存屏障）</p>
+<blockquote>
+<p>虽然 <code>java.util.concurrent.atomic</code> 提供了原子操作，但这些解决方案主要针对单一变量。对于涉及多个变量时的原子性操作，仍然需要使用高级同步机制（如 <code>synchronized</code> 块或 <code>ReentrantLock</code>）。</p>
+<p>Java 内存模型（JMM）确保在使用原子类和 CAS 操作时，数值的更新对其他线程是可见的。这是通过内存屏障来实现的。</p>
+</blockquote>
+<h2 id="2、可见性"><a href="#2、可见性" class="headerlink" title="2、可见性"></a>2、可见性</h2><p><strong>可见性是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。</strong></p>
+<p>如volatile能保证被修饰变量的可见性、有序性；原子类可以保证原子性和可见性；</p>
+<blockquote>
+<ul>
+<li><strong>可见性</strong>：<code>volatile</code> 关键字确保变量的更新对所有线程立即可见，避免线程读取到变量的过期值。</li>
+<li><strong>禁止指令重排序优化</strong>：编译器和运行时不会把 <code>volatile</code> 变量的写操作与之前的内存操作重排序，也不会把 <code>volatile</code> 变量的读操作与之后的内存操作重排序。</li>
+</ul>
+</blockquote>
+<h2 id="3、有序性"><a href="#3、有序性" class="headerlink" title="3、有序性"></a>3、有序性</h2><p><strong>即程序执行的顺序按照代码的先后顺序执行。（指令编排可能会导致多线程下执行结果不一致）</strong></p>
+<p>如volatile能保证被修饰变量的可见性、有序性</p>
+<p><strong>synchronized关键字三者都能保证。</strong></p>
+<h1 id="Volatile-和synchronized的区别："><a href="#Volatile-和synchronized的区别：" class="headerlink" title="Volatile 和synchronized的区别："></a>Volatile 和synchronized的区别：</h1><p><strong><code>java.util.concurrent.atomic</code>包的原子类可以保证数据的原子性、可见性；volatile关键字能保证数据的可见性、有序性，但不能保证数据的原子性。synchronized关键字三者都能保证。</strong></p>
+<h2 id="1：并发特性比较："><a href="#1：并发特性比较：" class="headerlink" title="1：并发特性比较："></a>1：并发特性比较：</h2><p>volatile关键字能保证数据的可见性、有序性，但不能保证数据的原子性（即volatile int x; x++ 是三步操作：一取x值，二加一，三赋值回x）。synchronized关键字两者都能保证。</p>
+<p>有序性则volatile和synchronized都能保证，volatile关键字禁止JVM编译器已及处理器对其进行重排序,</p>
+<p>synchronized保证顺序性是串行化的结果，但同步块里的语句是会发生指令从排。</p>
+<h2 id="2：volatile-的原理"><a href="#2：volatile-的原理" class="headerlink" title="2：volatile 的原理"></a>2：volatile 的原理</h2><p>  1).  修改volatile变量时会强制将修改后的值刷新的主内存中。</p>
+<p>  2).  修改volatile变量后会导致其他线程工作内存中对应的变量值失效。因此，再读取该变量值的时候就需要重新从读取主内存中的值。</p>
+<p>  3).  <strong>禁止指令重排序优化</strong>：编译器和运行时不会把 <code>volatile</code> 变量的写操作与之前的内存操作重排序，也不会把 <code>volatile</code> 变量的读操作与之后的内存操作重排序。</p>
+<p>（Intel 的MESI协议：当CPU写数据时，如果发现操作的变量是共享变量，即在其他CPU中也存在该变量的副本，会发出信号通知其他CPU将该变量的高速缓存置为无效状态，因此当其他CPU需要读取这个变量时，发现自己缓存中缓存该变量的缓存行是无效的，那么它就会从内存重新读取重新加载到高速缓存。）</p>
+<h2 id="3：阻塞与否"><a href="#3：阻塞与否" class="headerlink" title="3：阻塞与否"></a>3：阻塞与否</h2><p>多线程访问volatile关键字不会发生阻塞（2所述原理），而synchronized关键字可能会发生阻塞(重量级锁时会阻塞)</p>
+<h2 id="4：性能"><a href="#4：性能" class="headerlink" title="4：性能"></a>4：性能</h2><p>volatile关键字是线程同步的轻量级实现，所以volatile性能肯定比synchronized关键字要好。但是volatile关键字只能用于变量而synchronized关键字可以修饰方法以及代码块。synchronized关键字在JavaSE1.6之后进行了主要包括为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁以及其它各种优化之后执行效率有了显著提升，实际开发中使用synchronized关键字的场景还是更多一些。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Concurrent/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T12:20:27.000Z" title="11/11/2021, 8:20:27 PM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.501Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 10996 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Tcp/">tcp</a></h1><div class="content"><p>简述：</p>
+<p>Tcp是</p>
+<p>面向链接的<br>面向字节流的<br>可靠的（几个点）</p>
+<p>保证可靠的手段：</p>
+<ul>
+<li><p>数据分块——握手时协商确定MSS，大于MSS的tcp数据包分段（也就是拆包）；序列号；校验和；<u>确认ack包</u>；</p>
+</li>
+<li><p>超时重传——发送方使用一个保守估计的时间作为收到数据包的确认的超时上限RTO。如果超过这个上限仍未收到确认包，发送方将重传这个数据包。每当发送方收到确认包后，会重置这个重传定时器。</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减为当前cwnd一半，执行慢启动每轮往返拥塞倍增</p>
+</li>
+<li><p>滑动窗口实现的流量控制；接收方在ack包中设置rwnd控制发送方发送速度。</p>
+</li>
+<li><p>拥塞控制算法——小于阈值之前从1开始每轮往返拥塞窗口cwnd倍增（慢启动），拥塞窗口大于阈值后步长为一的递增（拥塞避免）。接收方收到失序报文段后立即发出<u>重复确认ack包</u>，发送方连续三次重复确认则直接发送缺乏ack的丢包（快速重传），同时把阈值减为cwnd/2并调整拥塞窗口为新阈值而后执行拥塞避免算法（快速恢复）；</p>
+</li>
+</ul>
+<p>Ps:</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减为当前cwnd一半，执行慢启动每轮往返拥塞倍增；</p>
+<p>三次重复确认会执行快速重传快速恢复，阈值减为当前cwnd一半，拥塞窗口为新阈值值，执行拥塞避免，每轮往返递增；</p></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Tcp/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T02:54:51.000Z" title="11/11/2021, 10:54:51 AM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.403Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">12 minutes read (About 1813 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Socket/">Socket</a></h1><div class="content"><h1 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h1><h2 id="1-什么是Socket"><a href="#1-什么是Socket" class="headerlink" title="1 什么是Socket"></a>1 什么是Socket</h2><ul>
+<li><p>网络上的两个程序通过一个双向的通讯连接实现数据的交换，这个双向链路的一端称为一个Socket。Socket通常用来实现客户方和服务方的连接。Socket是TCP/IP协议的一个十分流行的编程界面，一个Socket由一个IP地址和一个端口号唯一确定。</p>
+</li>
+<li><p>但是，Socket所支持的协议种类也不光TCP/IP、UDP，因此两者之间是没有必然联系的。在Java环境下，Socket编程主要是指基于TCP/IP协议的网络编程。</p>
+</li>
+<li><p>socket连接就是所谓的长连接，客户端和服务器需要互相连接，理论上客户端和服务器端一旦建立起连接将不会主动断掉的，但是有时候网络波动还是有可能的</p>
+</li>
+<li><p>Socket偏向于底层。一般很少直接使用Socket来编程，框架底层使用Socket比较多，</p></li></ul></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Socket/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-09T03:49:45.000Z" title="11/9/2021, 11:49:45 AM">2021-11-09</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.378Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">23 minutes read (About 3463 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/09/MVXArchitecture/">MVXArchitecture</a></h1><div class="content"><h1 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h1><blockquote>
+<p><strong>View：</strong>XML布局文件。 <strong>Model：</strong>实体模型（数据的获取、存储、数据状态变化）。 <strong>Controller：</strong>对应于Activity，处理数据、业务和UI。</p>
+</blockquote>
+<p>从上面这个结构来看，Android本身的设计还是符合MVC架构的，但是Android中纯粹作为View的XML视图功能太弱，我们大量处理View的逻辑只能写在Activity中，这样Activity就充当了View和Controller两个角色，直接导致Activity中的代码大爆炸。相信大多数Android开发者都遇到过一个Acitivty数以千行的代码情况吧！所以，更贴切的说法是，这个MVC结构最终其实只是一个Model-View（Activity:View&amp;Controller）的结构。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/09/MVXArchitecture/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-01T12:20:27.000Z" title="11/1/2021, 8:20:27 PM">2021-11-01</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-10T06:53:55.353Z" title="5/10/2024, 2:53:55 PM">2024-05-10</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">29 minutes read (About 4375 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/01/HashMap/">HashMap</a></h1><div class="content"><h2 id="常见Map类"><a href="#常见Map类" class="headerlink" title="常见Map类"></a>常见Map类</h2><p>简述：HashMap是非线程安全的，如需要线程安全的哈希隐射类，应使用实现了分段锁（1.8）的ConcurrentHashMap，而不建议使用遗留类HashTable（HashTable实现线程安全是依靠用synchronized关键字修饰put/get方法，效率较低）。</p>
+<p>如果需要保存记录插入的顺序，可使用LinkHashMap()，其内部实现了一个双向链表，即每个节点本身记录了前后节点的引用。(btw:MessageQueue是单链表)</p></div><a class="article-more button is-small is-size-7" href="/2021/11/01/HashMap/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-06-15T13:11:21.000Z" title="6/15/2021, 9:11:21 PM">2021-06-15</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.999Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">4 minutes read (About 617 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/06/15/CpuArch/">CpuArch</a></h1><div class="content"><p><img src="/2021/06/15/CpuArch/image-20210615211220037.png" alt="image-20210615211220037"></p>
+<p><strong>‘armeabi-v7a’表示32位cpu架构, ‘arm64-v8a’表示64位, ‘x86’是只模拟器或特定rom。</strong></p></div><a class="article-more button is-small is-size-7" href="/2021/06/15/CpuArch/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-05-14T02:43:27.000Z" title="5/14/2021, 10:43:27 AM">2021-05-14</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.414Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">5 minutes read (About 815 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/05/14/ThreadLocal/">ThreadLocal</a></h1><div class="content"><h1 id="ThreadLocal："><a href="#ThreadLocal：" class="headerlink" title="ThreadLocal："></a>ThreadLocal：</h1><p><strong>ThreadLocal</strong>： 线程本地存储区（Thread Local Storage，简称为TLS），每个线程都有自己的私有的本地存储区域，不同线程之间彼此不能访问对方的TLS区域。</p>
+<p>ThreadLocal类不过是为了执行set/get，确定泛型的工具人而已。真正数据是靠的每个Thread内部维护。</p>
+<p><strong>实际上就是 每个Thread对象中 维护了一个</strong></p>
+<p><strong>叫ThreadLocal.ThreadLocalMap的</strong></p>
+<p>**key为 <em>ThreadLocal对象</em>,    value为 <em>存储的值</em> **</p>
+<p><strong>的key-vale映射结构，(实际上是一个键值对组成entry的唯一环形数组，线性探测，初始值3/4容量扩容)</strong></p>
+<p><strong>当调用threadLocalInstance.set(value)时，其实时调用的CurrentThread.threadLocalMap.set(threadLocalInstance, value)</strong></p></div><a class="article-more button is-small is-size-7" href="/2021/05/14/ThreadLocal/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-04-30T06:18:14.000Z" title="4/30/2021, 2:18:14 PM">2021-04-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.060Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Jvm/">Jvm</a></span><span class="level-item">a few seconds read (About 65 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/04/30/Gc/">Gc</a></h1><div class="content"><blockquote>
+<p>现代VM：”引用计数法，不行。可达性分析法，行！”<br>JVM：”可达分析法，很行”</p>
+</blockquote></div><a class="article-more button is-small is-size-7" href="/2021/04/30/Gc/#more">Read more</a></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

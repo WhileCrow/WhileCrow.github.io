@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>DNS - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="简述： 浏览器中访问一个www.baidu.com，首先会访问浏览器缓存，如未命中则进一步访问操作系统缓存，如未命中则访问hosts文件。如未命中，则客户端想本地DNS服务器发起递归查询（本地DNS会将结果也就是ip直接返回），如本地DNS解析服务器未命中，则由本地DNS解析服务器向根域名服务器、顶级域名服务器、管理方域名服务器等依次进行迭代查询（每有一个未命中则返回下一个域名服务器地址给本地域名"><meta property="og:type" content="blog"><meta property="og:title" content="DNS"><meta property="og:url" content="http://example.com/2022/01/06/DNS/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="简述： 浏览器中访问一个www.baidu.com，首先会访问浏览器缓存，如未命中则进一步访问操作系统缓存，如未命中则访问hosts文件。如未命中，则客户端想本地DNS服务器发起递归查询（本地DNS会将结果也就是ip直接返回），如本地DNS解析服务器未命中，则由本地DNS解析服务器向根域名服务器、顶级域名服务器、管理方域名服务器等依次进行迭代查询（每有一个未命中则返回下一个域名服务器地址给本地域名"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2022/01/06/DNS/bVbLAK3.png"><meta property="og:image" content="http://example.com/2022/01/06/DNS/858807-20170820123427006-190298208.png"><meta property="og:image" content="http://example.com/2022/01/06/DNS/858807-20170820123443521-1502085421.png"><meta property="og:image" content="http://example.com/2022/01/06/DNS/858807-20170820123624303-680937649.png"><meta property="og:image" content="http://example.com/2022/01/06/DNS/858807-20170820124317600-1783749391.png"><meta property="og:image" content="http://example.com/2022/01/06/DNS/858807-20170820124445615-743355102.png"><meta property="og:image" content="http://example.com/2022/01/06/DNS/858807-20170820124533396-745279476.png"><meta property="article:published_time" content="2022-01-06T09:45:42.000Z"><meta property="article:modified_time" content="2024-03-25T07:35:03.001Z"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2022/01/06/DNS/bVbLAK3.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2022/01/06/DNS/"},"headline":"DNS","image":["http://example.com/2022/01/06/DNS/bVbLAK3.png","http://example.com/2022/01/06/DNS/858807-20170820123427006-190298208.png","http://example.com/2022/01/06/DNS/858807-20170820123443521-1502085421.png","http://example.com/2022/01/06/DNS/858807-20170820123624303-680937649.png","http://example.com/2022/01/06/DNS/858807-20170820124317600-1783749391.png","http://example.com/2022/01/06/DNS/858807-20170820124445615-743355102.png","http://example.com/2022/01/06/DNS/858807-20170820124533396-745279476.png"],"datePublished":"2022-01-06T09:45:42.000Z","dateModified":"2024-03-25T07:35:03.001Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"简述： 浏览器中访问一个www.baidu.com，首先会访问浏览器缓存，如未命中则进一步访问操作系统缓存，如未命中则访问hosts文件。如未命中，则客户端想本地DNS服务器发起递归查询（本地DNS会将结果也就是ip直接返回），如本地DNS解析服务器未命中，则由本地DNS解析服务器向根域名服务器、顶级域名服务器、管理方域名服务器等依次进行迭代查询（每有一个未命中则返回下一个域名服务器地址给本地域名"}</script><link rel="canonical" href="http://example.com/2022/01/06/DNS/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-01-06T09:45:42.000Z" title="1/6/2022, 5:45:42 PM">2022-01-06</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.001Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">24 minutes read (About 3577 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">DNS</h1><div class="content"><p>简述：</p>
+<p>浏览器中访问一个<a target="_blank" rel="noopener" href="http://www.baidu.com,首先会访问浏览器缓存,如未命中则进一步访问操作系统缓存,如未命中则访问hosts文件.如未命中,则客户端想本地dns服务器发起递归查询(本地dns会将结果也就是ip直接返回),如本地dns解析服务器未命中,则由本地dns解析服务器向根域名服务器、顶级域名服务器、管理方域名服务器等依次进行迭代查询(每有一个未命中则返回下一个域名服务器地址给本地域名服务器,比如local/">www.baidu.com，首先会访问浏览器缓存，如未命中则进一步访问操作系统缓存，如未命中则访问hosts文件。如未命中，则客户端想本地DNS服务器发起递归查询（本地DNS会将结果也就是ip直接返回），如本地DNS解析服务器未命中，则由本地DNS解析服务器向根域名服务器、顶级域名服务器、管理方域名服务器等依次进行迭代查询（每有一个未命中则返回下一个域名服务器地址给本地域名服务器，比如local</a> dns server向根域名服务器查询未命中，则根域名服务器返回顶级域名服务器地址给local dns server，然后local dns server向收到的这个地址迭代发起查询）</p>
+<p>迭代与递归查询区别：客户端向本地dns服务器发起的是递归查询，客户端拿到的ip是由本地dns服务器直接返回；本地dns服务器向外网查询时是用的迭代查询，即向根域名服务器查询未命中返回给本地dns服务器的是下一个域名服务器的地址而非根域名去访问下一个域名服务器返回结果ip。</p>
+<p>这里还有一个权威性的问题：如果客户端向本地dns服务器发起递归查询时，本地dns存在缓存，并将结果返回客户端，则该结果不具权威性（即缓存可能已经失效）；反之如果由本地dns服务器解析命中后返回，则具有权威性</p>
+<span id="more"></span>
+
+<p>域名的级别：</p>
+<p>.代表根域名， .com这种是顶级域名，也叫一级域名，baidu.com这种叫二级域名， <a target="_blank" rel="noopener" href="http://www.baidu.com这种叫三级域名,依次类推./">www.baidu.com这种叫三级域名，依次类推。</a></p>
+<p>注：也有其他叫法的，反正你知道这个意思就可以了。</p>
+<p>再介绍一下最常见的两种域名服务器：</p>
+<p>权威DNS：负责对请求作出权威的回答。权威DNS中存储着记录，最常见的3种：A记录（记录某域名和其IP的对应），NS记录（记录某域名和负责解析该域的权威DNS），CNAME记录（负责记录某域名及其别名）。权威能直接回答的，就回A记录；需要其他权威DNS回答的，就回NS记录，然后LDNS再去找其他权威DNS问；如果该记录是别名类型的，就回CNAME，LDNS就会再去解析别名。</p>
+<p>递归DNS：通常就是LDNS，它接受终端的域名查询请求，负责在网上问一圈后，将答案返回终端。</p>
+<p>现在举一个具体的例子：比如终端请求<a target="_blank" rel="noopener" href="http://www.baidu.com这个域名的ip./">www.baidu.com这个域名的IP。</a></p>
+<p>在没有缓存时，LDNS会从根DNS问起：</p>
+<p>1、LDNS问根DNS说：“<a href="http://www.baidu.com的IP是多少啊？”。">www.baidu.com的IP是多少啊？”。</a></p>
+<p>2、根DNS说：“我哪有时间管你这么细的问题，你去问com顶级域的DNS吧，我只管到顶级域，喏，这些是com顶级域DNS的名字和IP，你去问它们吧”。（以NS记录回应）</p>
+<p>3、LDNS又忙问com的权威DNS，com权威DNS说：“你问的这是三级域名，我不管这么多，你去问baidu.com的权威DNS吧，它的名字是ns.baidu.com，他的IP是XXX（这里可能给出多个权威DNS）”。</p>
+<p>4、LDNS继续问baidu.com的权威DNS，这次痛快，因为<a target="_blank" rel="noopener" href="http://www.baidu.com正是它管的,它可能直接给出a记录,也可能给出cname记录,如果是前者,就直接得到ip,如果是后者,就需要对别名再做查询./">www.baidu.com正是它管的，它可能直接给出A记录，也可能给出CNAME记录，如果是前者，就直接得到IP，如果是后者，就需要对别名再做查询。</a></p>
+<p>5、最终，LDNS得到<a target="_blank" rel="noopener" href="http://www.baidu.com的ip,并将其返回给终端./">www.baidu.com的IP，并将其返回给终端。</a></p>
+<p><img src="/2022/01/06/DNS/bVbLAK3.png" alt="美国如果把根域名服务器封了，中国会从网络上消失？"></p>
+<p>细心的人会问，在第1步中，LDNS问根DNS的时候，他是怎么知道根DNS的IP的？</p>
+<p>这13个IP通常是预先配置在LDNS里面的。在LDNS初始化DNS缓存或者缓存失效的时候，LDNS向自己被预先配置的这些IP中的一个，发起对根的查询（也即询问.的NS记录），获得最新的根DNS的信息_（6）_。</p>
+<blockquote>
+<p>对于DNS服务器软件而言，这13个IP，配置在根提示文件（root hints file）中，可能是named.cache或root.ca或root.hints等等之类的文件。</p>
+</blockquote>
+<p>上面就是各种教科书中都会讲到的DNS查询过程，但实际上，没有这么麻烦，因为各个层面都是有缓存的。</p>
+<p>实际DNS查询的过程，是这样的：</p>
+<p>举个例子，比如用户在浏览器中输入这个域名：123.abc.qq.com.cn</p>
+<p>1、<strong>浏览器</strong>会先看自身有没有对这个域名的缓存，如果有，就直接返回，如果没有，就去问<strong>操作系统</strong>，操作系统也会去看自己的缓存，如果有，就直接返回，如果没有，再去<strong>hosts文件</strong>看，也没有，才会去问LDNS。</p>
+<p>2、LDNS会去先看看自己有没有123.abc.qq.com.cn的A记录，要有就直接返回，要没有，就去看有没有abc.qq.com.cn的NS记录，如果有，就去问它要答案，如果没有，就去看有无qq.com.cn的NS的记录，如果有，就去问它，没有就去看有无com.cn的DNS，还没有就去看有无cn的DNS，如果连cn的NS记录都没有，才去问根。</p>
+<p>所以，有了缓存以后，教科书上那种从根问起的情况，实际上很少发生。</p>
+<p>只有在各处都没有缓存的时候，我们才会问根。</p>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>1.域名系统</p>
+<p><img src="/2022/01/06/DNS/858807-20170820123427006-190298208.png" alt="img"></p>
+<p><img src="/2022/01/06/DNS/858807-20170820123443521-1502085421.png" alt="img"></p>
+<p> 2.域名服务器</p>
+<p><img src="/2022/01/06/DNS/858807-20170820123624303-680937649.png" alt="img"></p>
+<h2 id="域名解析过程"><a href="#域名解析过程" class="headerlink" title="域名解析过程"></a>域名解析过程</h2><p>1.在浏览器中输入<a target="_blank" rel="noopener" href="http://www.qq.com域名,会优先访问浏览器缓存,如果未命中则访问os缓存,则访问本地hosts文件/">www.qq.com域名，会优先访问浏览器缓存，如果未命中则访问OS缓存，则访问本地hosts文件</a></p>
+<p>2.如果hosts里没有这个域名的映射，则查找本地DNS解析器缓存，是否有这个网址映射关系，如果有，直接返回，完成域名解析。</p>
+<p>3.如果hosts与本地DNS解析器缓存都没有相应的网址映射关系，首先会找TCP/IP参数中设置的首选DNS服务器，在此我们叫它本地DNS服务器，</p>
+<p>此服务器收到查询时，如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。</p>
+<p>4.如果要查询的域名，不由本地DNS服务器区域解析，但该服务器已缓存了此网址映射关系，则调用这个IP地址映射，完成域名解析，此解析不具有权威性。</p>
+<p>5.如果本地DNS服务器本地区域文件与缓存解析都失效，则根据本地DNS服务器的设置（是否设置转发器）进行查询，</p>
+<p>如果未用转发模式，本地DNS就把请求发至 “根DNS服务器”，“根DNS服务器”收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。</p>
+<p>本地DNS服务器收到IP信息后，将会联系负责.com域的这台服务器。这台负责.com域的服务器收到请求后，如果自己无法解析，</p>
+<p>它就会找一个管理.com域的下一级DNS服务器地址(qq.com)给本地DNS服务器。当本地DNS服务器收到这个地址后，就会找qq.com域服务器，重复上面的动作，进行查询，直至找到<a target="_blank" rel="noopener" href="http://www.qq.com主机./">www.qq.com主机。</a></p>
+<p>6.如果用的是转发模式，此DNS服务器就会把请求转发至上一级DNS服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。</p>
+<p>不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机。</p>
+<h2 id="递归查询与迭代查询"><a href="#递归查询与迭代查询" class="headerlink" title="递归查询与迭代查询"></a>递归查询与迭代查询</h2><p> 一、主机向本地域名服务器的查询一般都是采用递归查询。</p>
+<p>​    所谓递归查询就是：如果主机所询问的本地域名服务器不知道被查询的域名的IP地址，那么本地域名服务器就以DNS客户的身份，</p>
+<p>​    向其它根域名服务器继续发出查询请求报文(即替主机继续查询)，而不是让主机自己进行下一步查询。</p>
+<p>​    因此，递归查询返回的查询结果或者是所要查询的IP地址，或者是报错，表示无法查询到所需的IP地址。</p>
+<p>二、本地域名服务器向根域名服务器的查询的迭代查询。</p>
+<p>​    迭代查询的特点：当根域名服务器收到本地域名服务器发出的迭代查询请求报文时，要么给出所要查询的IP地址，要么告诉本地服务器：“你下一步应当向哪一个域名服务器进行查询”。</p>
+<p>​    然后让本地服务器进行后续的查询。根域名服务器通常是把自己知道的顶级域名服务器的IP地址告诉本地域名服务器，让本地域名服务器再向顶级域名服务器查询。</p>
+<p>​    顶级域名服务器在收到本地域名服务器的查询请求后，要么给出所要查询的IP地址，要么告诉本地服务器下一步应当向哪一个权限域名服务器进行查询。</p>
+<p>​    最后，知道了所要解析的IP地址或报错，然后把这个结果返回给发起查询的主机</p>
+<p><img src="/2022/01/06/DNS/858807-20170820124317600-1783749391.png" alt="img"></p>
+<p><img src="/2022/01/06/DNS/858807-20170820124445615-743355102.png" alt="img"></p>
+<p><img src="/2022/01/06/DNS/858807-20170820124533396-745279476.png" alt="img"></p>
+<p><strong>递归</strong>：客户端只发一次请求，要求对方给出最终结果。</p>
+<p><strong>迭代</strong>：客户端发出一次请求，对方如果没有授权回答，它就会返回一个能解答这个查询的其它名称服务器列表，</p>
+<p>​     客户端会再向返回的列表中发出请求，直到找到最终负责所查域名的名称服务器，从它得到最终结果。</p>
+<p><strong>授权回答</strong>：向dns服务器查询一个域名，刚好这个域名是本服务器负责，返回的结果就是授权回答。</p>
+<p><strong>从递归和迭代查询可以看出：</strong></p>
+<p><strong>客户端-本地dns服务端：这部分属于递归查询。</strong></p>
+<p><strong>本地dns服务端—外网：这部分属于迭代查询。</strong></p>
+<p><strong>递归查询时，返回的结果只有两种:查询成功或查询失败.</strong></p>
+<p><strong>迭代查询，又称作重指引,返回的是最佳的查询点或者主机地址.</strong></p>
+<h2 id="DNS缓存机制"><a href="#DNS缓存机制" class="headerlink" title="DNS缓存机制"></a>DNS缓存机制</h2><p>关于DNS缓存的机制，有一篇非常详细的文章<a target="_blank" rel="noopener" href="http://igoro.com/archive/what-really-happens-when-you-navigate-to-a-url/">What really happens when you navigate to a URL</a>。</p>
+<p>简单来说，一条域名的DNS记录会在本地有两种缓存：浏览器缓存和<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/operatingsystem">操作系统</a>(OS)缓存。在浏览器中访问的时候，会优先访问浏览器缓存，</p>
+<p>如果未命中则访问OS缓存，则访问本地hosts文件，若未命中最后再访问DNS服务器(一般是ISP提供)，然后DNS服务器会递归式的查找域名记录，然后返回。</p>
+<p>DNS记录会有一个ttl值(time to live)，单位是秒，意思是这个记录最大有效期是多少。经过实验，OS缓存会参考ttl值，但是不完全等于ttl值，</p>
+<p>而浏览器DNS缓存的时间跟ttl值无关，每种浏览器都使用一个固定值。</p>
+<p>这里有一篇文章，做过详细的测试<a target="_blank" rel="noopener" href="http://dyn.com/web-browser-dns-caching-bad-thing/">Why Web Browser DNS Caching Can Be A Bad Thing</a>：</p>
+<p>Windows访问DNS后会把记录保存一段短暂的时间，</p>
+<p>可通过ipconfig /displaydns 查看windows的DNS缓存、通过ipconfig /flushdns来清除。</p>
+<h2 id="工具和命令"><a href="#工具和命令" class="headerlink" title="工具和命令"></a>工具和命令</h2><p>相关的工具和命令: dig,nslookup,host等.其中以<strong>dig</strong>命令的功能最为强大和灵活.</p>
+<p>dig命令典型应用形如： </p>
+<p><strong>dig  @server  name  type</strong></p>
+<p><strong>@server:</strong> 指定域名服务器</p>
+<p>  **name:**指定查询请求资源的域名</p>
+<p>  **type:**指定查询类型，如A、CNAME、SRV、MX、SIG等，如果不指定type，默认为A</p>
+<p>查询某个域名解析的全过程:(此时为迭代查询)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dig @8.8.8.8  163.com +trace</span><br></pre></td></tr></table></figure>
+
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qingdaofu/p/7399670.html">DNS递归查询与迭代查询 - 皈依之路 - 博客园 (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/wyq_tc25/article/details/51679520">http://blog.csdn.net/wyq_tc25/article/details/51679520</a></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/wytheonly/article/details/37925067">http://blog.csdn.net/wytheonly/article/details/37925067</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/Juntaran/p/5827110.html">http://www.cnblogs.com/Juntaran/p/5827110.html</a></p>
+<p><a target="_blank" rel="noopener" href="http://magic3.blog.51cto.com/1146917/1354084">http://magic3.blog.51cto.com/1146917/1354084</a></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/realmeh/article/details/22663807">http://blog.csdn.net/realmeh/article/details/22663807</a></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>DNS</p><p><a href="http://example.com/2022/01/06/DNS/">http://example.com/2022/01/06/DNS/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-01-06</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-03-25</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/01/10/Java/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Java</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/12/31/Generics/"><span class="level-item">Generics</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#基础知识"><span class="level-left"><span class="level-item">1</span><span class="level-item">基础知识</span></span></a></li><li><a class="level is-mobile" href="#域名解析过程"><span class="level-left"><span class="level-item">2</span><span class="level-item">域名解析过程</span></span></a></li><li><a class="level is-mobile" href="#递归查询与迭代查询"><span class="level-left"><span class="level-item">3</span><span class="level-item">递归查询与迭代查询</span></span></a></li><li><a class="level is-mobile" href="#DNS缓存机制"><span class="level-left"><span class="level-item">4</span><span class="level-item">DNS缓存机制</span></span></a></li><li><a class="level is-mobile" href="#工具和命令"><span class="level-left"><span class="level-item">5</span><span class="level-item">工具和命令</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

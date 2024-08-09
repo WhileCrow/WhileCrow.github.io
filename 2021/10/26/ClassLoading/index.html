@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>ClassLoading - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="类的生命周期：  简述：加载是字节码(.class)文件被ClassLoader装载进方法区并在堆中生成一个class对象引用；链接包括：校验二进制流是否符合JVM规范的验证、为各个变量分配内存赋值默认值的准备、将字符串表示的符号引用解析成直接将引用的解析；初始化则是static块、static变量初始化、类构造器执行的过程。"><meta property="og:type" content="blog"><meta property="og:title" content="ClassLoading"><meta property="og:url" content="http://example.com/2021/10/26/ClassLoading/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="类的生命周期：  简述：加载是字节码(.class)文件被ClassLoader装载进方法区并在堆中生成一个class对象引用；链接包括：校验二进制流是否符合JVM规范的验证、为各个变量分配内存赋值默认值的准备、将字符串表示的符号引用解析成直接将引用的解析；初始化则是static块、static变量初始化、类构造器执行的过程。"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2021/10/26/ClassLoading/1041642665584_.pic_hd_%E5%89%AF%E6%9C%AC.jpg"><meta property="og:image" content="http://example.com/2021/10/26/ClassLoading/classloadinglifecycle.jpg"><meta property="og:image" content="https://github.com/WhileCrow/BlackCrow/assets/26061465/0b856826-0333-4947-a05e-4d9b265ca44c"><meta property="article:published_time" content="2021-10-26T06:04:52.000Z"><meta property="article:modified_time" content="2024-04-19T02:53:39.122Z"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2021/10/26/ClassLoading/1041642665584_.pic_hd_%E5%89%AF%E6%9C%AC.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2021/10/26/ClassLoading/"},"headline":"ClassLoading","image":["http://example.com/2021/10/26/ClassLoading/1041642665584_.pic_hd_%E5%89%AF%E6%9C%AC.jpg","http://example.com/2021/10/26/ClassLoading/classloadinglifecycle.jpg"],"datePublished":"2021-10-26T06:04:52.000Z","dateModified":"2024-04-19T02:53:39.122Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"类的生命周期：  简述：加载是字节码(.class)文件被ClassLoader装载进方法区并在堆中生成一个class对象引用；链接包括：校验二进制流是否符合JVM规范的验证、为各个变量分配内存赋值默认值的准备、将字符串表示的符号引用解析成直接将引用的解析；初始化则是static块、static变量初始化、类构造器执行的过程。"}</script><link rel="canonical" href="http://example.com/2021/10/26/ClassLoading/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-26T06:04:52.000Z" title="10/26/2021, 2:04:52 PM">2021-10-26</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-19T02:53:39.122Z" title="4/19/2024, 10:53:39 AM">2024-04-19</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">16 minutes read (About 2418 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">ClassLoading</h1><div class="content"><p><img src="/2021/10/26/ClassLoading/1041642665584_.pic_hd_%E5%89%AF%E6%9C%AC.jpg" alt="1041642665584_.pic_hd_副本"></p>
+<p>类的生命周期：</p>
+<p><img src="/2021/10/26/ClassLoading/classloadinglifecycle.jpg" alt="classloadinglifecycle"></p>
+<p>简述：加载是字节码(.class)文件被ClassLoader装载进方法区并在堆中生成一个class对象引用；链接包括：校验二进制流是否符合JVM规范的验证、为各个变量分配内存赋值默认值的准备、将字符串表示的符号引用解析成直接将引用的解析；初始化则是static块、static变量初始化、类构造器执行的过程。</p>
+<span id="more"></span>
+
+<h1 id="类加载过程-ClassLoading"><a href="#类加载过程-ClassLoading" class="headerlink" title="类加载过程(ClassLoading)"></a>类加载过程(ClassLoading)</h1><pre><code>这里的类加载不是指类加载阶段，而是指整个类加载过程，即类加载阶段到初始化完成。
+</code></pre>
+<ol>
+<li><p>隐式加载</p>
+<ul>
+<li><p>创建类对象</p>
+</li>
+<li><p>使用类的静态域</p>
+</li>
+<li><p>创建子类对象</p>
+</li>
+<li><p>使用子类的静态域</p>
+</li>
+<li><p>在JVM启动时，BootStrapLoader会加载一些JVM自身运行所需的class</p>
+</li>
+<li><p>在JVM启动时，ExtClassLoader会加载指定目录下一些特殊的class</p>
+</li>
+<li><p>在JVM启动时，AppClassLoader会加载classpath路径下的class，以及main函数所在的类的class文件</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="2">
+<li><p>显式加载</p>
+<ul>
+<li><p>ClassLoader.loadClass(className)，只加载和连接、不会进行初始化</p>
+</li>
+<li><p>Class.forName(String name, boolean initialize,ClassLoader loader); 使用loader进行加载和连接，根据参数initialize决定是否初始化。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>动态加载</strong>：</p>
+<p>不管使用什么样的类加载器，类，都是在第一次被用到时，<strong>动态加载</strong>到JVM的。这句话有两层含义：</p>
+<ol>
+<li>Java程序在运行时并不一定被完整加载，只有当发现该类还没有加载时，才去本地或远程查找类的.class文件并验证和加载；</li>
+<li>当程序创建了第一个对类的静态成员的引用（如类的静态变量、静态方法、构造方法——构造方法也是静态的）时，才会加载该类。</li>
+</ol>
+<p>包括3个步骤：</p>
+<h2 id="一、加载（Loading）"><a href="#一、加载（Loading）" class="headerlink" title="一、加载（Loading）"></a>一、加载（Loading）</h2><p><strong>简述：加载是将.class文件从<u>各个来源</u>通过<code>ClassLoader</code>装载到方法区内存，并在堆内存中生成该类的class对象引用</strong></p>
+<p>时机：类加载器并不需要等到某个类被“首次主动使用”时再加载它，JVM规范允许类加载器在预料某个类将要被使用时就预先加载它</p>
+<p>这里有两个重点：</p>
+<ul>
+<li><strong>字节码来源</strong>。一般的加载来源包括从本地路径下编译生成的.class文件，从jar包中的.class文件，从远程网络，以及动态代理实时编译</li>
+<li><strong>类加载器</strong>。一般包括<strong>启动类加载器</strong>，<strong>扩展类加载器</strong>，<strong>应用类加载器</strong>，以及用户的<strong>自定义类加载器</strong>。(Android中是系统用PathClassLoader，插件化热修复方案用的DexClassLoader和所有classLoader的父ClassLoader——BaseClassLoader)</li>
+</ul>
+<h2 id="二、链接（Linking）"><a href="#二、链接（Linking）" class="headerlink" title="二、链接（Linking）"></a>二、链接（Linking）</h2><p>验证字节码、为类变量分配内存并赋default值，解析该类创建所需要直接引用；</p>
+<p>Java在加载了类之后，需要进行链接的步骤，链接简单地说，就是将已经加载的java二进制代码组合到JVM运行状态中去。它包括3个步骤：</p>
+<h3 id="验证（Verification）"><a href="#验证（Verification）" class="headerlink" title="验证（Verification）"></a>验证（Verification）</h3><p>​    <strong>简述：保证二进制字节码符合虚拟机规范：包括类型正确、访问权限、final类是否错误继承等；</strong></p>
+<p>​    验证是保证二进制字节码在结构上的正确性，具体来说，工作包括检测类型正确性，接入属性正确性（public、private），检查final class 没有被继承，检查静态变量的正确性等。</p>
+<h3 id="准备（Preparation）"><a href="#准备（Preparation）" class="headerlink" title="准备（Preparation）"></a>准备（Preparation）</h3><p>​    <strong>简述：不执行任何代码，仅为类变量(static)分配内存并赋零值：基本类型为0，引用类型为null；</strong></p>
+<p>​    准备阶段主要是创建静态域，分配空间，给这些域设默认值，需要注意的是两点：一个是在准备阶段不会执行任何代码，仅仅是设置默认值，二个是这些默认值是这样分配的，原生类型全部设为0，如：float:0f,int 0, long 0L, boolean:0（布尔类型也是0），其它引用类型为null。</p>
+<h3 id="解析（Resolution）"><a href="#解析（Resolution）" class="headerlink" title="解析（Resolution）"></a>解析（Resolution）</h3><p>​    <strong>简述：将符号引用解析成直接饮用（即字符串解析成具体地址）</strong><br><img src="https://github.com/WhileCrow/BlackCrow/assets/26061465/0b856826-0333-4947-a05e-4d9b265ca44c" alt="image"><br>直接引用指的是存于方法区-运行时常量池中的方法引用</p>
+<p>​    解析的过程就是对类中的接口、类、方法、变量的符号引用（<strong>处于方法区的类信息</strong>）进行解析并定位，解析成直接引用（符号引用就是编码，是用字符串表示某个变量、接口的位置；直接引用就是根据符号引用翻译出来的地址），并保证这些类被正确的找到。解析的过程可能导致其它的类被加载。</p>
+<h2 id="三、初始化（Initialization）"><a href="#三、初始化（Initialization）" class="headerlink" title="三、初始化（Initialization）"></a>三、初始化（Initialization）</h2><p><strong>类与接口的初始化不同，如果一个类被初始化，则其父类或父接口也会被初始化，但如果一个接口初始化，则不会引起其父接口的初始化。</strong></p>
+<h3 id="类的初始化时机"><a href="#类的初始化时机" class="headerlink" title="类的初始化时机:"></a>类的初始化时机:</h3><p><code>类的初始化</code>即java虚拟机为类的<code>static静态变量</code>赋予初始值(这和准备阶段设置默认初始值为0是不一样的)。只有类的<code>主动使用才会初始化类</code>。</p>
+<h4 id="1-类的主动使用-6种"><a href="#1-类的主动使用-6种" class="headerlink" title="1.类的主动使用(6种):"></a>1.类的主动使用(6种):</h4><ol>
+<li><p>创建类的实例：用new语句创建实例 Person ps=new Person();</p>
+</li>
+<li><p>调用类的静态变量或对静态变量赋值：</p>
+</li>
+</ol>
+<ol start="3">
+<li><p>调用类的静态方法</p>
+</li>
+<li><p>调用java API中的反射方法：<strong>Class.forName(“Person”);</strong></p>
+</li>
+<li><p>初始化子类的时候会先初始化父类(但”父类”是接口的时候，不会先初始化它所实现的接口的，只有在程序在使用接口的静态变量时才会使静态接口初始化)</p>
+</li>
+<li><p>java虚拟机启动时被标明为启动类的类</p>
+</li>
+</ol>
+<h4 id="2-类的被动使用"><a href="#2-类的被动使用" class="headerlink" title="2.类的被动使用:"></a>2.类的被动使用:</h4><ol>
+<li><p>final类型的静态变量在编译的时候能计算出值（即<code>编译时常量</code>，在编译的时候将这个值就放入到常量池中了）：<br>注： final类型的静态变量在编译的时候不能计算出变量的值(即<code>运行时常量</code>)的时候是会被初始化的</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> a=<span class="number">2</span>*<span class="number">3</span>;                 <span class="comment">//变量a是编译时常量</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> a=(<span class="keyword">int</span>)Math.<span class="built_in">random</span>();  <span class="comment">//变量a不是是编译时常量（即运行时常量）</span></span><br></pre></td></tr></table></figure></li>
+<li><p>“父类”是接口的时候，不会先初始化它所实现的接口的，只有在程序在使用接口的静态变量时才会使静态接口初始化</p>
+</li>
+<li><p>**ClassLoader类的loadClass(“Person”)**方法的时候，只是对类的加载，不是初始化。Class.forName(“Person”);才会初始化</p>
+</li>
+</ol>
+<h1 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h1><ul>
+<li><p>变量赋值：</p>
+<p>“二.1准备阶段”，是jvm赋static变量初值：包括基本类型赋值默认值0、引用类型赋值null</p>
+<p>”三、初始化阶段“，则根据程序员自己设置的变量赋值。</p>
+</li>
+</ul>
+<p>————final变量 在运行时初始化、static变量在“三、初始化阶段”初始化，至于默认值则都是在“二.1准备阶段”赋予了———</p>
+<ul>
+<li>类加载器</li>
+</ul>
+<p>在了解Java的机制之前，需要先了解类在JVM（Java虚拟机）中是如何加载的，这对后面理解java其它机制将有重要作用。</p>
+<p>每个类编译后产生一个Class对象，存储在.class文件中，JVM使用类加载器（Class Loader）来加载类的字节码文件（.class），类加载器实质上是一条类加载器链，一般的，我们只会用到一个原生的类加载器，它只加载Java API等可信类，通常只是在本地磁盘中加载，这些类一般就够我们使用了。如果我们需要从远程网络或数据库中下载.class字节码文件，那就需要我们来挂载额外的类加载器。</p>
+<p>一般来说，类加载器是按照树形的层次结构组织的，每个加载器都有一个父类加载器。另外，每个类加载器都支持代理模式，即可以自己完成Java类的加载工作，也可以代理给其它类加载器。</p>
+<p>类加载器的加载顺序有两种，一种是父类优先策略，一种是是自己优先策略，父类优先策略是比较一般的情况（如JDK采用的就是这种方式），在这种策略下，类在加载某个Java类之前，会尝试代理给其父类加载器，只有当父类加载器找不到时，才尝试自己去加载。自己优先的策略与父类优先相反，它会首先尝试子经济加载，找不到的时候才要父类加载器去加载，这种在web容器（如tomcat）中比较常见。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>ClassLoading</p><p><a href="http://example.com/2021/10/26/ClassLoading/">http://example.com/2021/10/26/ClassLoading/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-10-26</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-04-19</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/10/28/Mmkv/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">mmkv</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/10/19/APM/"><span class="level-item">APM</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#类加载过程-ClassLoading"><span class="level-left"><span class="level-item">1</span><span class="level-item">类加载过程(ClassLoading)</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#一、加载（Loading）"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">一、加载（Loading）</span></span></a></li><li><a class="level is-mobile" href="#二、链接（Linking）"><span class="level-left"><span class="level-item">1.2</span><span class="level-item">二、链接（Linking）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#验证（Verification）"><span class="level-left"><span class="level-item">1.2.1</span><span class="level-item">验证（Verification）</span></span></a></li><li><a class="level is-mobile" href="#准备（Preparation）"><span class="level-left"><span class="level-item">1.2.2</span><span class="level-item">准备（Preparation）</span></span></a></li><li><a class="level is-mobile" href="#解析（Resolution）"><span class="level-left"><span class="level-item">1.2.3</span><span class="level-item">解析（Resolution）</span></span></a></li></ul></li><li><a class="level is-mobile" href="#三、初始化（Initialization）"><span class="level-left"><span class="level-item">1.3</span><span class="level-item">三、初始化（Initialization）</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#类的初始化时机"><span class="level-left"><span class="level-item">1.3.1</span><span class="level-item">类的初始化时机:</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-类的主动使用-6种"><span class="level-left"><span class="level-item">1.3.1.1</span><span class="level-item">1.类的主动使用(6种):</span></span></a></li><li><a class="level is-mobile" href="#2-类的被动使用"><span class="level-left"><span class="level-item">1.3.1.2</span><span class="level-item">2.类的被动使用:</span></span></a></li></ul></li></ul></li></ul></li><li><a class="level is-mobile" href="#Other"><span class="level-left"><span class="level-item">2</span><span class="level-item">Other</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

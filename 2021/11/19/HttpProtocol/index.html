@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>HttpProtocol - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Http 缓存在请求一个静态文件的时候（图片，css，js）等，这些文件的特点是文件不经常变化，将这些不经常变化的文件存储起来，对客户端来说是一个优化用户浏览体验的方法。那么这个就是客户端缓存的意义了。 简述：  强制缓存是根据上次响应header中的Cache-Control:Max-age或是Expries，客户端直接判断缓存是否能用该资源缓存；  协商缓存需要客户端用记录下来的上次响应hea"><meta property="og:type" content="blog"><meta property="og:title" content="HttpProtocol"><meta property="og:url" content="http://example.com/2021/11/19/HttpProtocol/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="Http 缓存在请求一个静态文件的时候（图片，css，js）等，这些文件的特点是文件不经常变化，将这些不经常变化的文件存储起来，对客户端来说是一个优化用户浏览体验的方法。那么这个就是客户端缓存的意义了。 简述：  强制缓存是根据上次响应header中的Cache-Control:Max-age或是Expries，客户端直接判断缓存是否能用该资源缓存；  协商缓存需要客户端用记录下来的上次响应hea"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/image-20230825165323070.png"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/1717297caf6776de~tplv-t2oaga2asx-watermark.awebp"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/400px-HTTP_pipelining.svg.png"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/d9f07162d5391641b7a2645a61b24fc0_1440w.jpg"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/a21a608dd1807f2705b04032de7aae27.jpg-wh_600x-s_3005077120.jpg"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/640"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/640-20211201141157905"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/640-20211201141157945"><meta property="og:image" content="http://example.com/2021/11/19/HttpProtocol/640-20211201141157947"><meta property="article:published_time" content="2021-11-19T09:20:14.000Z"><meta property="article:modified_time" content="2024-07-08T09:36:08.977Z"><meta property="article:author" content="White Crow"><meta property="article:tag" content="Core"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2021/11/19/HttpProtocol/image-20230825165323070.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2021/11/19/HttpProtocol/"},"headline":"HttpProtocol","image":["http://example.com/2021/11/19/HttpProtocol/image-20230825165323070.png","http://example.com/2021/11/19/HttpProtocol/400px-HTTP_pipelining.svg.png","http://example.com/2021/11/19/HttpProtocol/d9f07162d5391641b7a2645a61b24fc0_1440w.jpg","http://example.com/2021/11/19/HttpProtocol/a21a608dd1807f2705b04032de7aae27.jpg-wh_600x-s_3005077120.jpg"],"datePublished":"2021-11-19T09:20:14.000Z","dateModified":"2024-07-08T09:36:08.977Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"Http 缓存在请求一个静态文件的时候（图片，css，js）等，这些文件的特点是文件不经常变化，将这些不经常变化的文件存储起来，对客户端来说是一个优化用户浏览体验的方法。那么这个就是客户端缓存的意义了。 简述：  强制缓存是根据上次响应header中的Cache-Control:Max-age或是Expries，客户端直接判断缓存是否能用该资源缓存；  协商缓存需要客户端用记录下来的上次响应hea"}</script><link rel="canonical" href="http://example.com/2021/11/19/HttpProtocol/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-19T09:20:14.000Z" title="11/19/2021, 5:20:14 PM">2021-11-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-08T09:36:08.977Z" title="7/8/2024, 5:36:08 PM">2024-07-08</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 8572 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">HttpProtocol</h1><div class="content"><h1 id="Http-缓存"><a href="#Http-缓存" class="headerlink" title="Http 缓存"></a>Http 缓存</h1><p>在请求一个静态文件的时候（图片，css，js）等，这些文件的特点是文件不经常变化，将这些不经常变化的文件存储起来，对客户端来说是一个优化用户浏览体验的方法。那么这个就是客户端缓存的意义了。</p>
+<p>简述：</p>
+<ul>
+<li><p>强制缓存是根据上次响应header中的Cache-Control:Max-age<del>或是Expries</del>，<strong>客户端直接判断缓存</strong>是否能用该资源缓存；</p>
+</li>
+<li><p>协商缓存需要<strong>客户端</strong>用记录下来的上次响应header中的ETag或是Last-Modified，通过与向服务器的请求request的header中赋值If-None-Match或If-Modified-Since，由<strong>服务器判断资源是否更新</strong>，结果由code和是否存在body明确是否命中缓存；</p>
+</li>
+</ul>
+<p>同时出现的优先级排序： 强制缓存 &gt; 协商缓存；ETag &amp; If-None-Match &gt; Last-Modified &amp; If-Modified-Since <del>;Cache-Control &gt; Expries；</del></p>
+<span id="more"></span>
+
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching">官方文档</a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching</a></p>
+<p><img src="/2021/11/19/HttpProtocol/image-20230825165323070.png" alt="image-20230825165323070"></p>
+<h2 id="一-强制缓存"><a href="#一-强制缓存" class="headerlink" title="一. 强制缓存"></a>一. 强制缓存</h2><p>强制缓存命中后请求没有到达后端，浏览器从缓存中提取资源，以statue code=200 OK(from memory cache)返回</p>
+<h3 id="Cache-Control"><a href="#Cache-Control" class="headerlink" title="Cache-Control"></a>Cache-Control</h3><ul>
+<li><code>max-age</code>：指定缓存的最大有效时间，以秒为单位。</li>
+<li><code>no-cache</code>：表示缓存需要重新验证，但仍然可以缓存。</li>
+<li><code>no-store</code>：表示不应该缓存这个资源。</li>
+<li><code>public</code>：表示响应可以被任何中间缓存存储。</li>
+<li><code>private</code>：表示响应只能够被个人用户缓存，不允许中间缓存存储。</li>
+<li><code>must-revalidate</code>：表示如果缓存过期，客户端必须重新验证资源的有效性。</li>
+<li><code>s-maxage</code>：类似于<code>max-age</code>，但只作用于共享缓存，比如代理服务器。</li>
+</ul>
+<p>e.g:  Cache-Control: max-age=3600, immutable</p>
+<p>这表示资源将在缓存中保持1小时（3600秒），并且该资源的内容在这个时间内都不会改变。如果客户端或中间缓存服务器收到了一个带有 “immutable” 指令的资源，并且已经将该资源存储在缓存中，它们可以安全地假设资源的内容在其声明的时间内保持不变，而无需重新验证。</p>
+<h3 id="Expires（Http1-0废弃）"><a href="#Expires（Http1-0废弃）" class="headerlink" title="Expires（Http1.0废弃）"></a><del>Expires（Http1.0废弃）</del></h3><p><del>简述：过期日期，值为具体时间，资源在这个时间之前都能使用缓存</del></p>
+<p><del>如：Expires:Thu, 31 Dec 2016 23:55:55 GMT</del></p>
+<h2 id="二-协商缓存"><a href="#二-协商缓存" class="headerlink" title="二. 协商缓存"></a>二. 协商缓存</h2><h3 id="ETag-amp-If-None-Match"><a href="#ETag-amp-If-None-Match" class="headerlink" title="ETag &amp; If-None-Match"></a>ETag &amp; If-None-Match</h3><p>简述：资源关键信息的hash，服务器下发response时携带在header中的ETag字段，客户端将上次缓存下来的该<strong>ETag</strong>值附在request请求header的<strong>If-None-Match</strong>中。服务器将客户端request发来的<strong>If-None-Match</strong>对比服务器当前资源ETag，<u>若相同则缓存，即返回response<strong>304</strong>和header（无body）；不同则下发新资源，即返回200和header+body新资源</u></p>
+<h3 id="Last-Modified-amp-If-Modified-Since"><a href="#Last-Modified-amp-If-Modified-Since" class="headerlink" title="Last-Modified &amp; If-Modified-Since"></a>Last-Modified &amp; If-Modified-Since</h3><p>简述：资源更新时间，类似ETag，服务器下发response时header中<strong>Last-Modifiled</strong>，客户端存储该GMT时间，下次请求该资源时request的header中<strong>If-Modified-Since</strong>附上。服务器从request中取出<strong>If-Modified-Since</strong>后将该时间与本地的资源更新时间对比，<u>若相同则缓存，即返回response<strong>304</strong>和header（无body）；不同则下发新资源，即返回200和header+body新资源</u></p>
+<h2 id="整体流程："><a href="#整体流程：" class="headerlink" title="整体流程："></a>整体流程：</h2><ol>
+<li><p>在前一次服务器响应时下发所有的缓存字段，包括：强制缓存的Cache-control:max-age、expires，协商缓存的Etag和Last-Modified。</p>
+</li>
+<li><p>接下来客户端发起请求时，从四个Header中选择一个的特定header（没必要多个，会按优先级只取一个），即客户端选择是强制缓存还是协商缓存。</p>
+<ul>
+<li>如果是强制缓存并且命中（即据上次请求时间小于max-age或者Expires还没到）则会直接客户端自取本地缓存并返回200(from memory cache)，请求根本不会到达服务器；</li>
+<li>如果是协商缓存，则会在请求中带上步骤1中的If-None-Match: cache_Etag或If-Modified-Since: cache_Last-Modified，向服务器发出请求</li>
+</ul>
+</li>
+<li><p>此步骤仅为协商缓存所有：服务器将 客户端请求中的If-None-Match值或Last-If-Modified-Since时间 与服务器中资源值的最新哈希值或修改时间 比较，如果资源有了更新则返回200和新的资源；如果资源没有更新则返回304(No Modified)和空body </p>
+</li>
+</ol>
+<h1 id="Http特性"><a href="#Http特性" class="headerlink" title="Http特性"></a>Http特性</h1><h2 id="什么是Http协议"><a href="#什么是Http协议" class="headerlink" title="什么是Http协议"></a>什么是Http协议</h2><ul>
+<li><p>Http协议是对客户端和服务器端之间数据之间实现可靠性的传输文字、图片、音频、视频等超文本数据的规范，格式简称为“超文本传输协议”</p>
+</li>
+<li><p>Http协议属于应用层，及用户访问的第一层就是http</p>
+<p><img src="/2021/11/19/HttpProtocol/1717297caf6776de~tplv-t2oaga2asx-watermark.awebp"></p>
+<p><strong>TcpIp协议分层：http,tls所在的应用层；tcp,udp所在的传输层；ip所在的网络层；arp（ip解析成mac）,rarp所在的链路层</strong></p>
+</li>
+</ul>
+<h2 id="1-常用HTTP状态码和分类"><a href="#1-常用HTTP状态码和分类" class="headerlink" title="1 常用HTTP状态码和分类"></a>1 常用HTTP状态码和分类</h2><ul>
+<li>HTTP状态码表示客户端HTTP请求的返回结果、标识服务器处理是否正常、表明请求出现的错误等。</li>
+<li>状态码的类别：</li>
+</ul>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1xx：</td>
+<td>指示信息–表示请求已接收，正在处理</td>
+</tr>
+<tr>
+<td>2xx：</td>
+<td>成功–表示请求已被成功接收、理解、接受</td>
+</tr>
+<tr>
+<td>3xx：</td>
+<td>重定向–要完成请求必须进行更进一步的操作</td>
+</tr>
+<tr>
+<td>4xx：</td>
+<td>客户端错误–请求有语法错误或请求无法实现</td>
+</tr>
+<tr>
+<td>5xx：</td>
+<td>服务器端错误–服务器未能实现合法的请求</td>
+</tr>
+</tbody></table>
+</blockquote>
+<ul>
+<li>常见的状态码：</li>
+</ul>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>200：</td>
+<td>请求被正常处理</td>
+</tr>
+<tr>
+<td>204：</td>
+<td>请求被受理但没有资源可以返回</td>
+</tr>
+<tr>
+<td>206：</td>
+<td>客户端只是请求资源的一部分，服务器只对请求的部分资源执行GET方法，相应报文中通过Content-Range指定范围的资源。</td>
+</tr>
+<tr>
+<td>301：</td>
+<td>永久性重定向</td>
+</tr>
+<tr>
+<td>302：</td>
+<td>临时重定向</td>
+</tr>
+<tr>
+<td>303：</td>
+<td>与302状态码有相似功能，只是它希望客户端在请求一个URI的时候，能通过GET方法重定向到另一个URI上</td>
+</tr>
+<tr>
+<td>304：</td>
+<td><strong>协商缓存命中，返回空body。发送附带条件的请求时，条件不满足时返回，与重定向无关</strong></td>
+</tr>
+<tr>
+<td>307：</td>
+<td>临时重定向，与302类似，只是强制要求使用POST方法</td>
+</tr>
+<tr>
+<td>400：</td>
+<td>请求报文语法有误，服务器无法识别</td>
+</tr>
+<tr>
+<td>401：</td>
+<td>请求需要认证</td>
+</tr>
+<tr>
+<td>403：</td>
+<td>请求的对应资源禁止被访问</td>
+</tr>
+<tr>
+<td>404：</td>
+<td>服务器无法找到对应资源</td>
+</tr>
+<tr>
+<td>500：</td>
+<td>服务器内部错误</td>
+</tr>
+<tr>
+<td>503：</td>
+<td>服务器正忙</td>
+</tr>
+</tbody></table>
+</blockquote>
+<h2 id="2-请求和响应格式"><a href="#2-请求和响应格式" class="headerlink" title="2 请求和响应格式"></a>2 请求和响应格式</h2><h3 id="请求格式："><a href="#请求格式：" class="headerlink" title="请求格式："></a>请求格式：</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Mothed Path HttpVersion     （MPV）</span><br><span class="line">Header</span><br><span class="line"></span><br><span class="line">Body(if have)</span><br><span class="line"></span><br><span class="line">//示例：</span><br><span class="line"><span class="keyword">GET</span> <span class="string">/d?ttl=1&amp;dn=82f3b6f4e75e6679742bdc4e8990e7e2e0e927e6bb3e8030&amp;id=316</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>119.29.29.29</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>Keep-Alive</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>android/okhttp</span><br><span class="line"></span><br><span class="line">17d10738b8085b2c9030ce1e4c7aace2998b95e308abbdcbbf425336f3d2e006(if Post)</span><br></pre></td></tr></table></figure>
+
+<h3 id="响应格式："><a href="#响应格式：" class="headerlink" title="响应格式："></a>响应格式：</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HttpVersion StatusCode StatusMessage     (VSS)</span><br><span class="line">Header</span><br><span class="line"></span><br><span class="line">Body</span><br><span class="line"></span><br><span class="line">//示例：</span><br><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"><span class="attribute">Server</span><span class="punctuation">: </span>Http Server</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>text/html</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>64</span><br><span class="line"></span><br><span class="line">17d10738b8085b2c9030ce1e4c7aace2998b95e308abbdcbbf425336f3d2e006</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-Http请求方式"><a href="#3-Http请求方式" class="headerlink" title="3 Http请求方式"></a>3 Http请求方式</h2><p>HTTP协议定义了多种请求方式，具体如下：<br><code>GET</code>：<strong>获取资源</strong>，用来请求访问已被URI（统一资源标志符，和URL是包含和被包含的关系）识别的资源。<br><code>POST</code>：用来<strong>传输实体的主体</strong>，虽然GET也可以实现，但是一般不用。<br><code>PUT</code>：<strong>传输文件</strong>。但是鉴于PUT方法自身不带验证机制，任何人都可以上传文件，存在安全性问题，因此一般网站都不采用该方法。<br><code>HEAD</code>:<strong>获得报文首部</strong>。和GET请求一样，只是不返回报文主体部分。<br><code>DELETE</code>：<strong>删除文件</strong>。同样不带验证机制，存在安全性问题。<br><code>OPTIONS</code>:<strong>询问指定的请求URI支持哪些方法</strong>。<br><code>CONNECT</code>：要求在<strong>与代理服务器通信时建立隧道</strong>，实现隧道协议进行TCP通信。</p>
+<p>HTTP 幂等方法是指无论调用多少次都不会有不同结果的 HTTP 方法。它无论是调用一次，还是十次都无关紧要。结果仍应相同。</p>
+<p>ps：只有POST是非幂等的，其他都是幂等的。</p>
+<blockquote>
+<p>这里还想补充说明一点，就是<strong>通过浏览器地址栏输入URL访问资源</strong>的方式都是<code>GET</code>请求。</p>
+</blockquote>
+<h3 id="3-POST和GET请求区别厘清"><a href="#3-POST和GET请求区别厘清" class="headerlink" title="3 POST和GET请求区别厘清"></a>3 POST和GET请求区别厘清</h3><h4 id="3-1-请求参数长度限制：GET请求长度最多1024kb，POST对请求数据没有限制？"><a href="#3-1-请求参数长度限制：GET请求长度最多1024kb，POST对请求数据没有限制？" class="headerlink" title="3.1 请求参数长度限制：GET请求长度最多1024kb，POST对请求数据没有限制？"></a>3.1 请求参数长度限制：GET请求长度最多1024kb，POST对请求数据没有限制？</h4><p>关于此点，在HTTP协议中没有对URL长度进行限制，这个限制是<strong>不同的浏览器及服务器</strong>由于有不同的规范而带来的限制。</p>
+<h4 id="3-2-GET请求一定不能用request-body传输数据？"><a href="#3-2-GET请求一定不能用request-body传输数据？" class="headerlink" title="3.2 GET请求一定不能用request body传输数据？"></a>3.2 GET请求一定不能用request body传输数据？</h4><p>GET<strong>可以带request body，但不能保证一定能被接收到</strong>。如果你用GET服务，在request body偷偷藏了数据，不同服务器的处理方式也是不同的，有些服务器会帮你读出数据，有些服务器直接忽略。</p>
+<h4 id="3-3-POST比GET安全性要高！"><a href="#3-3-POST比GET安全性要高！" class="headerlink" title="3.3 POST比GET安全性要高！"></a>3.3 POST比GET安全性要高！</h4><p>这里的安全是相对性，通过GET提交的数据都将显示到URL上，页面会被浏览器缓存，其他人查看历史记录会看到提交的数据，而POST不会。另外GET提交数据还可能会造成CSRF攻击。</p>
+<h4 id="（有误）3-4-GET产生一个TCP数据包，POST产生两个TCP数据包！"><a href="#（有误）3-4-GET产生一个TCP数据包，POST产生两个TCP数据包！" class="headerlink" title="（有误）3.4 GET产生一个TCP数据包，POST产生两个TCP数据包！"></a><del>（有误）3.4 GET产生一个TCP数据包，POST产生两个TCP数据包！</del></h4><p><del>对于GET方式的请求，浏览器会把http header和data一并发送出去，服务器响应200 OK(返回数据);</del><br><del>而对于POST，浏览器先发送header，服务器响应100 continue，浏览器再发送data，服务器响应200 OK(返回数据)。注意，<code>尽管POST请求会分两次，但body 是紧随在 header 后面发送的，根本不存在『等待服务器响应』一说</code>。</del></p>
+<h3 id="4-POST和GET请求的区别小结"><a href="#4-POST和GET请求的区别小结" class="headerlink" title="4 POST和GET请求的区别小结"></a>4 POST和GET请求的区别小结</h3><p><strong>请求参数</strong>：GET请求参数是通过URL传递的，多个参数以&amp;连接，POST请求放在request body中。<br><strong>请求缓存</strong>：GET请求会被缓存，而POST请求不会，除非手动设置。<br><strong>收藏为书签</strong>：GET请求支持，POST请求不支持。<br><strong>安全性</strong>：POST比GET安全，GET请求在浏览器回退时是无害的，而POST会再次请求。<br><strong>历史记录</strong>：GET请求参数会被完整保留在浏览历史记录里，而POST中的参数不会被保留。<br><strong>编码方式</strong>：GET请求只能进行url编码，而POST支持多种编码方式。<br><strong>对参数的数据类型</strong>：GET只接受ASCII字符，而POST没有限制。</p>
+<h1 id="Http-Version"><a href="#Http-Version" class="headerlink" title="Http Version"></a>Http Version</h1><p>简述：最为人诟病的就是当客户端同时发出多个请求时需要排队进行会产生队头阻塞，这也是为何一些在1.x站点会有多个[静态资源]CDN 域名的原因之一，目的就是变相的解决浏览器针对同一[域名]的请求限制阻塞问题</p>
+<h2 id="HTTP1-0（几乎没有使用）"><a href="#HTTP1-0（几乎没有使用）" class="headerlink" title="HTTP1.0（几乎没有使用）"></a>HTTP1.0（几乎没有使用）</h2><p><strong>无链接，即每次请求都要建立新的tcp链接；缓存只有Expires</strong></p>
+<p>http1.0被抱怨最多的就是 <strong>连接无法复用</strong> 和 <strong>head of line blocking</strong> 这两个问题。</p>
+<blockquote>
+<p> 理解这两个问题的前提：</p>
+<p>1、每个连接（也就是Tcp连接）建立要经过三次握手，断开需要四次挥手，十分耗时</p>
+<p>2、客户端是依据域名来向服务器建立连接，一般PC端浏览器会针对单个域名的server同时建立<strong>6～8</strong>个连接，手机端的连接数则一般控制在<strong>4～6</strong>个。显然连接数并不是越多越好，资源开销和整体延迟都会随之增大。</p>
+</blockquote>
+<ul>
+<li>无连接，浏览器的每次请求都需要与服务器经过三次握手建立一个<strong>TCP连接</strong>，服务器处理完成后立即四次挥手断开<strong>TCP连接</strong>（无连接）。</li>
+<li>缓存只有Expires</li>
+</ul>
+<hr>
+<h2 id="HTTP1-1"><a href="#HTTP1-1" class="headerlink" title="HTTP1.1"></a>HTTP1.1</h2><p><strong>默认keep-alive长连接，即请求可以复用同一个tcp链接；协商缓存；响应分块；另外还有几乎没咋用的管线化</strong></p>
+<ul>
+<li><p><strong>长连接</strong>复用，即 <code>Connection: Keep-Alive</code> 字段默认开启，这个字段允许服务端和客户端保持一个长时间存活的<strong>TCP连接</strong>，当<strong>后续</strong>客户端发送另一个请求时，它会复用同一个<strong>TCP连接</strong>。这里需要说明的是，如果同时发起了多个请求，还是需要建立多个Tcp连接的。</p>
+</li>
+<li><p><strong>管线化</strong>(实际上不启动)，客户端可以同时发出多个HTTP请求，而不用一个个等待响应.</p>
+</li>
+<li><p><strong>支持响应分块</strong>， Transfer-Encoding(chunked) 与 Content-Encoding(gzip)</p>
+</li>
+<li><p><strong>协商缓存</strong>：废弃Expires，启用Cache-Control。新增协商缓存。</p>
+</li>
+</ul>
+<p>解决了Http1.0中<strong>连接无法复用</strong>的问题，默认长连接；</p>
+<p>但依然解决不了 <strong>head of line blocking</strong> 队头阻塞问题，http1.1试图用管线化机制同时发送多个请求 来解决head of line blocking，但即使pipelining 可以同时在一个 TCP 中发送多个 HTTP 请求，客户端接收服务端响应信息时，还是按照发送时的顺序来接收响应信息，依然会有队头阻塞的问题</p>
+<h4 id="长连接复用"><a href="#长连接复用" class="headerlink" title="长连接复用"></a>长连接复用</h4><p>​    在 HTTP 1.1 中， <code>Connection: Keep-Alive</code> 字段默认开启，这个字段允许服务端和客户端保持一个长连接，当客户端发送另一个请求时，它会复用同一个连接。这个连接会一直持续到客户端或服务器端认为会话已经结束，其中一方中断连接。<strong>中断连接的取决与否取决于 <code>Keep-Alive</code> 字段中的</strong>：</p>
+<ul>
+<li>timeout: 决定当前 tcp的最长保持连接时间，单位为 <code>s</code> ，超过设置的时间后断开连接</li>
+<li>max：决定了当前连接最多的可复用次数</li>
+</ul>
+<blockquote>
+<p>​    容易混淆的概念——TCP的keep alive和HTTP的Keep-alive：</p>
+<ul>
+<li>TCP的keep alive是检查当前TCP连接是否活着;</li>
+<li>HTTP的Keep-alive是要让一个TCP连接活久点。它们是不同层次的概念。</li>
+</ul>
+<p>TCP keep alive的表现：</p>
+<p>当一个连接“一段时间”没有数据通讯时，一方会发出一个心跳包(Keep Alive包)，如果对方有回包则表明当前连接有效，继续监控。</p>
+</blockquote>
+<h4 id="响应分块"><a href="#响应分块" class="headerlink" title="响应分块"></a>响应分块</h4><p><strong>Transfer-Encoding(chunked) 与 Content-Encoding(gzip)</strong></p>
+<blockquote>
+<p> 注： HTTP2 <strong>不再支持</strong>使用 <code>chunked</code> 分块机制传输数据，有了更好的流传输机制</p>
+</blockquote>
+<ul>
+<li>支持 Chunked Responses ，也就是说，在Response的时候，不必说明 <code>Content-Length</code> 这样，客户端就不能断连接，直到收到服务端的EOF标识。这种技术又叫 “<strong>服务端Push模型</strong>”，或是 “<strong>服务端Push式的HTTP 持久链接</strong>”</li>
+</ul>
+<h4 id="管线化（http-pipelining）"><a href="#管线化（http-pipelining）" class="headerlink" title="管线化（http pipelining）"></a>管线化（http pipelining）</h4><blockquote>
+<p>注： 默认不启用，HTTP2 中流水线已经被更好的算法给代替，如 <em>multiplexing</em></p>
+</blockquote>
+<p>​    <strong>HTTP管线化</strong>（英语：HTTP pipelining）是将多个 HTTP 请求（request）整批提交的技术，而在发送过程中不需先等待服务器的回应。</p>
+<p>​    流水线操作建立在长连接之上，可以将所有的 HTTP 请求一次性发出，而无需关心上一次发送请求的状态，虽然说客户端一次性能够发出所有的请求，但是在服务端接收到的请求还是一一进行处理的，如果当服务端返回的其中一个响应阻塞后，接下来的响应也会被阻塞。</p>
+<p><img src="/2021/11/19/HttpProtocol/400px-HTTP_pipelining.svg.png" alt="img"></p>
+<p><strong>HTTP 1.1 利用 pipelining 可以同时在一个 TCP 中发送多个 HTTP 请求，但是客户端接收服务端响应信息时，还是按照发送时的顺序来接收响应信息。</strong></p>
+<hr>
+<h2 id="HTTP2-0"><a href="#HTTP2-0" class="headerlink" title="HTTP2.0"></a>HTTP2.0</h2><p><strong>简述：Http2核心优化是通过多路复用机制，解决了Http请求队头阻塞问题，将两端所有的请求都放到了同一个Tcp连接中（但Tcp传输的局限性导致了Tcp队头阻塞且无法解决）；舍弃了低效的plain text格式使用二进制格式进行解析传输；使用HPACK算法对多个请求的首部进行差量更新；通过服务器提前将客户端可能要的资源响应回去（服务器：虽然你只请求了Html页面，但是我觉得你还需要这里面所有的资源如js、css等）</strong></p>
+<ul>
+<li><p><strong>二进制分帧</strong>（采用二进制格式的编码将其封装）</p>
+</li>
+<li><p><strong>首部压缩</strong>（设置了专门的首部压缩设计的HPACK算法。）</p>
+</li>
+<li><p><strong>多路复用</strong>（可以在共享TCP链接的基础上同时发送请求和响应）</p>
+</li>
+<li><p><strong>服务器推送</strong>（server push;几乎没咋用。就是服务器可以对一个客户端请求发送多个响应。服务器向客户端推送资 源无需客户端明确的请求。）</p>
+</li>
+</ul>
+<h4 id="二进制分帧"><a href="#二进制分帧" class="headerlink" title="二进制分帧"></a>二进制分帧</h4><p><strong>新的二进制格式</strong>（Binary Format），二进制协议，增加了数据传输的效率。</p>
+<p>HTTP1.x的解析是基于文本（plain text），低效且健壮性差。http2.0的格式定义更接近tcp层的方式，十分高效且精简。而且实际上http2.0并没有改变http1.x的语义，只是把原来http1.x的header和body部分用frame重新封装了一层而已。调试的时候浏览器甚至会把http2.0的frame自动还原成http1.x的格式。</p>
+<h4 id="多路复用"><a href="#多路复用" class="headerlink" title="多路复用"></a>多路复用</h4><p><strong>多路复用</strong>，可以在一个TCP链接中并发请求多个HTTP请求。</p>
+<p>一个客户端和一个服务器的多个（即使是同时发出）的请求都是在同一个Tcp连接中进行的。</p>
+<ul>
+<li><p>减少了需要进行多个连接的耗时，再多的请求也只需要一个Tcp连接的三次握手耗时</p>
+</li>
+<li><p>解决了一个Host只支持6个左右连接的限制，只用一个连接进行所有请求</p>
+</li>
+<li><p>解决了head of line blocking<strong>（丢包失序时还是会阻塞）</strong>，多个请求可以同时发出（但由于基于Tcp，Tcp为了保证数据的有序传输，如果Tcp传输中某个数据包丢失或者失序了，那么接收端会等待该数据包导致后面数据包的整个阻塞）</p>
+</li>
+</ul>
+<h4 id="首部压缩（HPACK-Huffman算法无损压缩）"><a href="#首部压缩（HPACK-Huffman算法无损压缩）" class="headerlink" title="首部压缩（HPACK-Huffman算法无损压缩）"></a>首部压缩（HPACK-Huffman算法无损压缩）</h4><p><strong>header压缩</strong>，压缩头，如果你同时发出多个请求，他们的头是一样的或是相似的，那么，协议会帮你消除重复的部分。这就是所谓的HPACK算法</p>
+<p>HTTP1.x的header带有大量信息（包含cookie可达到kb等级占用），而且每次都要重复发送，HTTP2.0使用HPACK算法encoder来减少需要传输的header大小，通讯双方各自<strong>cache一份header 字典</strong>进行<strong>差量更新</strong>，既避免了重复header的传输，又减小了需要传输的大小。</p>
+<h4 id="服务端推送"><a href="#服务端推送" class="headerlink" title="服务端推送"></a>服务端推送</h4><p>服务端推送是一种在客户端请求之前发送数据的机制。在 HTTP/2 中，服务器可以对客户端的一个请求发送多个响应。Server Push 让HTTP1.x 时代使用内嵌资源的优化手段变得没有意义；如果一个请求是由你的主页发起的，服务器很可能会响应主页内容、logo 以及样式表，因为它知道客户端会用到这些东西。这相当于在一个 HTML 文档内集合了所有的资源，不过与之相比，服务器推送还有一个很大的优势：可以缓存！也让在遵循同源的情况下，不同页面之间可以共享缓存资源成为可能。</p>
+<p>Ps：如果不需要的话，客户端能自主选择是否需要中断该推送的流，通过发送一个<code>RST_STREAM</code>帧来中止。</p>
+<p><img src="/2021/11/19/HttpProtocol/d9f07162d5391641b7a2645a61b24fc0_1440w.jpg" alt="img"></p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><h5 id="队头阻塞"><a href="#队头阻塞" class="headerlink" title="队头阻塞"></a><strong>队头阻塞</strong></h5><p>队头阻塞翻译自英文<strong>head-of-line blocking</strong>，这个词并不新鲜，因为早在HTTP/1.1时代，就一直存在着队头阻塞的问题。</p>
+<p>但是很多人在一些资料中会看到有论点说HTTP/2解决了队头阻塞的问题。但是这句话只对了一半。</p>
+<p>**只能说HTTP/2解决了HTTP的队头阻塞问题，但是并没有解决TCP队头阻塞问题!**也就是请求的队头阻塞问题解决了，tcp传输丢包的队头阻塞问题没有解决。（ps：解决办法就是不用Tcp，也就是H3/QUIC中的UDP）</p>
+<p>HTTP队头阻塞的问题在HTTP/2中得到了有效的解决。HTTP/2创新性的引入了帧、消息和数据流等概念。客户端和服务器可以把 HTTP 消息分解为互不依赖的帧，然后乱序发送，最后再在另一端把它们重新组合起来。</p>
+<p><a target="_blank" rel="noopener" href="https://s5.51cto.com/oss/202012/15/a21a608dd1807f2705b04032de7aae27.jpg-wh_600x-s_3005077120.jpg"><img src="/2021/11/19/HttpProtocol/a21a608dd1807f2705b04032de7aae27.jpg-wh_600x-s_3005077120.jpg" alt="img"></a></p>
+<p>因为没有顺序了，所以就不需要阻塞了，就有效的解决了HTTP队头阻塞的问题。</p>
+<p>但是，HTTP/2仍然会存在TCP队头阻塞的问题，那是因为HTTP/2其实还是依赖TCP协议实现的。</p>
+<p>TCP传输过程中会把数据拆分为一个个按照顺序排列的数据包，这些数据包通过网络传输到了接收端，接收端再按照顺序将这些数据包组合成原始数据，这样就完成了数据传输。</p>
+<p>但是如果其中的某一个数据包没有按照顺序到达，接收端会一直保持连接等待数据包返回，这时候就会阻塞后续请求。这就发生了TCP队头阻塞。</p>
+<p>由于HTTP/2中同一个域名只是用一个TCP连接，所有的数据包都是通过这个连接传输的，所以，在HTTP/2中，发生TCP队头阻塞造成的影响会更大，因为HTTP/2的多路复用技术使得多个请求其实是基于同一个TCP连接的，那如果某一个请求造成了TCP队头阻塞，那么多个请求都会受到影响。</p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>HTTP/2底层是采用TCP协议实现的，虽然解决了HTTP队头阻塞的问题，但是对于TCP队头阻塞的问题却无能为力。</p>
+<p>另外，TCP这种可靠传输是靠三次握手实现的，TCP三次握手的过程客户端和服务器之间需要交互三次，那么也就是说需要消耗1.5 RTT。如果是HTTPS那么消耗的RTT就更多。</p>
+<h2 id="HTTP3-QUIC"><a href="#HTTP3-QUIC" class="headerlink" title="HTTP3/QUIC"></a>HTTP3/QUIC</h2><p>基于UDP的Http，核心优势是：基于Udp多路复用的同时彻底解决了队头阻塞问题；0-RTT建立连接；连接迁移可以保证网络（比如客户端从 WIFI 切换到蜂窝网络）连接不断。</p>
+<ul>
+<li><p> 0-RTT 建立连接</p>
+</li>
+<li><p>无队头阻塞的多路复用</p>
+</li>
+<li><p>连接迁移</p>
+</li>
+<li><p>全应用态协议栈</p>
+</li>
+</ul>
+<p>可以看一下tx实践<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Sf8JsZKeZYxT9WBZrh_etg">https://mp.weixin.qq.com/s/Sf8JsZKeZYxT9WBZrh_etg</a></p>
+<p>以及淘宝开源XQUIC<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/VTyy20IkAR-QUc1PcHWjrQ">https://mp.weixin.qq.com/s/VTyy20IkAR-QUc1PcHWjrQ</a></p>
+<p>QUIC 全称 quick udp internet connection，“快速 UDP 互联网连接”，（和英文 quick 谐音，简称“快”）是由 Google 提出的基于 UDP 进行可靠传输的协议。QUIC 在应用层实现了丢包恢复、拥塞控制、滑窗机制等保证数据传输的可靠性，同时对传输的数据具备前向安全的加密能力。HTTP3 则是 IETF(互联网工程任务组)基于 QUIC 协议基础进行设计的新一代 HTTP 协议。</p>
+<p>QUIC/HTTP3 分层模型及与 HTTP2 对比：</p>
+<p><img src="/2021/11/19/HttpProtocol/640" alt="图片"></p>
+<h4 id="0-RTT-建立连接"><a href="#0-RTT-建立连接" class="headerlink" title="0-RTT 建立连接"></a><strong>0-RTT 建立连接</strong></h4><p>简述：这里说一下GQUIC(Google QUIC)里的实现，基本上安卓实现0-RTT是在应用启动时候就进行加密握手，拿到服务器的加密套件和证书，内存缓存起来。后面用到的时候就不需要再进行握手获取了，直接用新生成的随机数做对称秘钥通信，在第二次发送时带上用服务器公钥加密的该随机数就可以？</p>
+<p>QUIC 基于的 UDP 协议本身无需握手，并且它早于 TLS 1.3 协议，就实现了自己的 0-RTT 加密握手。下图分别代表了 1-RTT 握手（首次建连），成功的 0-RTT 握手，以及失败回退的握手。</p>
+<p><img src="/2021/11/19/HttpProtocol/640-20211201141157905" alt="图片"></p>
+<h4 id="无队头阻塞的多路复用"><a href="#无队头阻塞的多路复用" class="headerlink" title="无队头阻塞的多路复用"></a><strong>无队头阻塞的多路复用</strong></h4><p>相比于 HTTP/2 的多路复用，QUIC 不会受到队头阻塞的影响，各个流更独立，多路复用的效果也更好。</p>
+<p><img src="/2021/11/19/HttpProtocol/640-20211201141157945" alt="图片"></p>
+<h4 id="连接迁移"><a href="#连接迁移" class="headerlink" title="连接迁移"></a><strong>连接迁移</strong></h4><p>跟 TCP 用四元组标识一个唯一连接不同，QUIC 使用一个 64 位的 ConnectionID 来标识连接，基于这个特点，QUIC 的使用连接迁移机制，在四元组发生变化时（比如客户端从 WIFI 切换到蜂窝网络），尝试“保留”先前的连接，从而维持数据传输不中断。</p>
+<p><img src="/2021/11/19/HttpProtocol/640-20211201141157947" alt="图片"></p>
+<h4 id="全应用态协议栈"><a href="#全应用态协议栈" class="headerlink" title="全应用态协议栈"></a><strong>全应用态协议栈</strong></h4><p>QUIC 核心逻辑都在用户态，能灵活的修改连接参数、替换拥塞算法、更改传输行为。而 TCP 核心实现在内核态，改造需要修改内核并且进行系统重启，成本极高。</p>
+<hr>
+<p>//from chatgpt</p>
+<blockquote>
+<p>HTTP/3.0、SPDY 和 QUIC 都与网络通信相关，它们在不同层次上推动了网络协议的发展，并且在一定程度上有一些联系。下面我将详细介绍它们的关系和特点：</p>
+<ol>
+<li><p>**SPDY(HTTP2.0前身)**：</p>
+<p>SPDY（读作”speedy”）是 Google 开发的一种网络协议，旨在优化传输性能，减少网页加载时间。SPDY 被设计为 HTTP/1.1 的替代方案，它引入了多路复用、流优先级、头部压缩等特性，以改进数据传输效率。</p>
+<p>关键特点：</p>
+<ul>
+<li>多路复用：在单个 TCP 连接上同时传输多个请求和响应，避免了 TCP 连接的建立和拆除开销。</li>
+<li>流优先级：允许对不同流设置优先级，确保重要资源的优先传输。</li>
+<li>头部压缩：使用首部压缩算法减少请求和响应的头部数据量。</li>
+<li>服务器推送：服务器可以主动推送资源，以减少客户端请求的延迟。</li>
+</ul>
+</li>
+<li><p>**QUIC(Http3.0前身)**：</p>
+<p>QUIC（Quick UDP Internet Connections）是 Google 开发的一种基于 UDP 协议的传输层协议，旨在解决 TCP 的一些限制和性能瓶颈。QUIC 综合了 TCP、TLS 和 SPDY/HTTP2 的特性，提供了更快的连接建立和传输性能。</p>
+<p>关键特点：</p>
+<ul>
+<li>连接多路复用：类似于 SPDY，QUIC 允许在同一连接上并发传输多个流。</li>
+<li>0-RTT 握手：QUIC 支持零往返时间握手，从而减少了连接建立的延迟。</li>
+<li>前向纠错：通过在数据包中引入冗余信息，减少数据包丢失的影响，提高传输可靠性。</li>
+<li>动态适应：QUIC 可以根据网络状况自适应地调整拥塞控制和流控制算法。</li>
+</ul>
+</li>
+<li><p><strong>HTTP/3.0</strong>：</p>
+<p>HTTP/3.0 是在 QUIC 协议基础上进行的新一代 HTTP 协议。它继承了 QUIC 的优势，并在应用层定义了新的特性。HTTP/3.0 的目标是改进用户体验，减少网络延迟，提升性能。</p>
+<p>关键特点：</p>
+<ul>
+<li>基于 QUIC：HTTP/3.0 使用 QUIC 作为传输层协议，从而具有 QUIC 的优势。</li>
+<li>多路复用：类似于 SPDY 和 QUIC，HTTP/3.0 支持多路复用，减少了连接建立和拆除的开销。</li>
+<li>零 RTT 握手：HTTP/3.0 利用 QUIC 的 0-RTT 握手功能，进一步减少连接建立的延迟。</li>
+</ul>
+</li>
+</ol>
+<p>综上所述，SPDY 和 QUIC 都是 Google 提出的网络协议，其中 SPDY 作为 HTTP/1.1 的改进版引入了多路复用等特性，而 QUIC 则是基于 UDP 的传输层协议，综合了多路复用、0-RTT 握手等功能。HTTP/3.0 则是在 QUIC 的基础上定义的新一代 HTTP 协议，将 QUIC 的优势引入到应用层。它们的目标都是提升网络传输性能，减少延迟，从而改善用户体验</p>
+</blockquote>
+<h1 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h1><h2 id="附录：Http各版本及Https使用占比"><a href="#附录：Http各版本及Https使用占比" class="headerlink" title="附录：Http各版本及Https使用占比"></a>附录：Http各版本及Https使用占比</h2><h3 id="Https-约95"><a href="#Https-约95" class="headerlink" title="Https: 约95%"></a>Https: 约95%</h3><h3 id="Http2-0-约68"><a href="#Http2-0-约68" class="headerlink" title="Http2.0: 约68%"></a>Http2.0: 约68%</h3><h3 id="Http3-0-约20"><a href="#Http3-0-约20" class="headerlink" title="Http3.0:  约20%"></a>Http3.0:  约20%</h3><p>数据来源：<a target="_blank" rel="noopener" href="https://httparchive.org/reports/state-of-the-web#h2">https://httparchive.org/reports/state-of-the-web#h2</a></p>
+<h2 id="cookie和session作用与区别"><a href="#cookie和session作用与区别" class="headerlink" title="cookie和session作用与区别"></a>cookie和session作用与区别</h2><ul>
+<li><p>HTTP协议本身是无法判断用户身份。所以需要cookie或者session</p>
+</li>
+<li><p>cookie与session区别</p>
+<p><strong>Session是服务器端保持状态的方案，Cookie是客户端保持状态的方案</strong></p>
+<p><strong>Cookie保存在客户端本地，客户端请求服务器时会将Cookie一起提交；Session保存在服务端，通过检索Sessionid查看状态。保存Sessionid的方式可以采用Cookie，如果禁用了Cookie，可以使用URL重写机制（把会话ID保存在URL中）。</strong></p>
+<p>  1）存储位置不同，cookie是保存在客户端的数据；session的数据存放在服务器上<br>  2）存储容量不同，单个cookie保存的数据小，一个站点最多保存20个Cookie；对于session来说并没有上限<br>  3）存储方式不同，cookie中只能保管ASCII字符串；session中能够存储任何类型的数据<br>  4）隐私策略不同，cookie对客户端是可见的；session存储在服务器上，对客户端是透明的<br>  5）有效期上不同，cookie可以长期有效存在；session依赖于名为JSESSIONID的cookie，过期时间默认为-1，只需关闭窗口该session就会失效<br>  6）跨域支持上不同，cookie支持跨域名访问；session不支持跨域名访问</p>
+</li>
+</ul>
+<h2 id="一次HTTP请求，程序一般经历了哪几个步骤？"><a href="#一次HTTP请求，程序一般经历了哪几个步骤？" class="headerlink" title="一次HTTP请求，程序一般经历了哪几个步骤？"></a>一次HTTP请求，程序一般经历了哪几个步骤？</h2><p>1）解析域名 -&gt; 2）发起TCP三次握手，建立连接 -&gt; 3）基于TCP发起HTTP请求 -&gt; 4）服务器响应HTTP请求，并返回数据 -&gt; 5）客户端解析返回数据</p>
+<p>详细点：</p>
+<h2 id="从输入网址到获得页面的过程-越详细越好-？sss"><a href="#从输入网址到获得页面的过程-越详细越好-？sss" class="headerlink" title="从输入网址到获得页面的过程 (越详细越好)？sss"></a>从输入网址到获得页面的过程 (越详细越好)？sss</h2><ol>
+<li><p>浏览器查询 DNS，首先会访问浏览器缓存，如未命中则进一步访问操作系统缓存，如未命中则访问hosts文件。如未命中，则客户端想本地DNS服务器发起递归查询（本地DNS会将结果也就是ip直接返回），如本地DNS解析服务器未命中，则由本地DNS解析服务器向根域名服务器、顶级域名服务器、管理方域名服务器等依次进行迭代查询（每有一个未命中则返回下一个域名服务器地址给本地域名服务器，比如local dns server向根域名服务器查询未命中，则根域名服务器返回顶级域名服务器地址给local dns server，然后local dns server向收到的这个地址迭代发起查询）</p>
+<p>简述：即浏览器缓存 -&gt; 操作系统缓存 -&gt; 本地Host文件 -&gt; 向本地DNS服务器查询 ，最终取得域名对应ip</p>
+</li>
+<li><p>浏览器获得域名对应的IP地址以后，浏览器向服务器请求建立链接，发起三次握手；</p>
+</li>
+<li><p>TCP/IP链接建立起来后，浏览器向服务器发送HTTP请求；</p>
+</li>
+<li><p>服务器接收到这个请求，并根据路径参数映射到特定的请求处理器进行处理，并将处理结果及相应的视图返回给浏览器；</p>
+</li>
+<li><p>浏览器解析并渲染视图，若遇到对js文件、css文件及图片等静态资源的引用，则重复上述步骤并向服务器请求这些资源；</p>
+</li>
+<li><p>浏览器根据其请求到的资源、数据渲染页面，最终向用户呈现一个完整的页面。</p>
+</li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>HttpProtocol</p><p><a href="http://example.com/2021/11/19/HttpProtocol/">http://example.com/2021/11/19/HttpProtocol/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-11-19</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-07-08</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Core/">Core</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/11/22/HighFrequencyIssue/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">HighFrequencyIssue</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/11/15/SharePreference/"><span class="level-item">sharePreference</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Http-缓存"><span class="level-left"><span class="level-item">1</span><span class="level-item">Http 缓存</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#一-强制缓存"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">一. 强制缓存</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Cache-Control"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">Cache-Control</span></span></a></li><li><a class="level is-mobile" href="#Expires（Http1-0废弃）"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Expires（Http1.0废弃）</span></span></a></li></ul></li><li><a class="level is-mobile" href="#二-协商缓存"><span class="level-left"><span class="level-item">1.2</span><span class="level-item">二. 协商缓存</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#ETag-amp-If-None-Match"><span class="level-left"><span class="level-item">1.2.1</span><span class="level-item">ETag &amp; If-None-Match</span></span></a></li><li><a class="level is-mobile" href="#Last-Modified-amp-If-Modified-Since"><span class="level-left"><span class="level-item">1.2.2</span><span class="level-item">Last-Modified &amp; If-Modified-Since</span></span></a></li></ul></li><li><a class="level is-mobile" href="#整体流程："><span class="level-left"><span class="level-item">1.3</span><span class="level-item">整体流程：</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Http特性"><span class="level-left"><span class="level-item">2</span><span class="level-item">Http特性</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#什么是Http协议"><span class="level-left"><span class="level-item">2.1</span><span class="level-item">什么是Http协议</span></span></a></li><li><a class="level is-mobile" href="#1-常用HTTP状态码和分类"><span class="level-left"><span class="level-item">2.2</span><span class="level-item">1 常用HTTP状态码和分类</span></span></a></li><li><a class="level is-mobile" href="#2-请求和响应格式"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">2 请求和响应格式</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#请求格式："><span class="level-left"><span class="level-item">2.3.1</span><span class="level-item">请求格式：</span></span></a></li><li><a class="level is-mobile" href="#响应格式："><span class="level-left"><span class="level-item">2.3.2</span><span class="level-item">响应格式：</span></span></a></li></ul></li><li><a class="level is-mobile" href="#3-Http请求方式"><span class="level-left"><span class="level-item">2.4</span><span class="level-item">3 Http请求方式</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-POST和GET请求区别厘清"><span class="level-left"><span class="level-item">2.4.1</span><span class="level-item">3 POST和GET请求区别厘清</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-1-请求参数长度限制：GET请求长度最多1024kb，POST对请求数据没有限制？"><span class="level-left"><span class="level-item">2.4.1.1</span><span class="level-item">3.1 请求参数长度限制：GET请求长度最多1024kb，POST对请求数据没有限制？</span></span></a></li><li><a class="level is-mobile" href="#3-2-GET请求一定不能用request-body传输数据？"><span class="level-left"><span class="level-item">2.4.1.2</span><span class="level-item">3.2 GET请求一定不能用request body传输数据？</span></span></a></li><li><a class="level is-mobile" href="#3-3-POST比GET安全性要高！"><span class="level-left"><span class="level-item">2.4.1.3</span><span class="level-item">3.3 POST比GET安全性要高！</span></span></a></li><li><a class="level is-mobile" href="#（有误）3-4-GET产生一个TCP数据包，POST产生两个TCP数据包！"><span class="level-left"><span class="level-item">2.4.1.4</span><span class="level-item">（有误）3.4 GET产生一个TCP数据包，POST产生两个TCP数据包！</span></span></a></li></ul></li><li><a class="level is-mobile" href="#4-POST和GET请求的区别小结"><span class="level-left"><span class="level-item">2.4.2</span><span class="level-item">4 POST和GET请求的区别小结</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#Http-Version"><span class="level-left"><span class="level-item">3</span><span class="level-item">Http Version</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#HTTP1-0（几乎没有使用）"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">HTTP1.0（几乎没有使用）</span></span></a></li><li><a class="level is-mobile" href="#HTTP1-1"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">HTTP1.1</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#长连接复用"><span class="level-left"><span class="level-item">3.2.1.1</span><span class="level-item">长连接复用</span></span></a></li><li><a class="level is-mobile" href="#响应分块"><span class="level-left"><span class="level-item">3.2.1.2</span><span class="level-item">响应分块</span></span></a></li><li><a class="level is-mobile" href="#管线化（http-pipelining）"><span class="level-left"><span class="level-item">3.2.1.3</span><span class="level-item">管线化（http pipelining）</span></span></a></li></ul></ul></li><li><a class="level is-mobile" href="#HTTP2-0"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">HTTP2.0</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#二进制分帧"><span class="level-left"><span class="level-item">3.3.1.1</span><span class="level-item">二进制分帧</span></span></a></li><li><a class="level is-mobile" href="#多路复用"><span class="level-left"><span class="level-item">3.3.1.2</span><span class="level-item">多路复用</span></span></a></li><li><a class="level is-mobile" href="#首部压缩（HPACK-Huffman算法无损压缩）"><span class="level-left"><span class="level-item">3.3.1.3</span><span class="level-item">首部压缩（HPACK-Huffman算法无损压缩）</span></span></a></li><li><a class="level is-mobile" href="#服务端推送"><span class="level-left"><span class="level-item">3.3.1.4</span><span class="level-item">服务端推送</span></span></a></li><li><a class="level is-mobile" href="#问题"><span class="level-left"><span class="level-item">3.3.1.5</span><span class="level-item">问题</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#队头阻塞"><span class="level-left"><span class="level-item">3.3.1.5.1</span><span class="level-item">队头阻塞</span></span></a></li></ul></li><li><a class="level is-mobile" href="#小结"><span class="level-left"><span class="level-item">3.3.1.6</span><span class="level-item">小结</span></span></a></li></ul></ul></li><li><a class="level is-mobile" href="#HTTP3-QUIC"><span class="level-left"><span class="level-item">3.4</span><span class="level-item">HTTP3/QUIC</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#0-RTT-建立连接"><span class="level-left"><span class="level-item">3.4.1.1</span><span class="level-item">0-RTT 建立连接</span></span></a></li><li><a class="level is-mobile" href="#无队头阻塞的多路复用"><span class="level-left"><span class="level-item">3.4.1.2</span><span class="level-item">无队头阻塞的多路复用</span></span></a></li><li><a class="level is-mobile" href="#连接迁移"><span class="level-left"><span class="level-item">3.4.1.3</span><span class="level-item">连接迁移</span></span></a></li><li><a class="level is-mobile" href="#全应用态协议栈"><span class="level-left"><span class="level-item">3.4.1.4</span><span class="level-item">全应用态协议栈</span></span></a></li></ul></ul></li></ul></li><li><a class="level is-mobile" href="#Other"><span class="level-left"><span class="level-item">4</span><span class="level-item">Other</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#附录：Http各版本及Https使用占比"><span class="level-left"><span class="level-item">4.1</span><span class="level-item">附录：Http各版本及Https使用占比</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Https-约95"><span class="level-left"><span class="level-item">4.1.1</span><span class="level-item">Https: 约95%</span></span></a></li><li><a class="level is-mobile" href="#Http2-0-约68"><span class="level-left"><span class="level-item">4.1.2</span><span class="level-item">Http2.0: 约68%</span></span></a></li><li><a class="level is-mobile" href="#Http3-0-约20"><span class="level-left"><span class="level-item">4.1.3</span><span class="level-item">Http3.0:  约20%</span></span></a></li></ul></li><li><a class="level is-mobile" href="#cookie和session作用与区别"><span class="level-left"><span class="level-item">4.2</span><span class="level-item">cookie和session作用与区别</span></span></a></li><li><a class="level is-mobile" href="#一次HTTP请求，程序一般经历了哪几个步骤？"><span class="level-left"><span class="level-item">4.3</span><span class="level-item">一次HTTP请求，程序一般经历了哪几个步骤？</span></span></a></li><li><a class="level is-mobile" href="#从输入网址到获得页面的过程-越详细越好-？sss"><span class="level-left"><span class="level-item">4.4</span><span class="level-item">从输入网址到获得页面的过程 (越详细越好)？sss</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Crow&#039;s Sky"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"Crow's Sky","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":""}</script><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-16T08:45:30.000Z" title="2/16/2022, 4:45:30 PM">2022-02-16</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.380Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">a minute read (About 127 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/16/PackageManager/">PackageManager</a></h1><div class="content"><p><img src="/2022/02/16/PackageManager/4d40d322bc9245f98b676235b5625bc6~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp.png" alt="img"></p>
+<p>PackageManger的核心作用：</p>
+<ol>
+<li>在系统启动过程中，通过**PackageManagerService(PKMS)*<em>对特定系统文件(如package.list, package.xml)进行扫描解析后，将所有app的信息整合存储，通过</em>IPackageManger*对外暴露</li>
+<li>通过<strong>PackageInstallerService</strong>提供Apk/Apex的安装、更新、卸载等操作(<em>IPackageInstaller</em>)</li>
+<li>应用运行过程中的权限检查</li>
+</ol></div><a class="article-more button is-small is-size-7" href="/2022/02/16/PackageManager/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-16T08:45:15.000Z" title="2/16/2022, 4:45:15 PM">2022-02-16</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.427Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">an hour read (About 8958 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/16/Window/">Window</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/huan89/p/14111360.html">https://www.cnblogs.com/huan89/p/14111360.html</a></p>
+<p>从来都没什么Window，有的只是一个个View树，每个窗口(activity/dialog/popupWindow)都是一个view树（代码中都是叫addView，直到WMS中才叫addWindow），在需要显示时被添加进WMS中，最后通过surfalceFlinger合成后渲染到屏幕中。</p>
+<p>每个窗口都对应一个Token，一个应用只对应一个session。</p>
+<h1 id="从Window视角看ActivityStart"><a href="#从Window视角看ActivityStart" class="headerlink" title="从Window视角看ActivityStart"></a>从Window视角看ActivityStart</h1><h2 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h2><p>简述：首先回顾一下，activity是怎么显示出来的：</p>
+<ol>
+<li>为activity创建PhoneWindow和WindowManager(WindowManagerImpl)对象</li>
+</ol>
+<p>在handleLaunchActivity()被回调的时候，调用<code>WindowManagerGlobal.initialize();</code>初始化WindoWindowManagerGlobal，之后<code>       Application app = r.packageInfo.makeApplication(false, mInstrumentation);</code>创建Application（如果还没有创建过Application），然后调用<code>activity.attach()</code>，这里面<code>   mWindow = new PhoneWindow(this, window, activityConfigCallback);</code>初始化PhoneWindow并给它设置<strong>WindowManager</strong>，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mWindow.setWindowManager(</span><br><span class="line">            (WindowManager)context.getSystemService(Context.WINDOW_SERVICE),</span><br><span class="line">            mToken, mComponent.flattenToString(),</span><br><span class="line">            (info.flags &amp; ActivityInfo.FLAG_HARDWARE_ACCELERATED) != <span class="number">0</span>);        </span><br></pre></td></tr></table></figure>
+
+<p>Window.setWindowManager()中通过<strong>WMS</strong>创建了WindowManagerImpl（其实就是个一百多行代码的壳）。</p>
+<blockquote>
+<p>从这里可以看到是利用系统服务的windowManager来创建新的windowManagerImpl，因而这个应用所有的WindowManagerImpl都是同个内核windowManager，而创建出来的仅仅是包了个壳。</p>
+</blockquote>
+<ol start="2">
+<li>setContentView实际上掉的是getWindow()（也就是上面的<strong>PhoneWindow</strong>）的setContentView()，其中调用PhoneWindow.installDecor()，</li>
+</ol>
+<ul>
+<li>首先看decorView创建了没有，没有的话创建DecorView</li>
+<li>把布局加载到<strong>DecorView</strong>中（LayoutInflater加载预设模板布局，见下）</li>
+</ul>
+<blockquote>
+<p>DecorView是在PhoneWindow中预设好的一个布局，这个布局长这样：</p>
+<p><img src="/2022/02/16/Window/7b50be9e59004b98b23781a7b25330cd~tplv-k3u1fbpfcp-zoom-1.png" alt="decorView"></p>
+<p>他是一个垂直排列的布局，上面是ActionBar，下面是ContentView，他是一个FrameLayout。我们的Activity布局就加载到ContentView里进行显示。所以Decorview是Activity布局最顶层的viewGroup。</p>
+</blockquote>
+<p>// DecorView创建完成了，但还缺少了最重要的一步：<strong>把DecorView</strong>作为window添加到屏幕上。</p>
+<ol start="3">
+<li><p>在handleResumeActivity中，执行了最后的  <code>wm.addView(mDecor, getWindow().getAttributes());</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleResumeActivity</span><span class="params">(IBinder token, <span class="keyword">boolean</span> finalStateRequest, <span class="keyword">boolean</span> isForward,</span></span></span><br><span class="line"><span class="function"><span class="params">        String reason)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 调用Activity的onResume方法</span></span><br><span class="line">    <span class="keyword">final</span> ActivityClientRecord r = performResumeActivity(token, finalStateRequest, reason);</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 让decorView显示到屏幕上</span></span><br><span class="line">	<span class="keyword">if</span> (r.activity.mVisibleFromClient) &#123;</span><br><span class="line">        r.activity.makeVisible();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">makeVisible</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!mWindowAdded) &#123;</span><br><span class="line">        ViewManager wm = getWindowManager();</span><br><span class="line">        wm.addView(mDecor, getWindow().getAttributes());</span><br><span class="line">        mWindowAdded = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    mDecor.setVisibility(View.VISIBLE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接调用<strong>WindowManagerImpl</strong>的addView方法来吧decorView添加到屏幕上，至此，我们的Activity界面就会显示在屏幕上了。</p>
+<p>进一步需要看WindowManagerImpl.addView之后是怎么将View（即Window）添加入屏幕的</p>
+<ol start="4">
+<li><code>wm.addView(mDecor, getWindow().getAttributes());</code>其中wm是<strong>WindowManagerImpl</strong>实例，<code>WindowManagerImpl.addView</code>其实是通过桥接，调用<strong>WindowManagerGlobal</strong>的全局单例的方法<code>WindowManagerGlobal.addView</code>，该方法中会新建一个<strong>ViewRootImpl</strong>，然后将入参的decorView、新建的ViewRootImp等加入自身维护的mViews、mRoots列表中，同时将DecorView注入ViewRootImpl<code>root.setView(view, wparams, panelParentView)</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">WindowMangerGlobal.clss</span><br><span class="line">维护着WMS实例sWindowManagerService和以下列表</span><br><span class="line"> </span><br><span class="line"><span class="comment">//应用所有的decorView</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;View&gt; mViews = <span class="keyword">new</span> ArrayList&lt;View&gt;();</span><br><span class="line"><span class="comment">//应用所有的ViewRootImpl</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;ViewRootImpl&gt; mRoots = <span class="keyword">new</span> ArrayList&lt;ViewRootImpl&gt;();</span><br><span class="line"><span class="comment">//应用所有的WindowManager.LayoutParams</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;WindowManager.LayoutParams&gt; mParams =</span><br><span class="line">        <span class="keyword">new</span> ArrayList&lt;WindowManager.LayoutParams&gt;();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(View view, ViewGroup.LayoutParams params,</span></span></span><br><span class="line"><span class="function"><span class="params">        Display display, Window parentWindow)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">//... 主要是校验参数和调整子窗口的参数</span></span><br><span class="line">	<span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// 这里新建了一个viewRootImpl，并设置参数</span></span><br><span class="line">        root = <span class="keyword">new</span> ViewRootImpl(view.getContext(), display);</span><br><span class="line">        view.setLayoutParams(wparams);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 添加到windowManagerGlobal的三个重要list中，每一个window所对应的这三个对象都会保存在这里，之后对window的一些操作就可以直接来这里取对象了。当window被删除的时候，这些对象也会被从list中移除。</span></span><br><span class="line">        mViews.add(view);</span><br><span class="line">        mRoots.add(root);</span><br><span class="line">        mParams.add(wparams);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 最后通过viewRootImpl来添加window</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            root.setView(view, wparams, panelParentView);</span><br><span class="line">        &#125; </span><br><span class="line">        ...</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>​    5. ViewRootImpl.setView()将调用到</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">res = mWindowSession.addToDisplay(mWindow, mSeq, mWindowAttributes,</span><br><span class="line">        getHostVisibility(), mDisplay.getDisplayId(), mWinFrame,</span><br><span class="line">        mAttachInfo.mContentInsets, mAttachInfo.mStableInsets,</span><br><span class="line">        mAttachInfo.mOutsets, mAttachInfo.mDisplayCutout, mInputChannel);</span><br></pre></td></tr></table></figure>
+
+<p>这个mWindowSession来自于构造器的入参，是由WindowManagerGlobal.getWindowSession中来的，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IWindowSession <span class="title">getWindowSession</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">synchronized</span> (WindowManagerGlobal.class) &#123;</span><br><span class="line">     <span class="keyword">if</span> (sWindowSession == <span class="keyword">null</span>) &#123;</span><br><span class="line">         <span class="keyword">try</span> &#123;</span><br><span class="line">             ...</span><br><span class="line">             sWindowSession = windowManager.openSession(</span><br><span class="line">                     <span class="keyword">new</span> IWindowSessionCallback.Stub() &#123;</span><br><span class="line">                         ...</span><br><span class="line">                     &#125;);</span><br><span class="line">         &#125; </span><br><span class="line">         ...</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> sWindowSession;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，这个session是一个单例，也就是<strong>整个应用的所有viewRootImpl的windowSession都是同一个，也就是一个应用只有一个windowSession</strong>。</p>
+<p><code>Session.addToDisplay</code>实际上走的是<strong>WMS</strong>的addWindow方法，后面的逻辑就交给WMS去处理了，WMS就会创建window，然后结合参数计算window的高度等等，最后使用viewRootImpl进行绘制。</p>
+<blockquote>
+<p>window的添加过程是通过PhoneWindow对应的WindowManagerImpl来添加window，内部会调用WindowManagerGlobal来实现。WindowManagerGlobal会使用viewRootImpl来进行跨进程通信让WMS执行创建window的业务。</p>
+<p>每个应用都有一个windowSession，用于负责和WMS的通信，如ApplicationThread与AMS的通信。</p>
+</blockquote>
+<h2 id="Other-Window"><a href="#Other-Window" class="headerlink" title="Other Window"></a>Other Window</h2><p><strong>dialog和popupwindow</strong>的层级是1000<del>1999，在这个层级<strong>都属于子window</strong>而不是应用Window(1</del>99)，<strong>子Window需要附属于父Window</strong>（Activity，也就是应用Window）才能显示，dialog虽然创建了一个PhoneWindow，但是popupWindow最终也创建了一个Window，只是它不是PhoneWindow而已，popupWindow和dialog的显示都需要依赖父Window的Token，其实两者都需要依赖于Activiy</p>
+<h3 id="PopupWindow"><a href="#PopupWindow" class="headerlink" title="PopupWindow"></a>PopupWindow</h3><p>那么，PopupWindow则是在构造器中时将入参的contentView直接执行  <code>setContentView(contentView);</code>，然后在<code>showAtLocation（）</code>中调用了<code>preparePopup()</code> 创建它的decorView（PopupDecorView）之后<code>invokePopup()</code>调用执行<code>mWindowManager.addView(decorView, p);</code></p>
+<ul>
+<li>根据参数构建popupDecorView</li>
+<li>把popupDecorView添加到屏幕上</li>
+</ul>
+<p><code>dismiss()</code>中调用<code>mWindowManager.removeViewImmediate(decorView);</code></p>
+<h3 id="Dialog"><a href="#Dialog" class="headerlink" title="Dialog"></a>Dialog</h3><p>dialog的创建过程Activity比较像：构造器创建PhoneWindow，setContentView初始化DecorView，show时候添加DecorView。</p>
+<ul>
+<li>构造函数中创建PhoneWindow，设置WindowManger（这里拿的是传入的context，实际上这context只能是actiivty，的WindowManager）</li>
+<li>Dialog.setContentView时掉PhoneWindow.setContentView来初始化DecorView</li>
+<li><code>show()</code>时候调用了<code>mWindowManager.addView(mDecor, l);</code></li>
+<li><code>dismiss()</code>时候调用<code>mWindowManager.removeViewImmediate(mDecor);</code></li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><blockquote>
+<ul>
+<li>dialog和popupWindow不同，dialog创建了新的PhoneWindow，使用了PhoneWindow的DecorView模板。而popupWindow没有，popupWindow他也对应一个window，因为它也是通过windowManager添加上去的，不属于Activity的view树。</li>
+<li>dialog的显示层级数更高，会直接显示在Activity上面，在dialog后添加的popUpWindow也会显示在dialog下</li>
+<li>dialog的创建流程和activity非常像</li>
+</ul>
+</blockquote></div><a class="article-more button is-small is-size-7" href="/2022/02/16/Window/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-01-24T09:18:13.000Z" title="1/24/2022, 5:18:13 PM">2022-01-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.376Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">17 minutes read (About 2621 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/01/24/Linux/">Linux</a></h1><div class="content"><h1 id="进程切换"><a href="#进程切换" class="headerlink" title="进程切换"></a>进程切换</h1><h2 id="什么是-CPU-上下文"><a href="#什么是-CPU-上下文" class="headerlink" title="什么是 CPU 上下文"></a>什么是 CPU 上下文</h2><p>CPU 寄存器和程序计数器就是 CPU 上下文，因为它们都是 CPU 在运行任何任务前，必须的依赖环境。</p>
+<ul>
+<li>CPU 寄存器是 CPU 内置的容量小、但速度极快的内存。</li>
+<li>程序计数器则是用来存储 CPU 正在执行的指令位置、或者即将执行的下一条指令位置。</li>
+</ul>
+<h2 id="什么是-CPU-上下文切换"><a href="#什么是-CPU-上下文切换" class="headerlink" title="什么是 CPU 上下文切换"></a>什么是 CPU 上下文切换</h2><p>就是先把前一个任务的 CPU 上下文（也就是 CPU 寄存器和程序计数器）保存起来，然后加载新任务的上下文到这些寄存器和程序计数器，最后再跳转到程序计数器所指的新位置，运行新任务。</p>
+<p>而这些保存下来的上下文，会存储在系统内核中，并在任务重新调度执行时再次加载进来。这样就能保证任务原来的状态不受影响，让任务看起来还是连续运行。</p></div><a class="article-more button is-small is-size-7" href="/2022/01/24/Linux/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-01-24T09:14:28.000Z" title="1/24/2022, 5:14:28 PM">2022-01-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.231Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">33 minutes read (About 4946 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/01/24/HandlerEpoll/">HandlerEpoll</a></h1><div class="content"><h2 id="Looper的阻塞唤醒"><a href="#Looper的阻塞唤醒" class="headerlink" title="Looper的阻塞唤醒"></a>Looper的阻塞唤醒</h2><p><strong>简述：通过pipe/epoll机制，实现MessageQueue.next的无消息时阻塞，有消息时唤醒，pipe</strong></p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>具体来说，当Looper在处理消息时，如果消息队列为空，那么它会调用MessageQueue的next方法来等待新的消息到来，通过Linux内核的epoll机制阻塞线程，等待新的消息到来。在阻塞期间，线程处于睡眠状态，不会占用CPU资源;当新的消息到来时，MessageQueue对象会将消息加入队列，并通知Looper对象，从而唤醒线程并继续执行消息的分发和处理。</p>
+<p>epoll机制是Linux内核提供的一种高效的I/O多路复用机制，可以在多个文件描述符上等待，并在其中任何一个文件描述符有事件到达时立即返回，从而实现高效的I/O事件处理。</p>
+<p>epoll机制主要分为以下三个步骤：</p>
+<ol>
+<li>创建epoll句柄：在使用epoll机制之前，首先需要创建一个epoll句柄。这可以通过调用epoll_create函数来完成，它会返回一个整型的文件描述符，可以用于后续的epoll操作。</li>
+<li>添加文件描述符到epoll：将需要监听的文件描述符添加到epoll中，可以通过调用epoll_ctl函数来完成。在添加文件描述符时，需要指定文件描述符的类型（例如管道、socket等）、事件类型（例如读事件、写事件等）以及回调函数等信息。</li>
+<li>等待事件到达：等待事件到达是epoll机制的核心。可以通过调用epoll_wait函数来等待文件描述符上的事件。该函数会阻塞，直到有文件描述符上有事件到达或者超时时间到达。当有事件到达时，函数会立即返回，返回值为就绪文件描述符的个数，同时将就绪文件描述符的信息填充到一个事件数组中。</li>
+</ol>
+<p>在处理就绪事件时，可以遍历事件数组，并根据每个事件的类型来进行相应的处理。例如，如果是读事件，可以使用read函数来读取文件描述符上的数据。</p>
+<p>总之，通过使用epoll机制，可以高效地处理多个文件描述符上的I/O事件，并及时响应事件的到达。这种机制在Linux系统中得到了广泛的应用，包括网络编程、图形界面等领域。</p></div><a class="article-more button is-small is-size-7" href="/2022/01/24/HandlerEpoll/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-01-12T07:09:17.000Z" title="1/12/2022, 3:09:17 PM">2022-01-12</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.005Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">12 minutes read (About 1804 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/01/12/EventAndNestedScroll/">EventAndNestedScroll</a></h1><div class="content"><h1 id="原理-amp-流程"><a href="#原理-amp-流程" class="headerlink" title="原理&amp;流程"></a>原理&amp;流程</h1><p>一.  <code>ns child</code>会在收到<code>DOWN</code>事件时，找到自己祖上中最近的能与自己匹配的<code>ns parent</code>，与它进行绑定并关闭它的事件拦截机制</p>
+<p>二. 然后<code>ns child</code>会在接下来的<code>MOVE</code>事件中判定出用户触发了滑动手势，并把事件流拦截下来给自己消费</p>
+<p>三. 消费事件流时，对于每一次<code>MOVE</code>事件增加的滑动距离：</p>
+<ol>
+<li><code>ns child</code>并不是直接自己消费，而是先把它交给<code>ns parent</code>，让<code>ns parent</code>可以在<code>ns child</code>之前消费滑动<code>dispatch/onNestedPreScroll()</code></li>
+<li>如果<code>ns parent</code>没有消费或是没有消费完，<code>ns child</code>再自己消费剩下的滑动<code>dispatchNestedScroll()</code></li>
+<li>如果<code>ns child</code>自己还是没有消费完这个滑动，会再把剩下的滑动交给<code>ns parent</code>消费<code>onNestedScroll()</code></li>
+<li>最后如果滑动还有剩余，<code>ns child</code>可以做最终的处理<code>dispatchNestedScroll()</code></li>
+</ol>
+<p>四. 同时在<code>ns child</code>的<code>computeScroll()</code>方法中，<code>ns child</code>也会把自己因为用户<code>fling</code>操作引发的滑动，与上一条中用户滑动屏幕触发的滑动一样，使用「parent -&gt; child -&gt; parent -&gt; child」的顺序进行消费</p></div><a class="article-more button is-small is-size-7" href="/2022/01/12/EventAndNestedScroll/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-01-10T06:35:59.000Z" title="1/10/2022, 2:35:59 PM">2022-01-10</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-22T06:20:58.600Z" title="4/22/2024, 2:20:58 PM">2024-04-22</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">an hour read (About 7080 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/01/10/Java/">Java</a></h1><div class="content"><h1 id="final-amp-finalize"><a href="#final-amp-finalize" class="headerlink" title="final &amp; finalize()"></a>final &amp; finalize()</h1><h2 id="final"><a href="#final" class="headerlink" title="final"></a>final</h2><p>final修饰的类不可被继承，方法不可被覆盖(或者叫重写)，对象不可被更改。</p>
+<h2 id="finalize"><a href="#finalize" class="headerlink" title="finalize()"></a>finalize()</h2><p>finalize()是Object的protected方法，是用来给对象在Gc前<strong>一次</strong>行动的机会：首先，当对象变成(GC Roots)不可达时，GC会判断该对象是否覆盖了finalize方法，若未覆盖，则直接将其回收。否则，若对象未执行过finalize方法，将其放入F-Queue队列，由一低优先级线程执行该队列中对象的finalize方法。执行finalize方法完毕后，GC会再次判断该对象是否可达，若不可达，则进行回收，否则，对象“复活”。</p>
+<ul>
+<li><p>System.gc()与System.runFinalization()方法增加了finalize方法执行的机会，但不可盲目依赖它们</p>
+</li>
+<li><p>Java语言规范并不保证finalize方法会被及时地执行、而且根本不会保证它们会被执行</p>
+</li>
+<li><p>finalize方法可能会带来性能问题。因为JVM通常在单独的低优先级线程中完成finalize的执行</p>
+</li>
+<li><p>对象再生问题：finalize方法中，可将待回收对象赋值给GC Roots可达的对象引用，从而达到对象再生的目的</p>
+</li>
+<li><p>finalize方法至多由GC执行一次(用户当然可以手动调用对象的finalize方法，但并不影响GC对finalize的行为)</p>
+</li>
+</ul>
+<p>简述：finalize()方法会在对象回收前至多被调用一次，一般可以在这里做一次重新挂到GcRoot链上的保活操作，或者像Android6以前安卓在覆盖的finalize()方法中释放native内存一样。</p></div><a class="article-more button is-small is-size-7" href="/2022/01/10/Java/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-01-06T09:45:42.000Z" title="1/6/2022, 5:45:42 PM">2022-01-06</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.001Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">24 minutes read (About 3577 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/01/06/DNS/">DNS</a></h1><div class="content"><p>简述：</p>
+<p>浏览器中访问一个<a target="_blank" rel="noopener" href="http://www.baidu.com,首先会访问浏览器缓存,如未命中则进一步访问操作系统缓存,如未命中则访问hosts文件.如未命中,则客户端想本地dns服务器发起递归查询(本地dns会将结果也就是ip直接返回),如本地dns解析服务器未命中,则由本地dns解析服务器向根域名服务器、顶级域名服务器、管理方域名服务器等依次进行迭代查询(每有一个未命中则返回下一个域名服务器地址给本地域名服务器,比如local/">www.baidu.com，首先会访问浏览器缓存，如未命中则进一步访问操作系统缓存，如未命中则访问hosts文件。如未命中，则客户端想本地DNS服务器发起递归查询（本地DNS会将结果也就是ip直接返回），如本地DNS解析服务器未命中，则由本地DNS解析服务器向根域名服务器、顶级域名服务器、管理方域名服务器等依次进行迭代查询（每有一个未命中则返回下一个域名服务器地址给本地域名服务器，比如local</a> dns server向根域名服务器查询未命中，则根域名服务器返回顶级域名服务器地址给local dns server，然后local dns server向收到的这个地址迭代发起查询）</p>
+<p>迭代与递归查询区别：客户端向本地dns服务器发起的是递归查询，客户端拿到的ip是由本地dns服务器直接返回；本地dns服务器向外网查询时是用的迭代查询，即向根域名服务器查询未命中返回给本地dns服务器的是下一个域名服务器的地址而非根域名去访问下一个域名服务器返回结果ip。</p>
+<p>这里还有一个权威性的问题：如果客户端向本地dns服务器发起递归查询时，本地dns存在缓存，并将结果返回客户端，则该结果不具权威性（即缓存可能已经失效）；反之如果由本地dns服务器解析命中后返回，则具有权威性</p></div><a class="article-more button is-small is-size-7" href="/2022/01/06/DNS/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-12-31T03:51:04.000Z" title="12/31/2021, 11:51:04 AM">2021-12-31</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-06T08:42:39.750Z" title="5/6/2024, 4:42:39 PM">2024-05-06</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">23 minutes read (About 3436 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/12/31/Generics/">Generics</a></h1><div class="content"><h1 id="Java泛型"><a href="#Java泛型" class="headerlink" title="Java泛型"></a>Java泛型</h1><p>简述：</p>
+<p>理解的泛型，其实是这样的：假如没有泛型，出现在泛型类型位置的就会是Object类，而程序员在使用该类型的时候再手动将类型强转一下，不仅代码啰嗦、而且有类型不匹配的crash可能。</p>
+<p>而java1.5提供泛型同时为了兼容旧版，本质上也是用了Object，只不过<strong>编译器将.java编译成.class时</strong>进行“泛型擦除”时会把泛型类型替代成<strong>Object</strong>或<strong>上限类型</strong>（字节码中就不存在泛型了），再自动地使用处前加上原始类型的强转，之后再加载到JVM中。而在编译期存在的泛型可以借由IDE有效的进行<strong>类型检测</strong>和<strong>可读的扩展</strong>，防止类型不匹配。</p>
+<p>//<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/28665443/answer/118148143">java伪泛型的设计原因主要为了兼容老版本的java。真泛型并非做不到，而是因为如果用真泛型（即类型保留），老程序都需要修改。</a></p>
+<p>//另外泛型类中基础数据类型需要使用Integer、Long等封装类的原因也是因为“擦除后会把泛型类型替代成<strong>Object</strong>或<strong>上限类型</strong>”</p>
+<p>而kotlin的泛型是跟java一样的，在编译时会被擦除。但是kotlin提供了新的特性可以保留类型，就是**内联函数+reified(ˈriːɪfʌɪ/)**，泛型实化，可以说是真泛型：内联函数(inline)会把方法体copy到调用处（即不会创建新的虚拟机栈帧），</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;<span class="keyword">reified</span> C : Activity&gt;</span> Context.<span class="title">startActivityKtx</span><span class="params">()</span></span> &#123;</span><br><span class="line">    startActivity(Intent(<span class="keyword">this</span>, C::<span class="keyword">class</span>.java))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>协变：①<strong>协变</strong>：<strong>父子关系一致</strong>→<strong>子类也可以作为参数传进来</strong>→java<code>&lt;? extends Entity&gt;</code>→<strong>上界通配符</strong>→kotlin<code>&lt;out Entity&gt;</code></p>
+<p>逆变：②<strong>逆变</strong>：<strong>父子关系颠倒</strong>→<strong>父类也可以作为参数传进来</strong>→java<code>&lt;? super Article&gt;</code>→<strong>下界通配符</strong>→kotlin<code>&lt;in Entiry&gt;</code></p>
+<p>不变：③不变：只能</p>
+<p>无限通配符<code>&lt;?&gt;</code> == java <code>&lt;? extend Object&gt;</code> == kotlin<code>&lt;*&gt;</code> == kotlin<code>&lt;out Any&gt;</code></p></div><a class="article-more button is-small is-size-7" href="/2021/12/31/Generics/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-12-13T08:01:11.000Z" title="12/13/2021, 4:01:11 PM">2021-12-13</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.416Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">18 minutes read (About 2716 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/12/13/VirtualMemory/">VirtualMemory</a></h1><div class="content"><p><img src="/2021/12/13/VirtualMemory/1620.jpeg" alt="img"></p>
+<p>简述：cpu以虚拟内存，通过MMU查询 页表， 映射 高4位(页号) 到页表中查询得到 页框号 和 有效位。</p>
+<p>如果有效位 为1， 则直接将页框号和虚拟内存低12位（偏移量）组合返回即为物理地址</p>
+<p>如果有效位为0（意味着该页表项不存在MMU中，即未向MMU注册或相关页未被加载如内存中），则产生缺页中断，系统处理中断，通过内存置换swap算法（LRU，OPT，FIFO），之后重走一遍以上逻辑</p></div><a class="article-more button is-small is-size-7" href="/2021/12/13/VirtualMemory/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-22T12:59:00.000Z" title="11/22/2021, 8:59:00 PM">2021-11-22</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.380Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">an hour read (About 10880 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/22/OperatingSystem/">OperatingSystem</a></h1><div class="content"><h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><ul>
+<li>进程和线程<ul>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB">进程和线程有什么区别？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F">进程间通信有哪些方式？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98">进程同步问题</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81">进程有哪几种状态？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5%E6%9C%89%E5%93%AA%E4%BA%9B">进程调度策略有哪些？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B">什么是僵尸进程？</a></li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F">线程同步有哪些方式？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E7%A8%8B">什么是协程？</a></li>
+<li><a href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%BC%82%E5%B8%B8%E6%8E%A7%E5%88%B6%E6%B5%81%EF%BC%9A%E9%99%B7%E9%98%B1%E3%80%81%E4%B8%AD%E6%96%AD%E3%80%81%E5%BC%82%E5%B8%B8%E5%92%8C%E4%BF%A1%E5%8F%B7">进程的异常控制流：陷阱、中断、异常和信号</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFIO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0">什么是IO多路复用？怎么实现？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81">什么是用户态和内核态？</a></li>
+</ul>
+</li>
+<li>死锁<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%AD%BB%E9%94%81">什么是死锁？</a></li>
+<li><a href="#%E6%AD%BB%E9%94%81%E4%BA%A7%E7%94%9F%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6">死锁产生的必要条件？</a></li>
+<li><a href="#%E6%AD%BB%E9%94%81%E6%9C%89%E5%93%AA%E4%BA%9B%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95">死锁有哪些处理方法？</a></li>
+</ul>
+</li>
+<li>内存管理<ul>
+<li><a href="#%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB">分页和分段有什么区别？</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98">什么是虚拟内存？</a></li>
+<li><a href="#%E6%9C%89%E5%93%AA%E4%BA%9B%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95">有哪些页面置换算法？</a></li>
+<li><a href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E9%97%AE%E9%A2%98">缓冲区溢出问题</a></li>
+</ul>
+</li>
+<li><a href="#%E7%A3%81%E7%9B%98%E8%B0%83%E5%BA%A6">磁盘调度</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+<hr></div><a class="article-more button is-small is-size-7" href="/2021/11/22/OperatingSystem/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-22T08:51:31.000Z" title="11/22/2021, 4:51:31 PM">2021-11-22</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.239Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">16 minutes read (About 2339 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/22/HighFrequencyIssue/">HighFrequencyIssue</a></h1><div class="content"><h2 id="操作系统："><a href="#操作系统：" class="headerlink" title="操作系统："></a>操作系统：</h2><p>（1）线程和进程的区别？</p>
+<p>（2）线程之间怎么共享资源？</p>
+<p>（3）进程之间怎么通信？</p>
+<p>（4）进程池的原理是什么？</p>
+<h4 id="进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的"><a href="#进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的" class="headerlink" title="进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的?"></a>进程与线程的概念，以及为什么要有进程线程，其中有什么区别，他们各自又是怎么同步的?</h4><h5 id="1-基本概念："><a href="#1-基本概念：" class="headerlink" title="1. 基本概念："></a>1. 基本概念：</h5><p>进程是对运行时程序的封装，是<strong>系统进行资源调度和分配的的基本单位，实现了操作系统的并发</strong>；</p>
+<p>线程是进程的子任务，<strong>是CPU调度和分派的基本单位</strong>，<strong>用于保证程序的实时性，实现进程内部的并发；线程是操作系统可识别的最小执行和调度单位</strong>。每个线程都独自占用一个<strong>虚拟处理器</strong>：独自的<strong>寄存器组</strong>，<strong>指令计数器和处理器状态</strong>。每个线程完成不同的任务，但是<strong>共享同一地址空间</strong>（也就是同样的<strong>动态内存，映射文件，目标代码等等</strong>），<strong>打开的文件队列和其他内核资源</strong>。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/22/HighFrequencyIssue/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-19T09:20:14.000Z" title="11/19/2021, 5:20:14 PM">2021-11-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-08T09:36:08.977Z" title="7/8/2024, 5:36:08 PM">2024-07-08</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 8572 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/19/HttpProtocol/">HttpProtocol</a></h1><div class="content"><h1 id="Http-缓存"><a href="#Http-缓存" class="headerlink" title="Http 缓存"></a>Http 缓存</h1><p>在请求一个静态文件的时候（图片，css，js）等，这些文件的特点是文件不经常变化，将这些不经常变化的文件存储起来，对客户端来说是一个优化用户浏览体验的方法。那么这个就是客户端缓存的意义了。</p>
+<p>简述：</p>
+<ul>
+<li><p>强制缓存是根据上次响应header中的Cache-Control:Max-age<del>或是Expries</del>，<strong>客户端直接判断缓存</strong>是否能用该资源缓存；</p>
+</li>
+<li><p>协商缓存需要<strong>客户端</strong>用记录下来的上次响应header中的ETag或是Last-Modified，通过与向服务器的请求request的header中赋值If-None-Match或If-Modified-Since，由<strong>服务器判断资源是否更新</strong>，结果由code和是否存在body明确是否命中缓存；</p>
+</li>
+</ul>
+<p>同时出现的优先级排序： 强制缓存 &gt; 协商缓存；ETag &amp; If-None-Match &gt; Last-Modified &amp; If-Modified-Since <del>;Cache-Control &gt; Expries；</del></p></div><a class="article-more button is-small is-size-7" href="/2021/11/19/HttpProtocol/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-15T09:45:04.000Z" title="11/15/2021, 5:45:04 PM">2021-11-15</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.500Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">39 minutes read (About 5825 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/15/SharePreference/">sharePreference</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://leo-wxy.github.io/images/SharedPreferences%E5%8E%9F%E7%90%86.png"><img src="/2021/11/15/SharePreference/SharedPreferences%E5%8E%9F%E7%90%86.png" alt="SharedPreferences原理-xmind"></a></p>
+<p><a target="_blank" rel="noopener" href="https://leo-wxy.github.io/images/SharedPreferences%E5%8E%9F%E7%90%86.png">SharedPreferences原理-xmind</a></p>
+<p><code>SharedPreferences</code>是系统提供的一种简易数据持久化的手段，适合<strong>单进程、小批量</strong>的数据存储与访问。以键值对的形式存储在<code>xml</code>文件中。<br>文件存储路径为<code>data/data/package_name/shared_prefs/</code>目录。</p>
+<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><p><a target="_blank" rel="noopener" href="https://leo-wxy.github.io/images/SP-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.png"><img src="/2021/11/15/SharePreference/SP-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.png" alt="源码解析"></a></p>
+<p><a target="_blank" rel="noopener" href="https://leo-wxy.github.io/images/SP-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.png">源码解析</a></p></div><a class="article-more button is-small is-size-7" href="/2021/11/15/SharePreference/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T12:20:27.000Z" title="11/11/2021, 8:20:27 PM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-29T08:13:23.384Z" title="7/29/2024, 4:13:23 PM">2024-07-29</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">an hour read (About 8820 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Concurrent/">Concurrent</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://www.wwwbuild.net/JavaAmazing/112187.html">https://www.wwwbuild.net/JavaAmazing/112187.html</a></p>
+<h1 id="并发操作：原子性、可见性、有序性"><a href="#并发操作：原子性、可见性、有序性" class="headerlink" title="并发操作：原子性、可见性、有序性"></a>并发操作：原子性、可见性、有序性</h1><h2 id="1、原子性"><a href="#1、原子性" class="headerlink" title="1、原子性"></a><strong>1、原子性</strong></h2><p><strong>即一个操作或者多个操作，要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。</strong></p>
+<p>如java.util.concurrent.atomic包下的原子类，就是用CAS(Compare And Swap)保证原子性和可见性（内存屏障）</p>
+<blockquote>
+<p>虽然 <code>java.util.concurrent.atomic</code> 提供了原子操作，但这些解决方案主要针对单一变量。对于涉及多个变量时的原子性操作，仍然需要使用高级同步机制（如 <code>synchronized</code> 块或 <code>ReentrantLock</code>）。</p>
+<p>Java 内存模型（JMM）确保在使用原子类和 CAS 操作时，数值的更新对其他线程是可见的。这是通过内存屏障来实现的。</p>
+</blockquote>
+<h2 id="2、可见性"><a href="#2、可见性" class="headerlink" title="2、可见性"></a>2、可见性</h2><p><strong>可见性是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。</strong></p>
+<p>如volatile能保证被修饰变量的可见性、有序性；原子类可以保证原子性和可见性；</p>
+<blockquote>
+<ul>
+<li><strong>可见性</strong>：<code>volatile</code> 关键字确保变量的更新对所有线程立即可见，避免线程读取到变量的过期值。</li>
+<li><strong>禁止指令重排序优化</strong>：编译器和运行时不会把 <code>volatile</code> 变量的写操作与之前的内存操作重排序，也不会把 <code>volatile</code> 变量的读操作与之后的内存操作重排序。</li>
+</ul>
+</blockquote>
+<h2 id="3、有序性"><a href="#3、有序性" class="headerlink" title="3、有序性"></a>3、有序性</h2><p><strong>即程序执行的顺序按照代码的先后顺序执行。（指令编排可能会导致多线程下执行结果不一致）</strong></p>
+<p>如volatile能保证被修饰变量的可见性、有序性</p>
+<p><strong>synchronized关键字三者都能保证。</strong></p>
+<h1 id="Volatile-和synchronized的区别："><a href="#Volatile-和synchronized的区别：" class="headerlink" title="Volatile 和synchronized的区别："></a>Volatile 和synchronized的区别：</h1><p><strong><code>java.util.concurrent.atomic</code>包的原子类可以保证数据的原子性、可见性；volatile关键字能保证数据的可见性、有序性，但不能保证数据的原子性。synchronized关键字三者都能保证。</strong></p>
+<h2 id="1：并发特性比较："><a href="#1：并发特性比较：" class="headerlink" title="1：并发特性比较："></a>1：并发特性比较：</h2><p>volatile关键字能保证数据的可见性、有序性，但不能保证数据的原子性（即volatile int x; x++ 是三步操作：一取x值，二加一，三赋值回x）。synchronized关键字两者都能保证。</p>
+<p>有序性则volatile和synchronized都能保证，volatile关键字禁止JVM编译器已及处理器对其进行重排序,</p>
+<p>synchronized保证顺序性是串行化的结果，但同步块里的语句是会发生指令从排。</p>
+<h2 id="2：volatile-的原理"><a href="#2：volatile-的原理" class="headerlink" title="2：volatile 的原理"></a>2：volatile 的原理</h2><p>  1).  修改volatile变量时会强制将修改后的值刷新的主内存中。</p>
+<p>  2).  修改volatile变量后会导致其他线程工作内存中对应的变量值失效。因此，再读取该变量值的时候就需要重新从读取主内存中的值。</p>
+<p>  3).  <strong>禁止指令重排序优化</strong>：编译器和运行时不会把 <code>volatile</code> 变量的写操作与之前的内存操作重排序，也不会把 <code>volatile</code> 变量的读操作与之后的内存操作重排序。</p>
+<p>（Intel 的MESI协议：当CPU写数据时，如果发现操作的变量是共享变量，即在其他CPU中也存在该变量的副本，会发出信号通知其他CPU将该变量的高速缓存置为无效状态，因此当其他CPU需要读取这个变量时，发现自己缓存中缓存该变量的缓存行是无效的，那么它就会从内存重新读取重新加载到高速缓存。）</p>
+<h2 id="3：阻塞与否"><a href="#3：阻塞与否" class="headerlink" title="3：阻塞与否"></a>3：阻塞与否</h2><p>多线程访问volatile关键字不会发生阻塞（2所述原理），而synchronized关键字可能会发生阻塞(重量级锁时会阻塞)</p>
+<h2 id="4：性能"><a href="#4：性能" class="headerlink" title="4：性能"></a>4：性能</h2><p>volatile关键字是线程同步的轻量级实现，所以volatile性能肯定比synchronized关键字要好。但是volatile关键字只能用于变量而synchronized关键字可以修饰方法以及代码块。synchronized关键字在JavaSE1.6之后进行了主要包括为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁以及其它各种优化之后执行效率有了显著提升，实际开发中使用synchronized关键字的场景还是更多一些。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Concurrent/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T12:20:27.000Z" title="11/11/2021, 8:20:27 PM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.501Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 10996 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Tcp/">tcp</a></h1><div class="content"><p>简述：</p>
+<p>Tcp是</p>
+<p>面向链接的<br>面向字节流的<br>可靠的（几个点）</p>
+<p>保证可靠的手段：</p>
+<ul>
+<li><p>数据分块——握手时协商确定MSS，大于MSS的tcp数据包分段（也就是拆包）；序列号；校验和；<u>确认ack包</u>；</p>
+</li>
+<li><p>超时重传——发送方使用一个保守估计的时间作为收到数据包的确认的超时上限RTO。如果超过这个上限仍未收到确认包，发送方将重传这个数据包。每当发送方收到确认包后，会重置这个重传定时器。</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减为当前cwnd一半，执行慢启动每轮往返拥塞倍增</p>
+</li>
+<li><p>滑动窗口实现的流量控制；接收方在ack包中设置rwnd控制发送方发送速度。</p>
+</li>
+<li><p>拥塞控制算法——小于阈值之前从1开始每轮往返拥塞窗口cwnd倍增（慢启动），拥塞窗口大于阈值后步长为一的递增（拥塞避免）。接收方收到失序报文段后立即发出<u>重复确认ack包</u>，发送方连续三次重复确认则直接发送缺乏ack的丢包（快速重传），同时把阈值减为cwnd/2并调整拥塞窗口为新阈值而后执行拥塞避免算法（快速恢复）；</p>
+</li>
+</ul>
+<p>Ps:</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减为当前cwnd一半，执行慢启动每轮往返拥塞倍增；</p>
+<p>三次重复确认会执行快速重传快速恢复，阈值减为当前cwnd一半，拥塞窗口为新阈值值，执行拥塞避免，每轮往返递增；</p></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Tcp/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T02:54:51.000Z" title="11/11/2021, 10:54:51 AM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.403Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">12 minutes read (About 1813 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Socket/">Socket</a></h1><div class="content"><h1 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h1><h2 id="1-什么是Socket"><a href="#1-什么是Socket" class="headerlink" title="1 什么是Socket"></a>1 什么是Socket</h2><ul>
+<li><p>网络上的两个程序通过一个双向的通讯连接实现数据的交换，这个双向链路的一端称为一个Socket。Socket通常用来实现客户方和服务方的连接。Socket是TCP/IP协议的一个十分流行的编程界面，一个Socket由一个IP地址和一个端口号唯一确定。</p>
+</li>
+<li><p>但是，Socket所支持的协议种类也不光TCP/IP、UDP，因此两者之间是没有必然联系的。在Java环境下，Socket编程主要是指基于TCP/IP协议的网络编程。</p>
+</li>
+<li><p>socket连接就是所谓的长连接，客户端和服务器需要互相连接，理论上客户端和服务器端一旦建立起连接将不会主动断掉的，但是有时候网络波动还是有可能的</p>
+</li>
+<li><p>Socket偏向于底层。一般很少直接使用Socket来编程，框架底层使用Socket比较多，</p></li></ul></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Socket/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-09T03:49:45.000Z" title="11/9/2021, 11:49:45 AM">2021-11-09</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.378Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a></span><span class="level-item">23 minutes read (About 3463 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/09/MVXArchitecture/">MVXArchitecture</a></h1><div class="content"><h1 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h1><blockquote>
+<p><strong>View：</strong>XML布局文件。 <strong>Model：</strong>实体模型（数据的获取、存储、数据状态变化）。 <strong>Controller：</strong>对应于Activity，处理数据、业务和UI。</p>
+</blockquote>
+<p>从上面这个结构来看，Android本身的设计还是符合MVC架构的，但是Android中纯粹作为View的XML视图功能太弱，我们大量处理View的逻辑只能写在Activity中，这样Activity就充当了View和Controller两个角色，直接导致Activity中的代码大爆炸。相信大多数Android开发者都遇到过一个Acitivty数以千行的代码情况吧！所以，更贴切的说法是，这个MVC结构最终其实只是一个Model-View（Activity:View&amp;Controller）的结构。</p></div><a class="article-more button is-small is-size-7" href="/2021/11/09/MVXArchitecture/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-02T08:21:50.000Z" title="11/2/2021, 4:21:50 PM">2021-11-02</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.863Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">2 minutes read (About 231 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/02/ANR/">ANR</a></h1><div class="content"><p>机制描述：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/5EcwYhllQOjcQTvzGicrZfZGVCBmXt6j0QtLShpFAbzqwasf8JWjSPJAJqDpbXNCsKnMvURKb4YXBficiajr1stog/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="图片"></p>
+<p>（//ps：AOSP源码中Service的前台Service的TIMEOUT时间是20s，后台Service的TIMEOUT时间是200s）</p>
+<blockquote>
+<p>android-10   </p>
+<p>// How long we wait for a service to finish executing.</p>
+<p>​    static final int SERVICE_TIMEOUT = 20*1000;</p>
+<p>​    // How long we wait for a service to finish executing.</p>
+<p>​    static final int SERVICE_BACKGROUND_TIMEOUT = SERVICE_TIMEOUT * 10;原理：</p>
+</blockquote>
+<h3 id="Service："><a href="#Service：" class="headerlink" title="Service："></a>Service：</h3><p>前台Service启动超过20s没有启动完成：在Service启动时发送一个延迟20s的消息（该消息内部即为 报ANR并分析ANR栈），之后在Service的启动完成时将这个消息remove掉。如果成功remove那就啥事没有，如果超过20s没有remove就消息触发，执行消息体内的ANR动作。（后台消息）</p></div><a class="article-more button is-small is-size-7" href="/2021/11/02/ANR/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-02T03:51:57.000Z" title="11/2/2021, 11:51:57 AM">2021-11-02</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.999Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">24 minutes read (About 3570 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/02/Coroutines-Principle/">Coroutines_Principle</a></h1><div class="content"><h1 id="Kotlin协程使用"><a href="#Kotlin协程使用" class="headerlink" title="Kotlin协程使用"></a>Kotlin协程使用</h1></div><a class="article-more button is-small is-size-7" href="/2021/11/02/Coroutines-Principle/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-01T12:20:27.000Z" title="11/1/2021, 8:20:27 PM">2021-11-01</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-10T06:53:55.353Z" title="5/10/2024, 2:53:55 PM">2024-05-10</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/JavaBasic/">JavaBasic</a></span><span class="level-item">29 minutes read (About 4375 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/01/HashMap/">HashMap</a></h1><div class="content"><h2 id="常见Map类"><a href="#常见Map类" class="headerlink" title="常见Map类"></a>常见Map类</h2><p>简述：HashMap是非线程安全的，如需要线程安全的哈希隐射类，应使用实现了分段锁（1.8）的ConcurrentHashMap，而不建议使用遗留类HashTable（HashTable实现线程安全是依靠用synchronized关键字修饰put/get方法，效率较低）。</p>
+<p>如果需要保存记录插入的顺序，可使用LinkHashMap()，其内部实现了一个双向链表，即每个节点本身记录了前后节点的引用。(btw:MessageQueue是单链表)</p></div><a class="article-more button is-small is-size-7" href="/2021/11/01/HashMap/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-28T05:58:06.000Z" title="10/28/2021, 1:58:06 PM">2021-10-28</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.499Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">3 minutes read (About 393 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/28/Mmkv/">mmkv</a></h1><div class="content"><p>MMKV 是基于 <strong>mmap</strong> 内存映射的 key-value 组件，底层序列化/反序列化使用 <strong>protobuf</strong> 实现，性能高，稳定性强。多进程同步实现是依靠<strong>文件锁</strong></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903914119102472#heading-21">Android 存储优化 —— MMKV 集成与原理 - 掘金 (juejin.cn)</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Tencent/MMKV/wiki/design">design · Tencent/MMKV Wiki (github.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Tencent/MMKV/wiki/android_ipc">android_ipc · Tencent/MMKV Wiki (github.com)</a></p>
+<p>一些对比：</p>
+<p>虽然 MMKV 一些场景下比 SP 稍慢(如: 首次实例化会进行数据的复写剔除重复数据, 比 SP 稍慢, 查询数据时存在 ProtocolBuffer 解码, 比 SP 稍慢), 但其<strong>逆天的数据写入速度、mmap Linux 内核保证数据的同步, 以及 ProtocolBuffer 编码带来的更小的本地存储空间占用等都是非常棒的闪光点</strong></p></div><a class="article-more button is-small is-size-7" href="/2021/10/28/Mmkv/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-26T06:04:52.000Z" title="10/26/2021, 2:04:52 PM">2021-10-26</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-19T02:53:39.122Z" title="4/19/2024, 10:53:39 AM">2024-04-19</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">16 minutes read (About 2418 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/26/ClassLoading/">ClassLoading</a></h1><div class="content"><p><img src="/2021/10/26/ClassLoading/1041642665584_.pic_hd_%E5%89%AF%E6%9C%AC.jpg" alt="1041642665584_.pic_hd_副本"></p>
+<p>类的生命周期：</p>
+<p><img src="/2021/10/26/ClassLoading/classloadinglifecycle.jpg" alt="classloadinglifecycle"></p>
+<p>简述：加载是字节码(.class)文件被ClassLoader装载进方法区并在堆中生成一个class对象引用；链接包括：校验二进制流是否符合JVM规范的验证、为各个变量分配内存赋值默认值的准备、将字符串表示的符号引用解析成直接将引用的解析；初始化则是static块、static变量初始化、类构造器执行的过程。</p></div><a class="article-more button is-small is-size-7" href="/2021/10/26/ClassLoading/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-19T08:34:22.000Z" title="10/19/2021, 4:34:22 PM">2021-10-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.863Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">19 minutes read (About 2808 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/19/APM/">APM</a></h1><div class="content"><h1 id="主线程卡顿监控"><a href="#主线程卡顿监控" class="headerlink" title="主线程卡顿监控"></a>主线程卡顿监控</h1><h2 id="方案一、Looper-Printer监控每次-dispatchMessage-的执行耗时："><a href="#方案一、Looper-Printer监控每次-dispatchMessage-的执行耗时：" class="headerlink" title="方案一、Looper Printer监控每次 dispatchMessage 的执行耗时："></a>方案一、Looper Printer监控每次 dispatchMessage 的执行耗时：</h2><h3 id="DoKit-amp-BlockCanary-amp-Matrix"><a href="#DoKit-amp-BlockCanary-amp-Matrix" class="headerlink" title="DoKit &amp; BlockCanary &amp; Matrix"></a>DoKit &amp; BlockCanary &amp; Matrix</h3><p><strong>滴滴的哆啦A梦的卡顿检测其实就是blockCanary，和Matrix 的EvilMethodTracer和AnrTracer （当然后来Matrix还增加了native的Signal信号监听）使用的 方案也就是Looper设置Printer监听卡顿</strong></p>
+<p>都是根据handler原理，通过给Looper.loop() 中设置printer(无论是通过反射替换Looper的<em>mLogging</em>还是通过<em>setMessageLogging</em>设置printer)，监控超过 设定阈值(matrix700ms) 的主线程消息（超过5s报为ANR），printer 中判断start和end，来获取主线程dispatch该message的开始和结束时间，并判定该时间超过阈值为主线程卡慢发生，并 打印当时堆栈 + 方法耗时(matrix/dokit)</p></div><a class="article-more button is-small is-size-7" href="/2021/10/19/APM/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-19T07:46:58.000Z" title="10/19/2021, 3:46:58 PM">2021-10-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.483Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">25 minutes read (About 3761 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/19/%E5%8D%A1%E9%A1%BF%E7%9B%91%E6%8E%A7/">卡顿监控</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3dubi2GVW_rVFZZztCpsKg">https://mp.weixin.qq.com/s/3dubi2GVW_rVFZZztCpsKg</a></p>
+<h1 id="主线程卡顿监控"><a href="#主线程卡顿监控" class="headerlink" title="主线程卡顿监控"></a>主线程卡顿监控</h1><h2 id="方案一、Looper-Printer监控每次-dispatchMessage-的执行耗时："><a href="#方案一、Looper-Printer监控每次-dispatchMessage-的执行耗时：" class="headerlink" title="方案一、Looper Printer监控每次 dispatchMessage 的执行耗时："></a>方案一、Looper Printer监控每次 dispatchMessage 的执行耗时：</h2><h3 id="DoKit-amp-BlockCanary-amp-Matrix"><a href="#DoKit-amp-BlockCanary-amp-Matrix" class="headerlink" title="DoKit &amp; BlockCanary &amp; Matrix"></a>DoKit &amp; BlockCanary &amp; Matrix</h3><p><strong>滴滴的哆啦A梦的卡顿检测其实就是blockCanary，和Matrix 的EvilMethodTracer和AnrTracer （当然后来Matrix还增加了native的Signal信号监听）使用的 方案也就是Looper设置Printer监听卡顿</strong></p>
+<p>都是根据handler原理，通过给Looper.loop() 中设置printer(无论是通过反射替换Looper的<em>mLogging</em>还是通过<em>setMessageLogging</em>设置printer)，监控超过 设定阈值(matrix700ms) 的主线程消息（超过5s报为ANR），printer 中判断start和end，来获取主线程dispatch该message的开始和结束时间，并判定该时间超过阈值为主线程卡慢发生，并 打印当时堆栈 + 方法耗时(matrix/dokit)</p></div><a class="article-more button is-small is-size-7" href="/2021/10/19/%E5%8D%A1%E9%A1%BF%E7%9B%91%E6%8E%A7/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-15T09:02:21.000Z" title="10/15/2021, 5:02:21 PM">2021-10-15</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-29T11:11:43.250Z" title="7/29/2024, 7:11:43 PM">2024-07-29</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">14 minutes read (About 2075 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/10/15/RecyclerView/">recyclerView</a></h1><div class="content"><h1 id="缓存机制"><a href="#缓存机制" class="headerlink" title="缓存机制"></a>缓存机制</h1><p>简述：</p>
+<p>一级缓存为屏内缓存，分为没有变化的可以直接复用的ViewHolder和被notifyXXX标记为需要重新绑定的ViewHolder；</p>
+<p>二级缓存为离屏2个的ViewHolder缓存，直接复用</p>
+<p>三级缓存为自定义缓存，较少用</p>
+<p>四级缓存为超出上述缓存的需要重新绑定的ViewHolder</p></div><a class="article-more button is-small is-size-7" href="/2021/10/15/RecyclerView/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-09-30T06:00:40.000Z" title="9/30/2021, 2:00:40 PM">2021-09-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-31T06:52:30.190Z" title="7/31/2024, 2:52:30 PM">2024-07-31</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">22 minutes read (About 3260 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/09/30/Glide/">Glide</a></h1><div class="content"><h2 id="Glide缓存"><a href="#Glide缓存" class="headerlink" title="Glide缓存"></a>Glide缓存</h2><p><strong>磁盘(DiskLruCache) -&gt; LRUCache(不活跃资源) -&gt; WeakReference(使用中资源)</strong></p>
+<p><strong>内存缓存分为弱引用的和 LruCache ，其中正在使用的图片使用弱引用缓存，暂时不使用的图片用 LruCache缓存，这一点是通过 图片引用计数器（acquired变量）来实现的</strong></p>
+<p><img src="/2021/09/30/Glide/b784f4ad31217d419faedc0d0efc595f.jpg" alt="b784f4ad31217d419faedc0d0efc595f"></p>
+<p>Glide生成key（内存缓存Key类型为EngineKey）的方式远比我们想象的要复杂，决定缓存Key的参数有8种，其中包括图片URL、宽、高。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EngineKey key = keyFactory.buildKey(model, signature, width, height, transformations,</span><br><span class="line">        resourceClass, transcodeClass, options);</span><br></pre></td></tr></table></figure>
+
+<p>这里可以得出一个结论，几乎任意配置的改变都会导致同一张图片生成多个缓存key。举个例子：同一张图片加载到2个不同大小的ImageView会生成2个缓存图片</p>
+<h2 id="Glide-QA"><a href="#Glide-QA" class="headerlink" title="Glide QA"></a>Glide QA</h2><h3 id="glide是怎么拿到的width-height（view未测绘前拿不到宽高）"><a href="#glide是怎么拿到的width-height（view未测绘前拿不到宽高）" class="headerlink" title="glide是怎么拿到的width,height（view未测绘前拿不到宽高）"></a><strong>glide是怎么拿到的width,height（view未测绘前拿不到宽高）</strong></h3><p>width,height能拿到的原因是ViewTarget会为所持有的View注册view树绘制回调</p>
+<p><code>addOnPreDrawListener(OnPreDrawListener listener)</code></p>
+<p><img src="Glide//image-20240709154704558.png" alt="image-20240709154704558"></p>
+<h3 id="Glide的缓存大小默认是多少"><a href="#Glide的缓存大小默认是多少" class="headerlink" title="Glide的缓存大小默认是多少"></a>Glide的缓存大小默认是多少</h3><p><strong>内存缓存最大空间(maxSize) = 每个进程可用的最大内存（activityManager.getMemoryClass()  *  0.4</strong></p>
+<p><strong>(低配手机的话是: 每个进程可用的最大内存 * 0.33)</strong></p>
+<blockquote>
+<p>activityManager.getMemoryClass值：</p>
+<ul>
+<li>低端设备可能在 16-32 MB 范围内。</li>
+<li>中档设备通常在 64-128 MB 范围内。</li>
+<li>高端设备和新款设备可能在 256 MB 或更高。//当设置largeHeap时，最多可申请512M</li>
+</ul>
+</blockquote>
+<p><strong>磁盘缓存大小: 默认250MB</strong></p>
+<blockquote>
+<p><strong>磁盘缓存目录: 项目/cache/image_manager_disk_cache</strong></p>
+</blockquote>
+<p>//todo </p>
+<h2 id="Glide"><a href="#Glide" class="headerlink" title="Glide"></a>Glide</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
+<li>会根据控件大小进行下采样，以解码出符合需求的大小，对内存更友好</li>
+<li>内存缓存+磁盘缓存</li>
+<li>感知生命周期，取消任务，防止内存泄漏</li>
+<li>感知内存吃紧，进行回收</li>
+<li>BitmapPool，防止内存抖动的进行bitmap��换</li>
+<li>定义请求优先级</li>
+</ol>
+<h3 id="手写一个图片库注意事项"><a href="#手写一个图片库注意事项" class="headerlink" title="手写一个图片库注意事项"></a>手写一个图片库注意事项</h3><ol>
+<li>获取资源：异步并发下载图片，最大化利用cpu资源</li>
+<li>资源解码：按实际需求异步解码，多线程并发是否能加快解码速度</li>
+<li>资源变换：使用资源池，复用变换的资源，避免内存抖动</li>
+<li>缓存：磁盘缓存原始图片，或变换的资源。内存缓存刚使用过的资源，使用lru策略控制大小</li>
+<li>感知生命周期：避免内存泄漏</li>
+<li>感知内存吃紧：清理缓存</li>
+</ol>
+<h3 id="Glide-数据加载流程"><a href="#Glide-数据加载流程" class="headerlink" title="Glide 数据加载流程"></a>Glide 数据加载流程</h3><ul>
+<li>RequestBuilder 构建 Request和 Target，将请求委托给RequestManager，RequestManager触发Request.begin(),然后调用Engine.load()加载资源，若有内存缓存则返回，否则启动异步任务加载磁盘缓存，若无则从网络加载</li>
+<li>DecodeJob 负责加载数据（可能从磁盘，或网络，onDataFetcherReady），再进行数据解码（onDataFetcherReady），再进行数据变换（Transformation），写ActiveResource，（将变换后的数据回调给Target），将变换后的资源写文件（ResourceEncoder）</li>
+</ul>
+<h3 id="预加载"><a href="#预加载" class="headerlink" title="预加载"></a>预加载</h3><p>preload，加载到一个PreloadTarget，等资源加载好了，就调用clear，将资源从ActiveResource移除存到Lrucache中</p>
+<h3 id="感知内存吃紧"><a href="#感知内存吃紧" class="headerlink" title="感知内存吃紧"></a>感知内存吃紧</h3><p>注册ComponentCallbacks2，实现细粒度内存管理：</p>
+<ol>
+<li>onLowMemory(){清除内存}</li>
+<li>onTrimMemory(){修剪内存}</li>
+</ol>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">memoryCache<span class="selector-class">.trimMemory</span>(level); <span class="comment">// 内存缓存</span></span><br><span class="line">bitmapPool<span class="selector-class">.trimMemory</span>(level); <span class="comment">// bitmap池</span></span><br><span class="line">arrayPool<span class="selector-class">.trimMemory</span>(level); <span class="comment">// 字节数组池</span></span><br></pre></td></tr></table></figure>
+
+<p>可以设置在onTrimMemory时，取消所有正在进行的请求。</p>
+<h3 id="BitmapPool"><a href="#BitmapPool" class="headerlink" title="BitmapPool"></a>BitmapPool</h3><ul>
+<li>BitmatPool 是 Glide 维护了一个图片复用池，LruBitmapPool 使用 Lru 算法保留最近使用的尺寸的 Bitmap。</li>
+<li>api19 后使用bitmap的字节数和config作为key，而之前使用宽高和congif，所以19以后复用度更高</li>
+<li>用类似LinkedHashMap存储，键值对中的值是一组Bitmap，相同字节数的Bitmap 存在一个List中（这样设计的目的是，将Lru策略运用在Bitmap大小上，而不是单个Bitmap上），控制BitmapPool大小通过删除数据组中最后一个Bitmap。</li>
+<li>BitmapPool 大部分用于Bitmap变换和gif加载时</li>
+</ul>
+<h3 id="ArrayPool"><a href="#ArrayPool" class="headerlink" title="ArrayPool"></a>ArrayPool</h3><ul>
+<li>是一个采用Lru策略的数组池，用于解码时候的字节数组的复用。</li>
+<li>清理内存意味着清理MemoryCache，BitmapPool,ArrayPool</li>
+</ul>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>默认情况下，Glide 会在开始一个新的图片请求之前检查以下多级的缓存：</p>
+<ul>
+<li>活动资源 (Active Resources) - 现在是否有另一个 View 正在展示这张图片？</li>
+<li>内存缓存 (Memory cache) - 该图片是否最近被加载过并仍存在于内存中？</li>
+<li>资源类型（Resource） - 该图片是否之前曾被解码、转换并写入过磁盘缓存？</li>
+<li>数据来源 (Data) - 构建这个图片的资源是否之前曾被写入过文件缓存？</li>
+</ul>
+<p>在 Glide v4 里，所有缓存键都包含至少两个元素 活动资源，内存缓存，资源磁盘缓存的缓存键还包含一些其他数据，包括： 必选：Model 可选：签名 宽度和高度 可选的变换（Transformation） 额外添加的任何 选项(Options) 请求的数据类型 (Bitmap, GIF, 或其他)</p>
+<h3 id="磁盘缓存策略"><a href="#磁盘缓存策略" class="headerlink" title="磁盘缓存策略"></a>磁盘缓存策略</h3><ul>
+<li>如果缓存策略是AUTOMATIC（默认），对于网络图片只缓存原始数据，加载本地资源是存储变换过的数据，如果加载不同尺寸的图片，则会获取原始缓存并在此基础上做变换。</li>
+<li>如果缓存策略是ALL，会缓存原始图片以及每个尺寸的副本，</li>
+<li>如果缓存策略是SOURCE,只会缓存变换过的资源，如果另一个界面换一个尺寸显示图片，则会重新拉取网络 可通过自定义Key实现操控缓存命中策略（混入自己的值，比如修改时间）</li>
+</ul>
+<h3 id="内存缓存"><a href="#内存缓存" class="headerlink" title="内存缓存"></a>内存缓存</h3><ul>
+<li>内存缓存分为两级<ol>
+<li>活跃图片 ActiveResource<ul>
+<li>使用HashMap存储正在使用资源的弱引用</li>
+<li>资源被包装成带引用计数的EngineResource，标记引用资源的次数（当引用数不为0时阻止被回收或降级，降级即是存储到LruCache中）</li>
+<li>这一级缓存没有大小限制，所以使用了资源的弱引用</li>
+<li>存：每当下载资源后会在onEngineJobComplete()中存入ActiveResource，或者LruCache命中后，将资源从中LruCache移除并存入ActiveResource。</li>
+<li>取：每当资源释放时，会降级到LruCache中（请求对应的context onDestroy了或者被gc了）</li>
+<li>开一个后台线程，监听ReferenceQueue，不停地从中获取被gc的资源，将其从ActiveResource中移除，并重新构建一个新资源将其降级为LruCache</li>
+<li>ActiveResource是为了缓解LruCache中缓存造成压力，因为LruCache中没有命中的缓存只有等到容量超限时才会被清除，强引用即使内存吃紧也不会被gc，现在当LruCache命中后移到ActiveResource，弱引用持有，当内存吃紧时能被回收。</li>
+</ul>
+</li>
+<li>LruCache<ul>
+<li>使用 LinkedHashMap 存储从活跃图片降级的资源，使用Lru算法淘汰最近最少使用的</li>
+<li>存：从活跃图片降级的资源（退出当前界面，或者ActiveResource资源被回收）</li>
+<li>取：网络请求资源之前，从缓存中取，若命中则直接从LruCache中移除了。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>内存缓存只会缓存经过转换后的图片</li>
+<li>内存缓存键根据10多个参数生成，url，宽高</li>
+</ul>
+<h3 id="磁盘缓存"><a href="#磁盘缓存" class="headerlink" title="磁盘缓存"></a>磁盘缓存</h3><ul>
+<li>会将源数据或经过变换的数据存储在磁盘，在内存中用LinkedHashMap记录一组Entry，Entry内部包含一组文件，文件名即是key，并且有开启后台线程执行删除文件操作以控制磁盘缓存大小。</li>
+<li>写磁盘缓存即是触发Writer将数据写入磁盘，并在内存构建对应的File缓存在LinkedHashMap中</li>
+<li>根据缓存策略的不同，可能存储源数据和经过变换的数据。</li>
+</ul>
+<h3 id="感知生命周期"><a href="#感知生命周期" class="headerlink" title="感知生命周期"></a>感知生命周期</h3><ul>
+<li>构造RequestManager时传入context，可以是app的，activity的，或者是view的</li>
+<li>向界面添加无界面Fragment（SupportRequestManagerFragment），Fragment把生命周期传递给Lifecycle，Fragment持有RequestManager，RequestManager监听Lifecycle，RequestManager向RequestTracker传递生命周期以暂停加载，RequestTracker遍历所有正在进行的请求，并暂停他们（移除回调resourceReady回调）</li>
+<li>当绑定context destroy时，RequestManager会将该事件传递给RequestTracker，然后触发该请求Resource的clear，再调用Engine.release，将resource降级到LruCache</li>
+<li>通过HashMap结构保存无界面Fragment以避免重复创建</li>
+</ul>
+<h3 id="取消请求"><a href="#取消请求" class="headerlink" title="取消请求"></a>取消请求</h3><p>通过移除回调，设置取消标志位实现：无法取消已经发出的请求，会在DecodeJob的异步任务的run()方法中判断，如果cancel，则返回。移除各种回调，会传递到DataFetcher，httpUrlConnection 读取数据后会判断是否cancel，如果是则返回null。并没有断开链接</p>
+<h3 id="感知网络变化"><a href="#感知网络变化" class="headerlink" title="感知网络变化"></a>感知网络变化</h3><ul>
+<li>通过 ConnectivityManager 监听网络变化，当网络恢复时，遍历请求列表，将没有完成的任务继续开始</li>
+</ul>
+<h3 id="Transformation"><a href="#Transformation" class="headerlink" title="Transformation"></a>Transformation</h3><ul>
+<li>所有的BitmapTransformation 都是从BitmapPool 拿到一个bitmap，然后将在原有bitmap基础上应用一个matrix再画到新bitmap上。</li>
+<li>变换也是一个key，用以在缓存的时候做区别</li>
+</ul>
+<h3 id="RecycleView图片错乱"><a href="#RecycleView图片错乱" class="headerlink" title="RecycleView图片错乱"></a>RecycleView图片错乱</h3><ul>
+<li>异步任务+视图复用导致</li>
+<li>解决方案：设置占位图+回收表项时取消图片加载（或者新得加载开始时取消旧的加载）+imageview加tag判断是否是自己的图片如果不是则先调用clear</li>
+</ul>
+<h3 id="Glide-缓存失效"><a href="#Glide-缓存失效" class="headerlink" title="Glide 缓存失效"></a>Glide 缓存失效</h3><ul>
+<li>是因为 Key 发生变化，Url是生成key的依据，Url可能发生变化比如把token追加在后面</li>
+<li>自定义生成key的方式，继承GlideUrl重写getCacheKey()</li>
+</ul>
+<h3 id="自定义加载"><a href="#自定义加载" class="headerlink" title="自定义加载"></a>自定义加载</h3><ul>
+<li>定义一个Model类用于包装需要加载的数据</li>
+<li>定义一个Key的实现类，用于实现第一步的Model中的数据的签名用于区分缓存</li>
+<li>定义一个DataFetcher的实现类，用于告诉Glide音频封面如何加载，并把加载结果回调出去</li>
+<li>定义一个ModelLoader的实现类用于包装DataFetcher</li>
+<li>定义一个ModelLoaderFactory的实现类用于生成ModelLoader实例</li>
+<li>将自定义加载配置到AppGlideModule中</li>
+</ul>
+<h3 id="Glide线程池"><a href="#Glide线程池" class="headerlink" title="Glide线程池"></a>Glide线程池</h3><ol>
+<li>磁盘缓存线程池，一个核心线程：用于io图片编码</li>
+<li>加载资源线程池，最多不超过4个核心线程数，用于处理网络请求，图片解码转码</li>
+<li>动画线程池，最多不超过2个线程</li>
+<li>磁盘缓存清理线程池</li>
+<li>ActiveResource 开启一个后台线程监听ReferenceQueue 所有线程池都默认采用优先级队列</li>
+</ol>
+<h3 id="加载Gif流程"><a href="#加载Gif流程" class="headerlink" title="加载Gif流程"></a>加载Gif流程</h3><p>读取流的前三个字节，若判断是gif，则会命中gif解码器-将资源解码成GifDrawable，它持有GifFrameLoader会将资源解码成一张张Bitmap并且传递给DelayTarget的对象，该对象每次资源加载完毕都会通过handler发送延迟消息回调 onFrameReady() 以触发GifDrawable.invalidataSelf()重绘。加载下一帧时会重新构建DelayTarget</p>
+<h3 id="请求优先级"><a href="#请求优先级" class="headerlink" title="请求优先级"></a>请求优先级</h3><p>通过给加载线程池配置优先级队列，加载任务DecodeJob 实现了 compareTo 方法，将priority相减</p>
+<h3 id="图片加载优化"><a href="#图片加载优化" class="headerlink" title="图片加载优化"></a>图片加载优化</h3><ol>
+<li>服务器存多种尺寸的图片</li>
+<li>自定义 AppGlideModule，按设备性能好坏设定MemoryCategory.HIGH,LOW,NORMAL，内存缓存和bitmapPool的大小系数，以及图片解码格式，ARGB_8888，RGB_565</li>
+<li>RecyclerView 在onViewRecycled 中调用clear ，因为recyclerView会默认会缓存5个同类表项，如果类型很多，内存中会持有表项，如果这些表项都包含图片，Glide 的ActiveResource会膨胀。导致gc</li>
+<li>如果 RecyclerView 包含一个很长的itemView，超过一屏，其中包含很多照片，最好把长itemView拆成多个itemView</li>
+<li>使用thumbnail，加载一个缩略图，最好是一个独立的链接，如果是本地的也不差</li>
+<li>使用preload，将资源提前加载到内存中。</li>
+<li>大部分情况下 RESOURCE ，即缓存经过变换的图片上是最好选择，节约内存和磁盘。对于gif资源只缓存原始资源DATA，因为gif是多张图每次编码解码反而耗时</li>
+<li>使用Glide实现变换，因为有BitmapPool供复用</li>
+</ol>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-30T09:32:40.000Z" title="7/30/2021, 5:32:40 PM">2021-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.864Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">an hour read (About 6885 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/30/ActivityStart/">ActivityStart</a></h1><div class="content"><p><img src="/2021/07/30/ActivityStart/%E5%BD%93%E6%89%8B%E6%8C%87%E7%82%B9%E5%87%BB%E4%BA%86%E6%A1%8C%E9%9D%A2%E7%9A%84App%E5%9B%BE%E6%A0%87%E6%97%B6.jpg" alt="当手指点击了桌面的App图标时"></p>
+<p><img src="/2021/07/30/ActivityStart/%E5%BD%93%E6%89%8B%E6%8C%87%E7%82%B9%E5%87%BB%E4%BA%86%E6%A1%8C%E9%9D%A2%E7%9A%84App%E5%9B%BE%E6%A0%87%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88.jpg" alt="当手指点击了桌面的App图标时发生了什么"></p>
+<p><img src="/2021/07/30/ActivityStart/1929518181.jpg" alt="startActivity_onCreate.jpg"></p></div><a class="article-more button is-small is-size-7" href="/2021/07/30/ActivityStart/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-30T09:32:40.000Z" title="7/30/2021, 5:32:40 PM">2021-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-11T06:18:15.656Z" title="5/11/2024, 2:18:15 PM">2024-05-11</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">10 minutes read (About 1490 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/30/Emty/">empty</a></h1><div class="content"><ul>
+<li><p>PackageManagerService</p>
+</li>
+<li><p>WindowManagerService(done?)</p>
+</li>
+<li><p>ActivityManagerService(done?)</p>
+</li>
+<li><p>ServiceManager(done?)</p>
+</li>
+</ul>
+<ul>
+<li>Binder</li>
+<li>ANR</li>
+</ul>
+<h1 id="1、review"><a href="#1、review" class="headerlink" title="1、review"></a>1、review</h1><h3 id="kernel-bright-spots"><a href="#kernel-bright-spots" class="headerlink" title="kernel bright spots"></a>kernel bright spots</h3><ul>
+<li>Apm监控</li>
+<li>fresco深入优化</li>
+<li>性能优化工作/工具</li>
+</ul>
+<h3 id="skills-pool"><a href="#skills-pool" class="headerlink" title="skills pool"></a>skills pool</h3><ul>
+<li><p>recyclerview缓存和优化</p>
+</li>
+<li><p>app、android启动流程</p>
+</li>
+<li><p>编译流程</p>
+</li>
+<li><p>编舞者以及屏幕刷新原理（与耗时方法监听之）</p>
+</li>
+<li><p>插件化（代理和hook两种方式）</p>
+</li>
+<li><p>handler</p>
+</li>
+<li><p>https&amp;http（http version）</p>
+</li>
+<li><p>hashmap</p>
+</li>
+<li><p>Matrix为主，Dokit、blockcanary等APM框架</p>
+</li>
+<li><p>Jmm与GC算法（深入理解java虚拟机-标记清除之类）</p>
+</li>
+<li><p>tcp滑动窗口之类（就找一篇文章like腾讯之前的那篇tcp ip问题<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6LiZGMt2KRiIoMaLwx-lkQ">彻底弄懂TCP协议：从三次握手说起 (qq.com)</a>）</p>
+</li>
+<li><p>leakCanary、retrofit、okhttp、glide、</p>
+</li>
+<li><p>threadLocal、Rv四级缓存</p>
+</li>
+</ul>
+<h1 id="2、TODO"><a href="#2、TODO" class="headerlink" title="2、TODO"></a>2、TODO</h1><ul>
+<li>kotlin协程</li>
+<li>锁</li>
+<li>算法（1~2）</li>
+<li>View测绘，事件分发（事件系列只能被整一个处理）</li>
+<li>SurfaceView, TextureView及View的区别。SurfaceView怎么控制它处于的层级</li>
+<li>SMTP了解下</li>
+</ul>
+<h1 id="3、Optimize-Experience"><a href="#3、Optimize-Experience" class="headerlink" title="3、Optimize Experience"></a>3、Optimize Experience</h1><ul>
+<li><p>图片内存优化工作：fresco关于gif缓存问题修复，dokit图片闪烁缓存失效问题的修复、基于dokit框架（ASM）下尺寸过大图片识别实现。（基于业务做的一些图片加载的优化，如cdn链接统一域名，regex（String.replace）耗时200us）</p>
+</li>
+<li><p>耗时方法，两种常见的监听方式：looper.printer 以及 编舞者回调监听</p>
+</li>
+<li><p>recyclerview优化</p>
+</li>
+</ul>
+<h1 id="4、Other"><a href="#4、Other" class="headerlink" title="4、Other"></a>4、Other</h1><ul>
+<li>h5图片缓存共用的优化思路</li>
+<li>阿里patron和Metrix做的native hook 减少32bit模式下app内存占用</li>
+</ul>
+<h1 id="Project-Experience"><a href="#Project-Experience" class="headerlink" title="Project Experience"></a>Project Experience</h1><h2 id="从购物车重构到购物车预加载"><a href="#从购物车重构到购物车预加载" class="headerlink" title="从购物车重构到购物车预加载"></a>从购物车重构到购物车预加载</h2><p>ps:我并不想抽象的去将购物车的架构之类的东西，而是更具体的讲遇到的问题及解决方案。不过还是得简单讲一下设计</p>
+<p>购物车代码十分屎山，难以维护。在23年时做了一次历经一个月的重构，边开车边换轮子。使用多数业务在用的协议架构奥创重构：先说收益：奥创加购以组件为单位，职责清晰，易于复用维护，端侧组件使用MVVM架构进一步解耦逻辑：</p>
+<p>举个例子，请求在<strong>model</strong>层（共用的Repository，维护于Engine层），每个组件通过注册组件的ViewHolder获得独立的<strong>View</strong>，注册组件的Parser获得独立的<strong>ViewModel</strong>解析数据及进行业务逻辑处理。view与vm之间使用liveData进行数据更新后的通知view状态渲染。</p>
+<p>遇到的问题：</p>
+<ol>
+<li>奥创冗余数据及后端接口慢 -&gt; 购物车本地数据缓存 + （detail/购物车进下单页）的数据预加载 + 购物车预加载的根据abtest下做的精细运营。 </li>
+<li>LiveData的使用：购物车提供给MainActiivty的其他Tab由于时机问题导致的刷新问题</li>
+<li>多国家配置不同组件 -&gt; 问题：一些组件不同国家需要配置不同的样式和逻辑，但是下发的组件名是一致的。那么当时有两种做法：一种是直接在解析是篡改掉网络数据中的组件名，本地正常映射。但是这个评估完认为直接修改了数据，风险更不好控。于是我在注册组件名时根据依靠 <strong>同名Parser后注册的Parser优先匹配的机制 实现</strong> 的特性，在注册Parser时提供将多国家的parser后置接口，于是当解析完多国家组件parser后即不会再映射通用组件了，即不影响原数据，也实现了多国家不新增后端组件。</li>
+</ol>
+<h2 id="RTL-adapte"><a href="#RTL-adapte" class="headerlink" title="RTL adapte"></a>RTL adapte</h2><ol>
+<li>What: Ltr下不同币种导致的显示顺序错乱；</li>
+<li>How: 服务端配置下发特殊符号</li>
+<li>More: </li>
+</ol>
+<ol>
+<li><p>做过印象比较深的事情 ，有挑战的事情</p>
+</li>
+<li><p>弱网环境优化：业务和技术的手段，有什么很技术的手段来做吗</p>
+</li>
+<li><p>当前团队的优劣点</p>
+</li>
+<li><p>遇到不合理需求你会怎么拒绝</p>
+</li>
+<li><p>有用过新的东西吗</p>
+</li>
+<li><p>线上问题怎么解决，因为不能用动态字节码技术</p>
+</li>
+<li><p>遇到啥有意思的问题吗，crash。window</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalArgumentException: View&#x3D;android.widget.PopupWindow$PopupDecorView&#123;2a10009 V.E...... R.....I. 0,0-0,0&#125; not attached to window manager</span><br><span class="line">	at android.view.WindowManagerGlobal.findViewLocked(WindowManagerGlobal.java:544)</span><br><span class="line">	at android.view.WindowManagerGlobal.updateViewLayout(WindowManagerGlobal.java:433)</span><br><span class="line">	at android.view.WindowManagerImpl.updateViewLayout(WindowManagerImpl.java:162)</span><br><span class="line">	at android.widget.PopupWindow.update(PopupWindow.java:2226)</span><br><span class="line">	at android.widget.PopupWindow.update(PopupWindow.java:2347)</span><br><span class="line">	at android.widget.PopupWindow.alignToAnchor(PopupWindow.java:2517)</span><br><span class="line">	at android.widget.PopupWindow.-$$Nest$malignToAnchor(Unknown Source:0)</span><br><span class="line">	at android.widget.PopupWindow$1.onViewAttachedToWindow(PopupWindow.java:243)</span><br><span class="line">	at android.view.View.dispatchAttachedToWindow(View.java:21423)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3502)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewGroup.dispatchAttachedToWindow(ViewGroup.java:3509)</span><br><span class="line">	at android.view.ViewRootImpl.performTraversals(ViewRootImpl.java:3011)</span><br><span class="line">	at android.view.ViewRootImpl.doTraversal(ViewRootImpl.java:2518)</span><br><span class="line">	at android.view.ViewRootImpl$TraversalRunnable.run(ViewRootImpl.java:9389)</span><br><span class="line">	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1451)</span><br><span class="line">	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1459)</span><br><span class="line">	at android.view.Choreographer.doCallbacks(Choreographer.java:1089)</span><br><span class="line">	at android.view.Choreographer.doFrame(Choreographer.java:1003)</span><br><span class="line">	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1431)</span><br><span class="line">	at android.os.Handler.handleCallback(Handler.java:942)</span><br><span class="line">	at android.os.Handler.dispatchMessage(Handler.java:99)</span><br><span class="line">	at android.os.Looper.loopOnce(Looper.java:210)</span><br><span class="line">	at android.os.Looper.loop(Looper.java:299)</span><br><span class="line">	at android.app.ActivityThread.main(ActivityThread.java:8261)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Native Method)</span><br><span class="line">	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:559)</span><br><span class="line">	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:954)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>OOM的治理：crash率在一次架构组的升级后由万4涨到万6，其中新增了很多的OOM。1：修复了EventCenter的内存泄露；2：搜推服务造成的泄露；</p>
+<p>内存兜底措施：2g设备直接改为RGB565，其他才开ARGB8888；同时降低起设备图片内存池大小;</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-30T09:32:40.000Z" title="7/30/2021, 5:32:40 PM">2021-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-15T03:50:46.355Z" title="7/15/2024, 11:50:46 AM">2024-07-15</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Kotlin/">Kotlin</a></span><span class="level-item">18 minutes read (About 2736 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/30/Kotlin/">Kotlin</a></h1><div class="content"><h1 id="kotlin-data-class"><a href="#kotlin-data-class" class="headerlink" title="kotlin data class"></a>kotlin data class</h1><h2 id="data-class会自动生成以下方法："><a href="#data-class会自动生成以下方法：" class="headerlink" title="data class会自动生成以下方法："></a>data class会自动生成以下方法：</h2><ul>
+<li><p>equals()</p>
+</li>
+<li><p>hashCode()</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> int hashCode() &#123;</span><br><span class="line">   int var10000 = Integer.hashCode(<span class="keyword">this</span>.age) * <span class="number">31</span>;</span><br><span class="line">   String var10001 = <span class="keyword">this</span>.name;</span><br><span class="line">   <span class="keyword">return</span> var10000 + (var10001 != <span class="literal">null</span> ? var10001.hashCode() : <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>toString()</p>
+</li>
+<li><p>copy()</p>
+</li>
+<li><p>componentN()</p>
+<p>编译器会为数据类生成 <em>组件函数(Component function)</em>, 有了这些组件函数, 就可以在 <a target="_blank" rel="noopener" href="https://kotlin.liying-cn.net/docs/reference_zh/destructuring-declarations.html">解构声明(destructuring declaration)</a> 中使用数据类:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> jane = User(<span class="string">&quot;Jane&quot;</span>, <span class="number">35</span>)</span><br><span class="line"><span class="keyword">val</span> (name, age) = jane</span><br><span class="line">println(<span class="string">&quot;<span class="variable">$name</span>, <span class="variable">$age</span> years of age&quot;</span>) </span><br><span class="line"><span class="comment">// 输出结果为 Jane, 35 years of age</span></span><br></pre></td></tr></table></figure></li>
+<li><p>属性的get()/set()</p>
+<p>val的属性不会有setter</p>
+</li>
+<li><p>constructor()  </p>
+<p>只有有参构造函数，没有无参构造函数。fastJson解析会抛该异常，需升级到高版本并引入kotlin-reflect依赖</p>
+</li>
+</ul></div><a class="article-more button is-small is-size-7" href="/2021/07/30/Kotlin/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-29T09:45:07.000Z" title="7/29/2021, 5:45:07 PM">2021-07-29</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.404Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">24 minutes read (About 3625 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/29/Surface/">Surface</a></h1><div class="content"><ul>
+<li>SurfaceView: View 的子类，但不与宿主 Window 共享 Surface, 而是有自己独立的 Surface, 且可以在一个独立的线程中进行绘制，因此 SurfaceView 一般用来实现比较复杂的图像或动画/视频的显示。可以参考 <a target="_blank" rel="noopener" href="https://juejin.cn/post/6897029276752625671">Android双缓存与SurfaceView</a>。由于其内容是绘制在一个独立的 Surface 上，因此无法用 scrollTo/By 等方法去移动操作 Canvas 里的内容，但是可对整个 View 进行平移，缩放，旋转等变换操作。</li>
+<li>GLSurfaceView: 基于 SurfaceView 再次进行扩展，在 SurfaceView 基础上封装了 EGL 环境管理以及 Render 线程，专门为 OpenGl 显示渲染使用。参考 <a target="_blank" rel="noopener" href="https://ljd1996.github.io/2019/08/19/Android-OpenGL-ES%E7%AC%94%E8%AE%B0/">Android-OpenGL-ES笔记</a>。</li>
+<li>TextrueView: Android 4.0 后引入 TextureView, 它将 SurfaceTexture 和 View 结合到了一起。与 SurfaceView 相比，它并没有创建一个单独的 Surface 来绘制，解决了 SurfaceView 无法在 Canvas 内容上做动画的问题。另外 TextureView 必须在硬件加速开启的窗口中使用。</li>
+</ul></div><a class="article-more button is-small is-size-7" href="/2021/07/29/Surface/#more">Read more</a></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous"><a href="/">Previous</a></div><div class="pagination-next"><a href="/page/3/">Next</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link" href="/">1</a></li><li><a class="pagination-link is-current" href="/page/2/">2</a></li><li><a class="pagination-link" href="/page/3/">3</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

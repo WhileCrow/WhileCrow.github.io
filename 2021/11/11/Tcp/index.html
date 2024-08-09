@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>tcp - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="简述： Tcp是 面向链接的面向字节流的可靠的（几个点） 保证可靠的手段：  数据分块——握手时协商确定MSS，大于MSS的tcp数据包分段（也就是拆包）；序列号；校验和；确认ack包；  超时重传——发送方使用一个保守估计的时间作为收到数据包的确认的超时上限RTO。如果超过这个上限仍未收到确认包，发送方将重传这个数据包。每当发送方收到确认包后，会重置这个重传定时器。 超时重传会触发拥塞控制之重置"><meta property="og:type" content="blog"><meta property="og:title" content="tcp"><meta property="og:url" content="http://example.com/2021/11/11/Tcp/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="简述： Tcp是 面向链接的面向字节流的可靠的（几个点） 保证可靠的手段：  数据分块——握手时协商确定MSS，大于MSS的tcp数据包分段（也就是拆包）；序列号；校验和；确认ack包；  超时重传——发送方使用一个保守估计的时间作为收到数据包的确认的超时上限RTO。如果超过这个上限仍未收到确认包，发送方将重传这个数据包。每当发送方收到确认包后，会重置这个重传定时器。 超时重传会触发拥塞控制之重置"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/640-20211026212303355"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/640-20211026213139398"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/tcp_data_seq_num.jpg"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/387107cfb2b943f398ee54e0c525856b~tplv-k3u1fbpfcp-watermark.awebp"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/640-20211022141607641?lastModify=1636614282.png"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/image-20230907175049737.png"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/640-20211022141546696?lastModify=1636614282.png"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/tcp.slow_.start_.jpg"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/640-20211022141613950?lastModify=1636614282.png"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/640-20211022141619285?lastModify=1636614282.png"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/v2-c55cbe9732b1a2bf9b13e63bb489a650_1440w-20211111104323405.png"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/v2-7b92eb20e4b0fb7f0a471a06806239a8_1440w-20211111104323401.jpg"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/v2-c01a6511abf81f867fd0e531bd51af2c_1440w-20211111155311754.jpg"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/TCP-Header-01.jpg"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/v2-3bd45a13afe868cae6225d75b85e9c36_1440w-20211111155311751.jpg"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/TCP-Header-01.jpg"><meta property="og:image" content="http://example.com/2021/11/11/Tcp/TCP-Header-02.jpg"><meta property="article:published_time" content="2021-11-11T12:20:27.000Z"><meta property="article:modified_time" content="2024-04-24T09:35:45.501Z"><meta property="article:author" content="White Crow"><meta property="article:tag" content="Core"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2021/11/11/Tcp/640-20211026212303355"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2021/11/11/Tcp/"},"headline":"tcp","image":["http://example.com/2021/11/11/Tcp/tcp_data_seq_num.jpg","http://example.com/2021/11/11/Tcp/640-20211022141607641?lastModify=1636614282.png","http://example.com/2021/11/11/Tcp/image-20230907175049737.png","http://example.com/2021/11/11/Tcp/640-20211022141546696?lastModify=1636614282.png","http://example.com/2021/11/11/Tcp/tcp.slow_.start_.jpg","http://example.com/2021/11/11/Tcp/640-20211022141613950?lastModify=1636614282.png","http://example.com/2021/11/11/Tcp/640-20211022141619285?lastModify=1636614282.png","http://example.com/2021/11/11/Tcp/v2-c55cbe9732b1a2bf9b13e63bb489a650_1440w-20211111104323405.png","http://example.com/2021/11/11/Tcp/v2-7b92eb20e4b0fb7f0a471a06806239a8_1440w-20211111104323401.jpg","http://example.com/2021/11/11/Tcp/v2-c01a6511abf81f867fd0e531bd51af2c_1440w-20211111155311754.jpg","http://example.com/2021/11/11/Tcp/TCP-Header-01.jpg","http://example.com/2021/11/11/Tcp/v2-3bd45a13afe868cae6225d75b85e9c36_1440w-20211111155311751.jpg","http://example.com/2021/11/11/Tcp/TCP-Header-01.jpg","http://example.com/2021/11/11/Tcp/TCP-Header-02.jpg"],"datePublished":"2021-11-11T12:20:27.000Z","dateModified":"2024-04-24T09:35:45.501Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"简述： Tcp是 面向链接的面向字节流的可靠的（几个点） 保证可靠的手段：  数据分块——握手时协商确定MSS，大于MSS的tcp数据包分段（也就是拆包）；序列号；校验和；确认ack包；  超时重传——发送方使用一个保守估计的时间作为收到数据包的确认的超时上限RTO。如果超过这个上限仍未收到确认包，发送方将重传这个数据包。每当发送方收到确认包后，会重置这个重传定时器。 超时重传会触发拥塞控制之重置"}</script><link rel="canonical" href="http://example.com/2021/11/11/Tcp/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T12:20:27.000Z" title="11/11/2021, 8:20:27 PM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.501Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 10996 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">tcp</h1><div class="content"><p>简述：</p>
+<p>Tcp是</p>
+<p>面向链接的<br>面向字节流的<br>可靠的（几个点）</p>
+<p>保证可靠的手段：</p>
+<ul>
+<li><p>数据分块——握手时协商确定MSS，大于MSS的tcp数据包分段（也就是拆包）；序列号；校验和；<u>确认ack包</u>；</p>
+</li>
+<li><p>超时重传——发送方使用一个保守估计的时间作为收到数据包的确认的超时上限RTO。如果超过这个上限仍未收到确认包，发送方将重传这个数据包。每当发送方收到确认包后，会重置这个重传定时器。</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减为当前cwnd一半，执行慢启动每轮往返拥塞倍增</p>
+</li>
+<li><p>滑动窗口实现的流量控制；接收方在ack包中设置rwnd控制发送方发送速度。</p>
+</li>
+<li><p>拥塞控制算法——小于阈值之前从1开始每轮往返拥塞窗口cwnd倍增（慢启动），拥塞窗口大于阈值后步长为一的递增（拥塞避免）。接收方收到失序报文段后立即发出<u>重复确认ack包</u>，发送方连续三次重复确认则直接发送缺乏ack的丢包（快速重传），同时把阈值减为cwnd/2并调整拥塞窗口为新阈值而后执行拥塞避免算法（快速恢复）；</p>
+</li>
+</ul>
+<p>Ps:</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减为当前cwnd一半，执行慢启动每轮往返拥塞倍增；</p>
+<p>三次重复确认会执行快速重传快速恢复，阈值减为当前cwnd一半，拥塞窗口为新阈值值，执行拥塞避免，每轮往返递增；</p>
+<span id="more"></span>
+
+<h1 id="First-of-All"><a href="#First-of-All" class="headerlink" title="First of All"></a>First of All</h1><p><strong>废话少说，首先，我们需要知道TCP在网络OSI的七层模型中的第四层——Transport层，IP在第三层——Network层，ARP在第二层——Data Link层，在第二层上的数据，我们叫Frame，在第三层上的数据叫Packet，第四层的数据叫Segment。</strong></p>
+<p><strong>首先，我们需要知道，我们程序的数据首先会打到TCP的Segment中，然后TCP的Segment会打到IP的Packet中，然后再打到以太网Ethernet的Frame中，传到对端后，各个层解析自己的协议，然后把数据交给更高层的协议处理。</strong></p>
+<p>TCP segment（段）, IP packet（包） </p>
+<h1 id="UDP-和-TCP-的特点与区别"><a href="#UDP-和-TCP-的特点与区别" class="headerlink" title="UDP 和 TCP 的特点与区别"></a>UDP 和 TCP 的特点与区别</h1><p><strong>用户数据报协议 UDP（User Datagram Protocol）</strong></p>
+<p>是无连接的，尽最大可能交付，没有拥塞控制，面向报文（对于应用程序传下来的报文不合并也不拆分，只是添加 UDP 首部），支持一对一、一对多、多对一和多对多的交互通信。效率高。</p>
+<p><strong>传输控制协议 TCP（Transmission Control Protocol）</strong></p>
+<p>是面向连接的，提供可靠交付，有流量控制，拥塞控制，提供全双工通信，面向字节流（把应用层传下来的报文看成字节流，把字节流组织成大小不等的数据块），每一条 TCP 连接只能是点对点的（一对一）。效率低。</p>
+<h1 id="Tcp协议是怎么保证可靠传输"><a href="#Tcp协议是怎么保证可靠传输" class="headerlink" title="Tcp协议是怎么保证可靠传输"></a>Tcp协议是怎么保证可靠传输</h1><ol>
+<li><p><strong>数据分块</strong>：应用数据被分割成 TCP 认为最适合发送的数据块（MTU=1500= MSS1460 + TCP头20+IP头20）。</p>
+<p><em>大于一个MSS的会被拆包，小于MSS的相连发出的包会粘包。</em></p>
+</li>
+<li><p><strong>序列号</strong>：TCP 给发送的每一个包进行编号，接收方对数据包进行排序，把有序数据传送给应用层。</p>
+<p><em>首部中的seq字段32位，如果SYN标记位打开，则为握手时初始化随机序列号。保证每个包的有序</em></p>
+</li>
+<li><p><strong>校验和</strong>：发送的数据包的二进制相加然后取反，<strong>目的是检测数据在传输过程中的任何变化</strong>。如果收到段的检验和有差错，TCP将丢弃这个报文段和不确认收到此报文段。</p>
+</li>
+<li><p><strong>确认应答</strong>：TCP 传输的过程中，每次接收方收到数据后，都会对传输方进行确认应答。也就是发送 ACK 报文。这个 ACK 报文当中带有对应的确认序列号，告诉发送方，接收到了哪些数据，下一次的数据从哪里发。</p>
+<p><em>ACK包=ack标记位置1接受到的seq+1</em></p>
+</li>
+<li><p><strong>流量控制：</strong> TCP 连接的每一方都有固定大小的缓冲空间，TCP的接收端只允许发送端发送接收端缓冲区能接纳的数据。当接收方来不及处理发送方的数据，能提示发送方降低发送的速率，防止包丢失。TCP 使用的流量控制协议是可变大小的滑动窗口协议。 （TCP 利用滑动窗口实现流量控制）</p>
+<p><em>首部中的16位WIN字段，由接收方返回给发送端的ack中携带，通知发送端自身缓冲区还能接纳的数据。</em></p>
+</li>
+<li><p><strong>拥塞控制：</strong> 当网络拥塞时，减少数据的发送。</p>
+<p><em>一为慢启动和拥塞避免算法（小于阈值倍增大于阈值加一递增，超时重传触发重置cwnd为1并慢启动）</em></p>
+<p><em>二为快速重传和快速回复（连续三次重复确认会触发快速恢复，即阈值减半，cwnd=新阈值，拥塞避免）</em></p>
+</li>
+<li><p><strong>超时重传：</strong> 当 TCP 发出一个段后，它启动一个定时器（一个超时时间RTO），等待目的端确认收到这个报文段。如果不能及时收到一个确认，将重发这个报文段。</p>
+<p><em>如果一个已经发送的报文段在超时时间RTO内没有收到确认，那么就重传这个报文段，阈值减半，重置cwnd为1后慢启动</em></p>
+</li>
+</ol>
+<!-- more -->
+
+<h1 id="Tcp的连接和断开过程"><a href="#Tcp的连接和断开过程" class="headerlink" title="Tcp的连接和断开过程"></a>Tcp的连接和断开过程</h1><h2 id="三次握手和四次挥手"><a href="#三次握手和四次挥手" class="headerlink" title="三次握手和四次挥手"></a>三次握手和四次挥手</h2><p>tcp握手挥手和状态机</p>
+<p><img src="/2021/11/11/Tcp/640-20211026212303355" alt="图片"></p>
+<h3 id="三次握手："><a href="#三次握手：" class="headerlink" title="三次握手："></a>三次握手：</h3><p><strong>即：client发起一个Syn包包含client序列号 -&gt; server收到后返回ack(client序列号+1)包和Syn包包含server序列号 -&gt; client回馈一个ack包(server序列号+1)，三次之后client和server都确认了对方的读写能力</strong></p>
+<p>TCP 进行握手初始化一个连接的目标是：**分配资源、初始化序列号(通知 peer 对端我的初始序列号是多少)**，知道初始化连接的目标，那么要达成这个目标的过程就简单了，握手过程可以简化为下面的四次交互：</p>
+<h4 id="第一次握手："><a href="#第一次握手：" class="headerlink" title="第一次握手："></a>第一次握手：</h4><p>1）client 端首先发送一个 SYN 包告诉 Server 端我的初始序列号是 X；</p>
+<h4 id="第二次握手："><a href="#第二次握手：" class="headerlink" title="第二次握手："></a>第二次握手：</h4><p>2）Server 端收到 SYN 包后回复给 client 一个 ACK 确认包，告诉 client 说我收到了；</p>
+<p>3）接着 Server 端也需要告诉 client 端自己的初始序列号，于是 Server 也发送一个 SYN 包告诉 client 我的初始序列号是 Y；</p>
+<h4 id="第三次握手："><a href="#第三次握手：" class="headerlink" title="第三次握手："></a>第三次握手：</h4><p>4）Client 收到后，回复 Server 一个 ACK 确认包说我知道了。</p>
+<p>其中2）3）合并在一起形成第二次握手，也就是server回一个SYN+ACK包，序列号为Y，ack为X+1；</p>
+<h4 id="Question"><a href="#Question" class="headerlink" title="Question:"></a>Question:</h4><ol>
+<li><strong>一定是三次吗？</strong></li>
+</ol>
+<p>大部分情况下建立连接需要三次握手，也不一定都是三次，有可能出现四次握手来建立连接的。如下图，当 Peer 两端同时发起 SYN 来建立连接的时候，就出现了四次握手来建立连接(对于有些 TCP/IP 的实现，可能不支持这种同时打开的情况)。</p>
+<p><img src="/2021/11/11/Tcp/640-20211026213139398" alt="图片"></p>
+<ol start="2">
+<li><strong>初始化序列号 X、Y 是可以是写死固定的吗，为什么不能呢？</strong></li>
+</ol>
+<p>不能，假如序列号固定的话，假设为1，如果刚开始client给server发送的10个包被缓存住了，又恰好client掉了。过了一会，client又用同样的端口重连回来了，序列号重新从1开始发送，连发5个包。这时候又恰好之前被路由器缓存住的10个包全部被路由到server端了，然后server给client回ack=10的包。那么client就乱了，才发了5个（重连后的）server就返回了确认号为10的？故显然不行。</p>
+<blockquote>
+<ul>
+<li>ISN是不能hard code的，不然会出问题的——比如：如果连接建好后始终用1来做ISN，如果client发了30个segment过去，但是网络断了，于是 client重连，又用了1做ISN，但是之前连接的那些包到了，于是就被当成了新连接的包，此时，client的Sequence Number 可能是3，而Server端认为client端的这个号是30了。全乱了。<a target="_blank" rel="noopener" href="http://tools.ietf.org/html/rfc793">RFC793</a>中说，ISN会和一个假的时钟绑在一起，这个时钟会在每4微秒对ISN做加一操作，直到超过2^32，又从0开始。这样，一个ISN的周期大约是4.55个小时。因为，我们假设我们的TCP Segment在网络上的存活时间不会超过Maximum Segment Lifetime（缩写为MSL – <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Maximum_Segment_Lifetime">Wikipedia语条</a>），所以，只要MSL的值小于4.55小时，那么，我们就不会重用到ISN。</li>
+</ul>
+</blockquote>
+<ol start="3">
+<li><strong>如 Client 发送一个 SYN 包给 Server 后就挂了或是不管了，这个时候这个连接处于什么状态呢？会超时吗？为什么呢？</strong></li>
+</ol>
+<p>重试5次，从1s开始，每次是之前的2倍，1s + 2s +4s+ 8s+ 16s + 32s =63s</p>
+<p>Linux 下默认会进行 5 次重发 SYN-ACK 包，重试的间隔时间从 1s 开始，下次的重试间隔时间是前一次的双倍，5 次的重试时间间隔为 1s,2s, 4s, 8s,16s，总共 31s，第 5 次发出后还要等 32s 都知道第 5 次也超时了，所以，总共需要 1s + 2s +4s+ 8s+ 16s + 32s =63s，TCP 才会把断开这个连接。</p>
+<blockquote>
+<ul>
+<li><strong>关于SYN Flood攻击</strong>。一些恶意的人就为此制造了SYN Flood攻击——给服务器发了一个SYN后，就下线了，于是服务器需要默认等63s才会断开连接，这样，攻击者就可以把服务器的syn连接的队列耗尽，让正常的连接请求不能处理。于是，Linux下给了一个叫<strong>tcp_syncookies</strong>的参数来应对这个事——当SYN队列满了后，TCP会通过源地址端口、目标地址端口和时间戳打造出一个特别的Sequence Number发回去（又叫cookie），如果是攻击者则不会有响应，如果是正常连接，则会把这个 SYN Cookie发回来，然后服务端可以通过cookie建连接（即使你不在SYN队列中）。请注意，<strong>请先千万别用tcp_syncookies来处理正常的大负载的连接的情况</strong>。因为，synccookies是妥协版的TCP协议，并不严谨。对于正常的请求，你应该调整三个TCP参数可供你选择，第一个是：tcp_synack_retries 可以用他来减少重试次数；第二个是：tcp_max_syn_backlog，可以增大SYN连接数；第三个是：tcp_abort_on_overflow 处理不过来干脆就直接拒绝连接了。</li>
+</ul>
+</blockquote>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>即：client发起FIN包 -&gt; server回一个ack包 -&gt; server数据发完了就也发一个FIN包 -&gt; client回一个ack包同时进入TIME_WAIT防止ack包丢失</p>
+<p>TCP 进行断开连接的目标是：<strong>回收资源、终止数据传输</strong>。由于 TCP 是全双工的，需要 Peer 两端分别各自拆除自己通向 Peer 对端的方向的通信信道。这样需要四次挥手来分别拆除通信信道，就比较清晰明了了。</p>
+<p><strong>第一次挥手：</strong></p>
+<p>1）Client 发送一个 FIN 包来告诉 Server 我已经没数据需要发给 Server 了；</p>
+<p><strong>第二次挥手：</strong></p>
+<p>2）Server 收到后回复一个 ACK 确认包说我知道了；</p>
+<p><strong>第三次挥手：</strong></p>
+<p>3）然后 server 在自己也没数据发送给 client 后，Server 也发送一个 FIN 包给 Client 告诉 Client 我也已经没数据发给 client 了；</p>
+<p><strong>第四次挥手：</strong></p>
+<p>4）Client 收到后，就会回复一个 ACK 确认包说我知道了。</p>
+<p>TCP 主动关闭连接的那一方(Client)会最后进入 TIME_WAIT（超时设置是 2*MS，即Linux为30s）</p>
+<h3 id="Question-1"><a href="#Question-1" class="headerlink" title="Question:"></a>Question:</h3><ol>
+<li><strong>为什么建立连接是三次握手，关闭连接确是四次挥手呢？</strong></li>
+</ol>
+<p>简单来讲就是第二三次挥手不能像第二三次握手的时候一样合并成一个，因为可能server端还有数据没有发完。所以需要在可能的数据发完之后再进行第三次挥手</p>
+<ol start="2">
+<li><strong>为什么主动关闭连接的一方要进入TIME_WAIT？为什么是2MS</strong></li>
+</ol>
+<p>主动关闭方需要进入 TIME_WAIT 以便能够重发丢掉的被动关闭方 FIN 包的 ACK。</p>
+<p>TIME_WAIT状态也成为2MSL等待状态。每个具体TCP实现必须选择一个报文段最大生存时间MSL（Maximum Segment Lifetime），它是任何报文段被丢弃前在网络内的最长时间。也就是一来一回的时间。</p>
+<p>第四次挥手时，客户端发送给服务器的ACK有可能丢失，TIME_WAIT状态就是用来重发可能丢失的ACK报文。如果Server没有收到ACK，就会重发FIN，如果Client在2*MSL的时间内收到了FIN，就会重新发送ACK并再次等待2MSL，防止Server没有收到ACK而不断重发FIN。 MSL(Maximum Segment Lifetime)，指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间。如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接。</p>
+<h3 id="数据传输中的Sequence-Number"><a href="#数据传输中的Sequence-Number" class="headerlink" title="数据传输中的Sequence Number"></a>数据传输中的Sequence Number</h3><p>下图是我从Wireshark中截了个我在访问coolshell.cn时的有数据传输的图给你看一下，SeqNum是怎么变的。（使用Wireshark菜单中的Statistics -&gt;Flow Graph… ）</p>
+<p><img src="/2021/11/11/Tcp/tcp_data_seq_num.jpg" alt="img"></p>
+<p>你可以看到，<strong>SeqNum的增加是和传输的字节数相关的</strong>。上图中，三次握手后，来了两个Len:1440的包，而第二个包的SeqNum就成了1441。然后第一个ACK回的是1441，表示第一个1440收到了。</p>
+<p><strong>注意</strong>：如果你用Wireshark抓包程序看3次握手，你会发现SeqNum总是为0，不是这样的，Wireshark为了显示更友好，使用了Relative SeqNum——相对序号，你只要在右键菜单中的protocol preference 中取消掉就可以看到“Absolute SeqNum”了</p>
+<h2 id="数据分块-amp-面向字节流"><a href="#数据分块-amp-面向字节流" class="headerlink" title="数据分块&amp;面向字节流"></a>数据分块&amp;面向字节流</h2><h3 id="分块传输"><a href="#分块传输" class="headerlink" title="分块传输"></a>分块传输</h3><p>我们可以发现，运输层在传输数据的时候，并不是把整个数据包加个首部直接发送过去，而是会拆分成多个报文分开发送；那他这样做原因是什么？</p>
+<p>有读者可能会想到：数据链路层限制了数据长度只能有<strong>1460</strong>（MSS）。那数据链路层为什么要这么限制？他的本质原因就是：<strong>网络是不稳定的</strong>。如果报文太长，那么极有可能在传输一般的时候突然中断了，这个时候就要整个数据重传，效率就降低了。把数据拆分成多个数据报，那么当某个数据报丢失，只需要重传该数据报即可。</p>
+<p>那是不是拆分得越细越好？报文中数据字段长度太低，会使得首部的占比太大，这样首部就会成为网络传输最大的负担了。例如1000字节，每个报文首部是40字节，如果拆分成10个报文，那么只需要传输400字节的首部；而如果拆分成1000个，那么需要传输40000字节的首部，效率就极大地降低了。</p>
+<h3 id="面向字节流"><a href="#面向字节流" class="headerlink" title="面向字节流"></a>面向字节流</h3><p>TCP并不是把应用层传输过来的数据直接加上首部然后发送给目标，而是把数据看成一个<strong>字节</strong> 流，给他们标上序号之后分部分发送。这就是TCP的 <strong>面向字节流</strong> 特性：</p>
+<p><img src="/2021/11/11/Tcp/387107cfb2b943f398ee54e0c525856b~tplv-k3u1fbpfcp-watermark.awebp" alt="img"></p>
+<ul>
+<li>TCP会以流的形式从应用层读取数据并存放在自己的发送缓存区中，同时为这些<strong>字节</strong>标上序号</li>
+<li>TCP会从发送方缓冲区选择适量的字节组成TCP报文，通过网络层发送给目标</li>
+<li>目标会读取字节并存放在自己的接收方缓冲区中，并在合适的时候交付给应用层</li>
+</ul>
+<h3 id="TCP的粘包和拆包"><a href="#TCP的粘包和拆包" class="headerlink" title="TCP的粘包和拆包"></a>TCP的粘包和拆包</h3><p>程序需要发送的数据大小和TCP报文段能发送MSS（Maximum Segment Size，最大报文长度）是不一样的<br>大于MSS时，而需要把程序数据拆分为多个TCP报文段，称之为拆包；小于时，则会考虑合并多个程序数据为一个TCP报文段，则是粘包；<br>在IP协议层或者链路层、物理层，都存在拆包、粘包现象</p>
+<h3 id="解决粘包和拆包的方法都有哪些？"><a href="#解决粘包和拆包的方法都有哪些？" class="headerlink" title="解决粘包和拆包的方法都有哪些？"></a>解决粘包和拆包的方法都有哪些？</h3><p>1）在数据尾部增加特殊字符进行分割<br>2）将数据定为固定大小<br>3）将数据分为两部分，</p>
+<h2 id="流量控制："><a href="#流量控制：" class="headerlink" title="流量控制："></a>流量控制：</h2><h3 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h3><p><strong>TCP头里有一个字段叫Window，这个字段是接收端告诉发送端自己还有多少缓冲区可以接收数据</strong>。<strong>于是发送端就可以根据这个接收端的处理能力来发送数据，而不会导致接收端处理不过来</strong>。</p>
+<p><strong>TCP 利用滑动窗口实现流量控制。流量控制是为了控制发送方发送速率，保证接收方来得及接收。</strong>将窗口字段设置为 0，则发送方不能发送数据。</p>
+<p><strong>由接收方 向 发送方通知自己还有多少缓冲区接受数据</strong></p>
+<p>设A向B发送数据。在连接建立时，B告诉了A：“我的接收窗口是 rwnd = 400 ”(这里的 rwnd 表示 receiver window) 。因此，发送方的发送窗口不能超过接收方给出的接收窗口的数值。请注意，TCP的窗口单位是字节，不是报文段。假设每一个报文段为100字节长，而数据报文段序号的初始值设为1。大写ACK表示首部中的确认位ACK，小写ack表示确认字段的值ack。</p>
+<p><img src="/2021/11/11/Tcp/640-20211022141607641?lastModify=1636614282.png" alt="图片"></p>
+<p>从图中可以看出，B进行了三次流量控制。第一次把窗口减少到 rwnd = 300 ，第二次又减到了 rwnd = 100 ，最后减到 rwnd = 0 ，即不允许发送方再发送数据了。这种使发送方暂停发送的状态将持续到主机B重新发出一个新的窗口值为止。B向A发送的三个报文段都设置了 ACK = 1 ，只有在ACK=1时确认号字段才有意义。</p>
+<h4 id="零窗口-Zero-Window"><a href="#零窗口-Zero-Window" class="headerlink" title="零窗口(Zero Window)"></a>零窗口(Zero Window)</h4><blockquote>
+<p>如果Window变成0了，TCP会怎么样？是不是发送端就不发数据了？是的，发送端就不发数据了，你可以想像成“Window Closed”，那你一定还会问，如果发送端不发数据了，接收方一会儿Window size 可用了，怎么通知发送端呢？</p>
+</blockquote>
+<p>解决这个问题，TCP使用了<strong>零窗口探测Zero Window Probe（ZWP）技术</strong>，也就是说，发送端在窗口变成0后，会发ZWP的包给接收方，让接收方来ack他的Window尺寸，一般这个值会设置成3次，每次大约30-60秒（不同的实现可能会不一样）。如果3次过后还是0的话，有的TCP实现就会发RST把链接断了。</p>
+<p><img src="/2021/11/11/Tcp/image-20230907175049737.png" alt="image-20230907175049737"></p>
+<h4 id="糊涂窗口综合症-Silly-Window-Syndrome"><a href="#糊涂窗口综合症-Silly-Window-Syndrome" class="headerlink" title="糊涂窗口综合症(Silly Window Syndrome)"></a>糊涂窗口综合症(Silly Window Syndrome)</h4><blockquote>
+<p>如果我们的接收方太忙了，来不及取走Receive Windows里的数据，那么，就会导致发送方越来越小。到最后，如果接收方腾出几个字节并告诉发送方现在有几个字节的window，而我们的发送方会义无反顾地发送这几个字节。<br>要知道，我们的TCP+IP头有40个字节，为了几个字节，要达上这么大的开销，这太不经济了。<br>要解决这个问题也不难，就是避免对小的window size做出响应，直到有足够大的window size再响应，这个思路可以同时实现在sender和receiver两端。</p>
+</blockquote>
+<ul>
+<li><p>如果这个问题是由<strong>接收端</strong>引起的（比如接收端处理缓冲区数据处理不过来，太忙了），那么就会使用 Clark 方案。在receiver端，如果收到的数据导致window size小于某个值，可以直接ack(0)回sender，这样就把window给关闭了，也阻止了sender再发数据过来，等到receiver端处理了一些数据后windows size 大于等于了MSS，或者，receiver buffer有一半为空，就可以把window打开让send 发送数据过来。</p>
+<p><strong>（简述：接收端引起的SWS，Clark方案：接收到的数据导致滑窗过小，ack(window=0)让发送端先暂停发送，直到接收端处理完一些数据后window大于MSS了或者缓冲区一半空了，就可以ack(新值)了）</strong></p>
+</li>
+<li><p>如果这个问题是由<strong>发送端</strong>引起的（比如发送端的内容是一个字节一个字节产生的），那么就会使用著名的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Nagle's_algorithm">Nagle’s algorithm</a>。这个算法的思路也是延时处理，他有两个主要的条件：1）要等到 Window Size&gt;=MSS 或是 Data Size &gt;=MSS，2）收到之前发送数据的ack回包，他才会发数据，否则就是在攒数据。</p>
+<p><strong>（简述：发送端引起的SWS，nagle算法：攒数据直到WindowSize &gt;= MSS或者Data Szie &gt;= MSS，同时要收到之前发送数据的ack回包）</strong></p>
+</li>
+</ul>
+<p>另外，Nagle算法默认是打开的，所以，对于一些需要小包场景的程序——<strong>比如像telnet或ssh这样的交互性比较强的程序，你需要关闭这个算法</strong>。你可以在Socket设置TCP_NODELAY选项来关闭这个算法（关闭Nagle算法没有全局参数，需要根据每个应用自己的特点来关闭）</p>
+<h2 id="拥塞控制："><a href="#拥塞控制：" class="headerlink" title="拥塞控制："></a>拥塞控制：</h2><p>慢开始门限ssthresh状态变量（假设为8个MSS）</p>
+<p>  swnd = min(rwnd, cwnd)</p>
+<p>发送方的窗口上限，是取值滑动窗口和拥塞窗口两者的最小值</p>
+<p>滑动窗口和拥塞窗口区别：<br>相同点都是控制丢包现象，实现机制都是让发送方发得慢一点</p>
+<p>不同点在于控制的对象不同<br>1）流量控制的对象是接收方，怕发送方发的太快，使得接收方来不及处理<br>2）拥塞控制的对象是网络拥塞，怕发送方发的太快，造成网络拥塞，使得网络来不及处理</p>
+<h3 id="慢启动"><a href="#慢启动" class="headerlink" title="慢启动"></a>慢启动</h3><p><strong>即：拥塞窗口从1MSS开始，每轮往返(即发送的TCP段都收到了ack)加倍</strong>，<strong>直到ssthresh值为止，切换拥塞避免</strong></p>
+<p>当主机开始发送数据时，如果立即所大量数据字节注入到网络，那么就有可能引起网络拥塞，因为现在并不清楚网络的负荷情况。 因此，较好的方法是 先探测一下，即由小到大逐渐增大发送窗口，也就是说，由小到大逐渐增大拥塞窗口数值。</p>
+<p>通常在刚刚开始发送报文段时，先把拥塞窗口 cwnd 设置为一个最大报文段MSS的数值。而在每收到一个对新的报文段的确认后，把拥塞窗口增加至多一个MSS的数值。用这样的方法逐步增大发送方的拥塞窗口 cwnd ，可以使分组注入到网络的速率更加合理。</p>
+<p><img src="/2021/11/11/Tcp/640-20211022141546696?lastModify=1636614282.png" alt="图片"></p>
+<p>​                                                                                                        <strong>cwnd窗口 1 -&gt; 2 -&gt; 4 -&gt; 8</strong></p>
+<p>​                    </p>
+<p>每经过一个传输轮次，拥塞窗口 cwnd 就加倍。一个传输轮次所经历的时间其实就是往返时间RTT。不过“传输轮次”更加强调：把拥塞窗口cwnd所允许发送的报文段都连续发送出去，并收到了对已发送的最后一个字节的确认。 另，慢开始的“慢”并不是指cwnd的增长速率慢，而是指在TCP开始发送报文段时先设置cwnd=1，使得发送方在开始时只发送一个报文段（目的是试探一下网络的拥塞情况），然后再逐渐增大cwnd。</p>
+<p>为了防止拥塞窗口cwnd增长过大引起网络拥塞，还需要设置一个慢开始门限ssthresh状态变量。慢开始门限ssthresh的用法如下：</p>
+<ul>
+<li>当 cwnd &lt; ssthresh 时，使用上述的慢开始算法。</li>
+<li>当 cwnd &gt; ssthresh 时，停止使用慢开始算法而改用拥塞避免算法。</li>
+<li>当 cwnd = ssthresh 时，既可使用慢开始算法，也可使用拥塞控制避免算法。</li>
+</ul>
+<h3 id="拥塞避免算法"><a href="#拥塞避免算法" class="headerlink" title="拥塞避免算法"></a>拥塞避免算法</h3><p><strong>即：大于ssthresh值时拥塞窗口每轮往返加一</strong></p>
+<p>让拥塞窗口cwnd缓慢地增大，即每经过一个往返时间RTT就把发送方的拥塞窗口cwnd加1，而不是加倍。这样拥塞窗口cwnd按线性规律缓慢增长，比慢开始算法的拥塞窗口增长速率缓慢得多。</p>
+<p>​                                                                                                                    （假装有图）</p>
+<p>​                                                                                                    <strong>cwnd窗口 8 -&gt; 9 -&gt; 10 -&gt; 11</strong></p>
+<blockquote>
+<h5 id="慢热启动算法-–-Slow-Start"><a href="#慢热启动算法-–-Slow-Start" class="headerlink" title="慢热启动算法 – Slow Start"></a>慢热启动算法 – Slow Start</h5><p>首先，我们来看一下TCP的慢热启动。慢启动的意思是，刚刚加入网络的连接，一点一点地提速，不要一上来就像那些特权车一样霸道地把路占满。新同学上高速还是要慢一点，不要把已经在高速上的秩序给搞乱了。</p>
+<p>慢启动的算法如下(cwnd全称Congestion Window)：</p>
+<p>1）连接建好的开始先初始化cwnd = 1，表明可以传一个MSS大小的数据。</p>
+<p>2）每当收到一个ACK，cwnd++; 呈线性上升</p>
+<p>3）每当过了一个RTT，cwnd = cwnd*2; 呈指数让升</p>
+<p>4）还有一个ssthresh（slow start threshold），是一个上限，当cwnd &gt;= ssthresh时，就会进入“拥塞避免算法”（后面会说这个算法）</p>
+<p>所以，我们可以看到，如果网速很快的话，ACK也会返回得快，RTT也会短，那么，这个慢启动就一点也不慢。下图说明了这个过程。</p>
+<p><img src="/2021/11/11/Tcp/tcp.slow_.start_.jpg" alt="img"></p>
+<p>这里，我需要提一下的是一篇Google的论文《<a target="_blank" rel="noopener" href="https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/36640.pdf">An Argument for Increasing TCP’s Initial Congestion Window</a>》Linux 3.0后采用了这篇论文的建议——把cwnd 初始化成了 10个MSS。 而Linux 3.0以前，比如2.6，Linux采用了<a target="_blank" rel="noopener" href="http://www.rfc-editor.org/rfc/rfc3390.txt">RFC3390</a>，cwnd是跟MSS的值来变的，如果MSS&lt; 1095，则cwnd = 4；如果MSS&gt;2190，则cwnd=2；其它情况下，则是3。</p>
+<h5 id="拥塞避免算法-–-Congestion-Avoidance"><a href="#拥塞避免算法-–-Congestion-Avoidance" class="headerlink" title="拥塞避免算法 – Congestion Avoidance"></a>拥塞避免算法 – Congestion Avoidance</h5><p>前面说过，还有一个ssthresh（slow start threshold），是一个上限，当cwnd &gt;= ssthresh时，就会进入“拥塞避免算法”。一般来说ssthresh的值是65535，单位是字节，当cwnd达到这个值时后，算法如下：</p>
+<p>1）收到一个ACK时，cwnd = cwnd + 1/cwnd</p>
+<p>2）当每过一个RTT时，cwnd = cwnd + 1</p>
+<p>这样就可以避免增长过快导致网络拥塞，慢慢的增加调整到网络的最佳值。很明显，是一个线性上升的算法。</p>
+</blockquote>
+<h3 id="快速重传和快速恢复"><a href="#快速重传和快速恢复" class="headerlink" title="快速重传和快速恢复"></a>快速重传和快速恢复</h3><p><strong>接收方每收到一个失序报文段就立即发出重复确认，发送方如果一连三次收到重复确认立即重传，ssthresh值减半，并cwnd窗口变更为新ssthresh，接下来执行拥塞避免算法加法增大</strong></p>
+<h4 id="快速重传"><a href="#快速重传" class="headerlink" title="快速重传"></a>快速重传</h4><p><strong>即：接收方每收到一个失序报文段就立即发出重复确认，发送方如果一连三次收到重复确认立即重传</strong></p>
+<ul>
+<li>首先要求接收方每收到一个失序的报文段后就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方）而不要等到自己发送数据时才进行捎带确认。</li>
+<li>发送方只要一连收到三个重复确认M2就应当立即重传对方尚未收到的报文段M3</li>
+</ul>
+<p><img src="/2021/11/11/Tcp/640-20211022141613950?lastModify=1636614282.png" alt="图片"></p>
+<h4 id="快速恢复-Reno算法"><a href="#快速恢复-Reno算法" class="headerlink" title="快速恢复(Reno算法)"></a>快速恢复(Reno算法)</h4><p><strong>即发送方接受到三个重复确认时，ssthresh值减半，并cwnd窗口变更为新ssthresh，接下来执行加法增大</strong></p>
+<ul>
+<li>当发送方连续收到三个重复确认，就执行“乘法减小”算法，把慢开始门限ssthresh减半，cwnd窗口变更为新ssthresh值（旧值的一半）。（即不执行“慢开始指数增大”，窗口不重置为1，而是设置为ssthresh二分之一，后面执行拥塞避免算法“加法增大”）</li>
+</ul>
+<p><img src="/2021/11/11/Tcp/640-20211022141619285?lastModify=1636614282.png" alt="图片"></p>
+<h2 id="超时重传"><a href="#超时重传" class="headerlink" title="超时重传"></a>超时重传</h2><p>简述：如果一个已经发送的报文段在超时时间RTO内没有收到确认，那么就重传这个报文段。</p>
+<p>往返时间Round Trip Time——RTT：客户到服务器<strong>往返</strong>所花时间，常说的延迟</p>
+<p>超时时间Retransmission TimeOut——RTO：由RTT加权计算出来的超时时间，超出RTO没有ack则重传</p>
+<p>等到RTO超时，重传数据包。TCP认为这种情况太糟糕，反应也很强烈。</p>
+<ul>
+<li><ul>
+<li>sshthresh =  cwnd /2</li>
+<li>cwnd 重置为 1</li>
+<li>进入慢启动过程</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>一个报文段从发送再到接收到确认所经过的时间称为往返时间 RTT，加权平均往返时间 RTTs 计算如下：</p>
+<p><img src="/2021/11/11/Tcp/v2-c55cbe9732b1a2bf9b13e63bb489a650_1440w-20211111104323405.png" alt="img"></p>
+<p>其中，0 ≤ a ＜ 1，RTTs 随着 a 的增加更容易受到 RTT 的影响。超时时间 RTO 应该略大于 RTTs，TCP 使用的超时时间计算如下：</p>
+<p><img src="/2021/11/11/Tcp/v2-7b92eb20e4b0fb7f0a471a06806239a8_1440w-20211111104323401.jpg" alt="img"></p>
+<p>其中 RTTd 为偏差的加权平均值。</p>
+</blockquote>
+<h2 id="快速重传和超时重传区别"><a href="#快速重传和超时重传区别" class="headerlink" title="快速重传和超时重传区别"></a>快速重传和超时重传区别</h2><p><strong>超时重传：如果一个已经发送的报文段在超时时间RTO内没有收到确认，那么就重传这个报文段，阈值减半，重置cwnd为1后慢启动</strong></p>
+<p><strong>快速重传：客户端连续收到三次重复确认（即服务器连续三次收到乱序的包），立即重传对应丢失包，阈值减半，cwnd设为新阈值后拥塞避免</strong></p>
+<p>快速重传机制「<a href="https://link.zhihu.com/?target=https://tools.ietf.org/html/rfc5681%23page-11">RFC5681</a>」基于接收端的反馈信息来引发重传，而非重传计时器超时。基于计时器的重传往往要等待很长时间，而快速重传使用了很巧妙的方法来解决这个问题：<strong>服务器如果收到乱序的包，也给客户端回复 ACK</strong>，只不过是重复的 ACK。就拿刚刚的例子来说，收到乱序的包 6,7,8,9 时，服务器全都发 ACK = 5。这样，客户端就知道 5 发生了空缺。一般来说，如果客户端连续三次收到重复的 ACK，就会重传对应包，而不需要等到计时器超时。</p>
+<h1 id="附录一：-MSL、ttl及RTT-amp-RTO的区别"><a href="#附录一：-MSL、ttl及RTT-amp-RTO的区别" class="headerlink" title="附录一： MSL、ttl及RTT&amp;RTO的区别"></a>附录一： <strong>MSL</strong>、ttl及<strong>RTT&amp;RTO</strong>的区别</h1><h2 id="MSL（30s）最大报文生存时间"><a href="#MSL（30s）最大报文生存时间" class="headerlink" title="MSL（30s）最大报文生存时间"></a>MSL（30s）最大报文生存时间</h2><p>Maximum Segment Lifetime</p>
+<p>简述：最大报文生存时间，一般是30s，用于关闭链接<strong>TIME_WAIT</strong>状态停留2MSL</p>
+<p><strong>每个TCP实现</strong>必须选择一个MSL。它是任何报文段被丢弃前在网络内的最长时间。这个时间是有限的，因为TCP报文段以IP数据报在网络内传输，而IP数据报则有限制其生存时间的TTL时间。RFC 793指出MSL为2分钟，Linux为30s</p>
+<h2 id="2MSL（2-30s）"><a href="#2MSL（2-30s）" class="headerlink" title="2MSL（2*30s）"></a>2MSL（2*30s）</h2><p>当TCP执行主动关闭，并发出最后一个ACK，该链接必须<strong>在TIME_WAIT状态下停留的时间</strong>为2MSL。这样可以（1）让TCP再次发送最后的ACK以防这个ACK丢失（被动关闭的一方超时并重发最后的FIN）；保证TCP的可靠的全双工连接的终止。（2）允许老的重复分节在网络中消失。参考文章<a target="_blank" rel="noopener" href="https://www.geek-share.com/article/1369166.html">《unix网络编程》（3）TCP连接的建立和终止</a></p>
+<h2 id="RTT往返时间，RTO超时时间"><a href="#RTT往返时间，RTO超时时间" class="headerlink" title="RTT往返时间，RTO超时时间"></a>RTT往返时间，RTO超时时间</h2><p>round-trip-time</p>
+<p>简述：RTT客户到服务器<strong>往返</strong>所花时间，RTO由RTT加权计算出的用于<strong>超时重传</strong>的超时时间用于</p>
+<p>往返时间Round Trip Time——RTT：客户到服务器<strong>往返</strong>所花时间，常说的延迟，Ping命令出来的</p>
+<p>超时时间Retransmission TimeOut——RTO：由RTT加权计算出来的超时时间，超出RTO没有ack则重传</p>
+<p><strong>TCP超时重传</strong>中最重要的部分就是对一个给定连接的往返时间RTT的测量。由于路由器和网络流量均会变化，因此这个时间可能经常会变化，TCP应该跟踪这些变化并相应地改变其超时时间。</p>
+<h2 id="TTL生存时间字段"><a href="#TTL生存时间字段" class="headerlink" title="TTL生存时间字段"></a>TTL生存时间字段</h2><p>time-to-live</p>
+<p>在<strong>IP首部中的8位字段</strong>。该字段不是存的具体时间，而是设置了数据报可以经过的最多路由器数。它制定了数据报的生存时间。TTL的初始值由源主机设置（通常为32或64），一旦经过一个处理它的路由器，它的值就减去1.当该字段值为0时，数据报就被丢弃，并发送ICMP报文通知源主机。</p>
+<h1 id="附录二：MSS、MTU"><a href="#附录二：MSS、MTU" class="headerlink" title="附录二：MSS、MTU"></a>附录二：MSS、MTU</h1><p>你需要知道网络上有个MTU，对于以太网来说，<strong>MTU是1500字节</strong>，除去TCP+IP头的40个字节，真正的数据传输可以有<strong>1460，这就是所谓的MSS（Max Segment Size）</strong>注意，TCP的RFC定义这个MSS的默认值是536，这是因为 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc791">RFC 791</a>里说了任何一个IP设备都得最少接收576尺寸的大小（实际上来说576是拨号的网络的MTU，而576减去IP头的20个字节就是536）。  </p>
+<h1 id="附录三：UDP-、TCP-首部格式"><a href="#附录三：UDP-、TCP-首部格式" class="headerlink" title="附录三：UDP 、TCP 首部格式"></a>附录三：<strong>UDP 、TCP 首部格式</strong></h1><h2 id="UDP首部："><a href="#UDP首部：" class="headerlink" title="UDP首部："></a>UDP首部：</h2><p>8个字节</p>
+<p><img src="/2021/11/11/Tcp/v2-c01a6511abf81f867fd0e531bd51af2c_1440w-20211111155311754.jpg" alt="img"></p>
+<p>UDP 首部字段只有 8 个字节，包括源端口、目的端口、长度、检验和。12 字节的伪首部是为了计算检验和临时添加的。</p>
+<h2 id="TCP首部："><a href="#TCP首部：" class="headerlink" title="TCP首部："></a>TCP首部：</h2><p>20个字节以上</p>
+<p><img src="/2021/11/11/Tcp/TCP-Header-01.jpg" alt="img"></p>
+<p><img src="/2021/11/11/Tcp/v2-3bd45a13afe868cae6225d75b85e9c36_1440w-20211111155311751.jpg" alt="img"></p>
+<p>TCP 首部格式比 UDP 复杂。</p>
+<p><strong>序号：</strong>用于对字节流进行编号，例如序号为 301，表示第一个字节的编号为 301，如果携带的数据长度为 100 字节，那么下一个报文段的序号应为 401。</p>
+<p><strong>确认号：</strong>期望收到的下一个报文段的序号。例如 B 正确收到 A 发送来的一个报文段，序号为 501，携带的数据长度为 200 字节，因此 B 期望下一个报文段的序号为 701，B 发送给 A 的确认报文段中确认号就为 701。</p>
+<p><strong>数据偏移：</strong>指的是数据部分距离报文段起始处的偏移量，实际上指的是首部的长度。</p>
+<p><strong>控制位：</strong>八位从左到右分别是 CWR，ECE，URG，ACK，PSH，RST，SYN，FIN。</p>
+<p><strong>CWR：</strong>CWR 标志与后面的 ECE 标志都用于 IP 首部的 ECN 字段，ECE 标志为 1 时，则通知对方已将拥塞窗口缩小；</p>
+<p><strong>ECE：</strong>若其值为 1 则会通知对方，从对方到这边的网络有阻塞。在收到数据包的 IP 首部中 ECN 为 1 时将 TCP 首部中的 ECE 设为 1；</p>
+<p><strong>URG：</strong>该位设为 1，表示包中有需要紧急处理的数据，对于需要紧急处理的数据，与后面的紧急指针有关；</p>
+<p><strong>ACK：</strong>该位设为 1，确认应答的字段有效，TCP规定除了最初建立连接时的 SYN 包之外该位必须设为 1；</p>
+<p><strong>PSH：</strong>该位设为 1，表示需要将收到的数据立刻传给上层应用协议，若设为 0，则先将数据进行缓存；</p>
+<p><strong>RST：</strong>该位设为 1，表示 TCP 连接出现异常必须强制断开连接；</p>
+<p><strong>SYN：</strong>用于建立连接，该位设为 1，表示希望建立连接，并在其序列号的字段进行序列号初值设定；</p>
+<p><strong>FIN：</strong>该位设为 1，表示今后不再有数据发送，希望断开连接。当通信结束希望断开连接时，通信双方的主机之间就可以相互交换 FIN 位置为 1 的 TCP 段。</p>
+<p>每个主机又对对方的 FIN 包进行确认应答之后可以断开连接。不过，主机收到 FIN 设置为 1 的 TCP 段之后不必马上回复一个 FIN 包，而是可以等到缓冲区中的所有数据都因为已成功发送而被自动删除之后再发 FIN 包；</p>
+<p><strong>窗口：</strong>窗口值作为接收方让发送方设置其发送窗口的依据。之所以要有这个限制，是因为接收方的数据缓存空间是有限的。</p>
+<h4 id="TCP头格式"><a href="#TCP头格式" class="headerlink" title="TCP头格式"></a>TCP头格式</h4><p>接下来，我们来看一下TCP头的格式</p>
+<p><img src="/2021/11/11/Tcp/TCP-Header-01.jpg" alt="img">TCP头格式（<a target="_blank" rel="noopener" href="http://nmap.org/book/tcpip-ref.html">图片来源</a>）</p>
+<p>你需要注意这么几点：</p>
+<ul>
+<li>TCP的包是没有IP地址的，那是IP层上的事。但是有源端口和目标端口。</li>
+<li>一个TCP连接需要四个元组来表示是同一个连接（src_ip, src_port, dst_ip, dst_port）准确说是五元组，还有一个是协议。但因为这里只是说TCP协议，所以，这里我只说四元组。</li>
+<li>注意上图中的四个非常重要的东西：<ul>
+<li><strong>Sequence Number</strong>是包的序号，<strong>用来解决网络包乱序（reordering）问题。</strong></li>
+<li><strong>Acknowledgement Number</strong>就是ACK——用于确认收到，<strong>用来解决不丢包的问题</strong>。</li>
+<li><strong>Window又叫Advertised-Window</strong>，也就是著名的滑动窗口（Sliding Window），<strong>用于解决流控的</strong>。</li>
+<li><strong>TCP Flag</strong> ，也就是包的类型，<strong>主要是用于操控TCP的状态机的</strong>。</li>
+</ul>
+</li>
+</ul>
+<p>关于其它的东西，可以参看下面的图示</p>
+<p><img src="/2021/11/11/Tcp/TCP-Header-02.jpg" alt="img"></p>
+<p>（<a target="_blank" rel="noopener" href="http://nmap.org/book/tcpip-ref.html">图片来源</a>）</p>
+<h2 id="IP首部："><a href="#IP首部：" class="headerlink" title="IP首部："></a>IP首部：</h2><p><strong>20个字节以上</strong></p>
+<p>1、第一个4字节（也就是第一行）：<br>（1）版本号（Version），4位；用于标识IP协议版本，IPv4是0100，IPv6是0110，也就是二进制的4和6。<br>（2）首部长度（Internet Header Length），4位；用于标识首部的长度，单位为4字节，所以首部长度最大值为：(2^4 - 1) * 4 = 60字节，但一般只推荐使用20字节的固定长度。<br>（3）服务类型（Type Of Service），8位；用于标识IP包的优先级，但现在并未使用。<br>（4）总长度（Total Length），16位；标识IP数据报的总长度，最大为：2^16 -1 = 65535字节。<br>2、第二个四字节：<br>（1）标识（Identification），16位；用于标识IP数据报，如果因为数据链路层帧数据段长度限制（也就是MTU，支持的最大传输单元），IP数据报需要进行分片发送，则每个分片的IP数据报标识都是一致的。<br>（2）标识（Flag），3位，但目前只有2位有意义；最低位为MF，MF=1代表后面还有分片的数据报，MF=0代表当前数据报已是最后的数据报。次低位为DF，DF=1代表不能分片，DF=0代表可以分片。<br>（3）片偏移（Fragment Offset），13位；代表某个分片在原始数据中的相对位置。<br>3、第三个四字节：<br>（1）生存时间（TTL），8位；以前代表IP数据报最大的生存时间，现在标识IP数据报可以经过的路由器数。<br>（2）协议（Protocol），8位；代表上层传输层协议的类型，1代表ICMP，2代表IGMP，6代表TCP，17代表UDP。<br>（3）校验和（Header Checksum），16位；用于验证数据完整性，计算方法为，首先将校验和位置零，然后将每16位二进制反码求和即为校验和，最后写入校验和位置。<br>4、第四个四字节：源IP地址<br>5、第五个四字节：目的IP地址</p>
+<h1 id="附录：参考QA"><a href="#附录：参考QA" class="headerlink" title="附录：参考QA"></a>附录：参考QA</h1><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6900439208641921038">网络篇：朋友面试之TCP/IP，回去等通知吧 - 掘金 (juejin.cn)</a></p>
+<p><a target="_blank" rel="noopener" href="https://coolshell.cn/articles/11564.html#TCP%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%BA">TCP 的那些事儿（上） | 酷 壳 - CoolShell</a></p>
+<p><a target="_blank" rel="noopener" href="https://coolshell.cn/articles/11609.html">TCP 的那些事儿（下） | 酷 壳 - CoolShell</a></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>tcp</p><p><a href="http://example.com/2021/11/11/Tcp/">http://example.com/2021/11/11/Tcp/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-11-11</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-04-24</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Core/">Core</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/11/11/Concurrent/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Concurrent</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/11/11/Socket/"><span class="level-item">Socket</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#First-of-All"><span class="level-left"><span class="level-item">1</span><span class="level-item">First of All</span></span></a></li><li><a class="level is-mobile" href="#UDP-和-TCP-的特点与区别"><span class="level-left"><span class="level-item">2</span><span class="level-item">UDP 和 TCP 的特点与区别</span></span></a></li><li><a class="level is-mobile" href="#Tcp协议是怎么保证可靠传输"><span class="level-left"><span class="level-item">3</span><span class="level-item">Tcp协议是怎么保证可靠传输</span></span></a></li><li><a class="level is-mobile" href="#Tcp的连接和断开过程"><span class="level-left"><span class="level-item">4</span><span class="level-item">Tcp的连接和断开过程</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#三次握手和四次挥手"><span class="level-left"><span class="level-item">4.1</span><span class="level-item">三次握手和四次挥手</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#三次握手："><span class="level-left"><span class="level-item">4.1.1</span><span class="level-item">三次握手：</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#第一次握手："><span class="level-left"><span class="level-item">4.1.1.1</span><span class="level-item">第一次握手：</span></span></a></li><li><a class="level is-mobile" href="#第二次握手："><span class="level-left"><span class="level-item">4.1.1.2</span><span class="level-item">第二次握手：</span></span></a></li><li><a class="level is-mobile" href="#第三次握手："><span class="level-left"><span class="level-item">4.1.1.3</span><span class="level-item">第三次握手：</span></span></a></li><li><a class="level is-mobile" href="#Question"><span class="level-left"><span class="level-item">4.1.1.4</span><span class="level-item">Question:</span></span></a></li></ul></li><li><a class="level is-mobile" href="#四次挥手"><span class="level-left"><span class="level-item">4.1.2</span><span class="level-item">四次挥手</span></span></a></li><li><a class="level is-mobile" href="#Question-1"><span class="level-left"><span class="level-item">4.1.3</span><span class="level-item">Question:</span></span></a></li><li><a class="level is-mobile" href="#数据传输中的Sequence-Number"><span class="level-left"><span class="level-item">4.1.4</span><span class="level-item">数据传输中的Sequence Number</span></span></a></li></ul></li><li><a class="level is-mobile" href="#数据分块-amp-面向字节流"><span class="level-left"><span class="level-item">4.2</span><span class="level-item">数据分块&amp;面向字节流</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#分块传输"><span class="level-left"><span class="level-item">4.2.1</span><span class="level-item">分块传输</span></span></a></li><li><a class="level is-mobile" href="#面向字节流"><span class="level-left"><span class="level-item">4.2.2</span><span class="level-item">面向字节流</span></span></a></li><li><a class="level is-mobile" href="#TCP的粘包和拆包"><span class="level-left"><span class="level-item">4.2.3</span><span class="level-item">TCP的粘包和拆包</span></span></a></li><li><a class="level is-mobile" href="#解决粘包和拆包的方法都有哪些？"><span class="level-left"><span class="level-item">4.2.4</span><span class="level-item">解决粘包和拆包的方法都有哪些？</span></span></a></li></ul></li><li><a class="level is-mobile" href="#流量控制："><span class="level-left"><span class="level-item">4.3</span><span class="level-item">流量控制：</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#滑动窗口"><span class="level-left"><span class="level-item">4.3.1</span><span class="level-item">滑动窗口</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#零窗口-Zero-Window"><span class="level-left"><span class="level-item">4.3.1.1</span><span class="level-item">零窗口(Zero Window)</span></span></a></li><li><a class="level is-mobile" href="#糊涂窗口综合症-Silly-Window-Syndrome"><span class="level-left"><span class="level-item">4.3.1.2</span><span class="level-item">糊涂窗口综合症(Silly Window Syndrome)</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#拥塞控制："><span class="level-left"><span class="level-item">4.4</span><span class="level-item">拥塞控制：</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#慢启动"><span class="level-left"><span class="level-item">4.4.1</span><span class="level-item">慢启动</span></span></a></li><li><a class="level is-mobile" href="#拥塞避免算法"><span class="level-left"><span class="level-item">4.4.2</span><span class="level-item">拥塞避免算法</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#慢热启动算法-–-Slow-Start"><span class="level-left"><span class="level-item">4.4.2.1.1</span><span class="level-item">慢热启动算法 – Slow Start</span></span></a></li><li><a class="level is-mobile" href="#拥塞避免算法-–-Congestion-Avoidance"><span class="level-left"><span class="level-item">4.4.2.1.2</span><span class="level-item">拥塞避免算法 – Congestion Avoidance</span></span></a></li></ul></ul></li><li><a class="level is-mobile" href="#快速重传和快速恢复"><span class="level-left"><span class="level-item">4.4.3</span><span class="level-item">快速重传和快速恢复</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#快速重传"><span class="level-left"><span class="level-item">4.4.3.1</span><span class="level-item">快速重传</span></span></a></li><li><a class="level is-mobile" href="#快速恢复-Reno算法"><span class="level-left"><span class="level-item">4.4.3.2</span><span class="level-item">快速恢复(Reno算法)</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#超时重传"><span class="level-left"><span class="level-item">4.5</span><span class="level-item">超时重传</span></span></a></li><li><a class="level is-mobile" href="#快速重传和超时重传区别"><span class="level-left"><span class="level-item">4.6</span><span class="level-item">快速重传和超时重传区别</span></span></a></li></ul></li><li><a class="level is-mobile" href="#附录一：-MSL、ttl及RTT-amp-RTO的区别"><span class="level-left"><span class="level-item">5</span><span class="level-item">附录一： MSL、ttl及RTT&amp;RTO的区别</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#MSL（30s）最大报文生存时间"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">MSL（30s）最大报文生存时间</span></span></a></li><li><a class="level is-mobile" href="#2MSL（2-30s）"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">2MSL（2*30s）</span></span></a></li><li><a class="level is-mobile" href="#RTT往返时间，RTO超时时间"><span class="level-left"><span class="level-item">5.3</span><span class="level-item">RTT往返时间，RTO超时时间</span></span></a></li><li><a class="level is-mobile" href="#TTL生存时间字段"><span class="level-left"><span class="level-item">5.4</span><span class="level-item">TTL生存时间字段</span></span></a></li></ul></li><li><a class="level is-mobile" href="#附录二：MSS、MTU"><span class="level-left"><span class="level-item">6</span><span class="level-item">附录二：MSS、MTU</span></span></a></li><li><a class="level is-mobile" href="#附录三：UDP-、TCP-首部格式"><span class="level-left"><span class="level-item">7</span><span class="level-item">附录三：UDP 、TCP 首部格式</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#UDP首部："><span class="level-left"><span class="level-item">7.1</span><span class="level-item">UDP首部：</span></span></a></li><li><a class="level is-mobile" href="#TCP首部："><span class="level-left"><span class="level-item">7.2</span><span class="level-item">TCP首部：</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#TCP头格式"><span class="level-left"><span class="level-item">7.2.1.1</span><span class="level-item">TCP头格式</span></span></a></li></ul></ul></li><li><a class="level is-mobile" href="#IP首部："><span class="level-left"><span class="level-item">7.3</span><span class="level-item">IP首部：</span></span></a></li></ul></li><li><a class="level is-mobile" href="#附录：参考QA"><span class="level-left"><span class="level-item">8</span><span class="level-item">附录：参考QA</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

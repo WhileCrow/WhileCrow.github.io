@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>RenderBlock - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="链接：https:&amp;#x2F;&amp;#x2F;juejin.cn&amp;#x2F;post&amp;#x2F;7062552765117136903 https:&amp;#x2F;&amp;#x2F;developer.android.com&amp;#x2F;topic&amp;#x2F;performance&amp;#x2F;rendering&amp;#x2F;profile-gpu?hl&amp;#x3D;zh-cn RenderThread的作用：主线程的 draw 函数并没有真正的执行 drawCall ，而是把要 draw 的内容记录到 DIsplayList"><meta property="og:type" content="blog"><meta property="og:title" content="RenderBlock"><meta property="og:url" content="http://example.com/2022/03/10/RenderBlock/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="链接：https:&amp;#x2F;&amp;#x2F;juejin.cn&amp;#x2F;post&amp;#x2F;7062552765117136903 https:&amp;#x2F;&amp;#x2F;developer.android.com&amp;#x2F;topic&amp;#x2F;performance&amp;#x2F;rendering&amp;#x2F;profile-gpu?hl&amp;#x3D;zh-cn RenderThread的作用：主线程的 draw 函数并没有真正的执行 drawCall ，而是把要 draw 的内容记录到 DIsplayList"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://github.com/WhileCrow/BlackCrow/assets/26061465/174fcbc3-c736-45c7-8613-c73bbb81cd7f"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/e76602c2c7b34d7ba98b8cdf8719445a~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/52a7e6f5fd734b1db159b76a0b21d3ba~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/039f2506191a4c738fba6fb40545123e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/d7d51e9d3d90434dbbb8ecfac3950d72~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0-20231106110643352.awebp"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227154924508.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155727677.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155727690.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155727687-3663847.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155727683.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155727687.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918487.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918416.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918728-3663958.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918728.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918645.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918629.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918598.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918645-3663958.png"><meta property="og:image" content="http://example.com/2022/03/10/RenderBlock/640-20231227155918776.png"><meta property="article:published_time" content="2022-03-10T08:16:46.000Z"><meta property="article:modified_time" content="2024-07-04T06:15:34.931Z"><meta property="article:author" content="White Crow"><meta property="article:tag" content="Graphic"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://github.com/WhileCrow/BlackCrow/assets/26061465/174fcbc3-c736-45c7-8613-c73bbb81cd7f"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2022/03/10/RenderBlock/"},"headline":"RenderBlock","image":["http://example.com/2022/03/10/RenderBlock/640-20231227154924508.png","http://example.com/2022/03/10/RenderBlock/640.png","http://example.com/2022/03/10/RenderBlock/640-20231227155727677.png","http://example.com/2022/03/10/RenderBlock/640-20231227155727690.png","http://example.com/2022/03/10/RenderBlock/640-20231227155727687-3663847.png","http://example.com/2022/03/10/RenderBlock/640-20231227155727683.png","http://example.com/2022/03/10/RenderBlock/640-20231227155727687.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918487.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918416.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918728-3663958.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918728.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918645.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918629.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918598.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918645-3663958.png","http://example.com/2022/03/10/RenderBlock/640-20231227155918776.png"],"datePublished":"2022-03-10T08:16:46.000Z","dateModified":"2024-07-04T06:15:34.931Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"链接：https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;7062552765117136903 https:&#x2F;&#x2F;developer.android.com&#x2F;topic&#x2F;performance&#x2F;rendering&#x2F;profile-gpu?hl&#x3D;zh-cn RenderThread的作用：主线程的 draw 函数并没有真正的执行 drawCall ，而是把要 draw 的内容记录到 DIsplayList"}</script><link rel="canonical" href="http://example.com/2022/03/10/RenderBlock/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-03-10T08:16:46.000Z" title="3/10/2022, 4:16:46 PM">2022-03-10</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-04T06:15:34.931Z" title="7/4/2024, 2:15:34 PM">2024-07-04</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">33 minutes read (About 4951 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">RenderBlock</h1><div class="content"><p>链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7062552765117136903">https://juejin.cn/post/7062552765117136903</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/topic/performance/rendering/profile-gpu?hl=zh-cn">https://developer.android.com/topic/performance/rendering/profile-gpu?hl=zh-cn</a></p>
+<h3 id="RenderThread的作用："><a href="#RenderThread的作用：" class="headerlink" title="RenderThread的作用："></a>RenderThread的作用：</h3><p>主线程的 draw 函数并没有真正的执行 drawCall ，而是把要 draw 的内容记录到 DIsplayList 里面（在 Measure、Layout、Draw 的 Draw 这个环节，Android 使用 DisplayList 进行绘制而非直接使用 CPU 绘制每一帧。），同步到 RenderThread 中，一旦同步完成，主线程就可以被释放出来做其他的事情，RenderThread 则继续进行渲染工作<br><img src="https://github.com/WhileCrow/BlackCrow/assets/26061465/174fcbc3-c736-45c7-8613-c73bbb81cd7f" alt="image"></p>
+<h3 id="2-3-生产者和消费者"><a href="#2-3-生产者和消费者" class="headerlink" title="2.3 生产者和消费者"></a>2.3 生产者和消费者</h3><p><img src="/2022/03/10/RenderBlock/e76602c2c7b34d7ba98b8cdf8719445a~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp" alt="图片"></p>
+<p>我们再回到 Vsync 的话题，消费 Vsync 的双方分别是 App 和 sf，<strong>其中 App 代表的是生产者，sf 代表的是消费者，两者交付的中间产物则是 surface buffer</strong>。</p>
+<p><strong>再具体一点，生产者大致可以分为两类，一类是以 window 为代表的页面，也就是我们平时所看到的 view 树这一套；另一类是以视频流为代表的可以直接和 surface 完成数据交换的来源，比如相机预览等。</strong></p>
+<p>对于一般的生产者和消费者模式，我们知道会存在<strong>相互阻塞</strong>的问题。比如生产者速度快但是消费者速度慢，亦或是生产者速度慢消费者速度快，都会导致整体速度慢且造成资源浪费。所以 Vsync 的协同以及双缓冲甚至三缓冲的作用就体现出来了。</p>
+<blockquote>
+<p>思考一个问题：是否缓冲的个数越多越好？过多的缓冲会造成什么问题？</p>
+<p> 答案是会造成另一个严重的问题：lag，响应延迟</p>
+</blockquote>
+<p>这里结合 view 的一生，我们可以把两个流程合在一起，让我们的视角再高一层：</p>
+<p><img src="/2022/03/10/RenderBlock/52a7e6f5fd734b1db159b76a0b21d3ba~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp" alt="图片"></p>
+<p>我们一般都比较了解 view 渲染的三大流程，但是 view 的渲染远不止于此：</p>
+<blockquote>
+<p>此处以一个通用的硬件加速流程来表征</p>
+</blockquote>
+<p><img src="/2022/03/10/RenderBlock/039f2506191a4c738fba6fb40545123e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt="图片"></p>
+<ol>
+<li><strong>Vsync 调度</strong>：很多同学的一个认知误区在于认为 vsync 是每 16ms 都会有的，但是其实 vsync 是需要调度的，没有调度就不会有回调；</li>
+<li><strong>消息调度</strong>：主要是 doframe 的消息调度，如果消息被阻塞，会直接造成卡顿；</li>
+<li><strong>input 处理</strong>：触摸事件的处理；</li>
+<li><strong>动画处理</strong>：animator 动画执行和渲染；</li>
+<li><strong>view 处理</strong>：主要是 view 相关的遍历和三大流程；</li>
+<li><strong>measure、layout、draw</strong>：view 三大流程的执行；</li>
+<li><strong>DisplayList 更新</strong>：view 硬件加速后的 draw op；</li>
+<li><strong>OpenGL 指令转换</strong>：绘制指令转换为 OpenGL 指令；</li>
+<li><strong>指令 buffer 交换</strong>：OpenGL 的指令交换到 GPU 内部执行；</li>
+<li><strong>GPU 处理</strong>：GPU 对数据的处理过程；</li>
+<li><strong>layer 合成</strong>：surface buffer 合成屏幕显示 buffer 的流程；</li>
+<li><strong>光栅化</strong>：将矢量图转换为位图；</li>
+<li><strong>Display</strong>：显示控制；</li>
+<li><strong>buffer 切换</strong>：切换屏幕显示的帧 buffer；</li>
+</ol>
+<span id="more"></span>
+
+
+
+<h3 id="2-4-机制上的保护"><a href="#2-4-机制上的保护" class="headerlink" title="2.4 机制上的保护"></a>2.4 机制上的保护</h3><p>这里我们来回答<strong>第三个问题</strong>，从系统的渲染架构上来说，机制上的保护主要有几方面：</p>
+<ol>
+<li><p>Vsync 机制的协同；</p>
+</li>
+<li><p>多缓冲设计；</p>
+</li>
+<li><p>surface 的提供；</p>
+</li>
+<li><p>同步屏障的保护；</p>
+</li>
+<li><p>硬件绘制的支持；</p>
+</li>
+<li><p>渲染线程的支持；</p>
+</li>
+<li><p>GPU 合成加速；</p>
+</li>
+</ol>
+<h3 id="2-5-再看卡顿的成因"><a href="#2-5-再看卡顿的成因" class="headerlink" title="2.5 再看卡顿的成因"></a>2.5 再看卡顿的成因</h3><h4 id="渲染流程"><a href="#渲染流程" class="headerlink" title="渲染流程"></a>渲染流程</h4><ol>
+<li><p><strong>Vsync 调度</strong>：这个是起始点，但是调度的过程会经过线程切换以及一些委派的逻辑，有可能造成卡顿，但是一般可能性比较小，我们也基本无法介入；</p>
+</li>
+<li><p><strong>消息调度</strong>：主要是 doframe Message 的调度，这就是一个普通的 Handler 调度，如果这个调度被其他的 Message 阻塞产生了时延，会直接导致后续的所有流程不会被触发。这里直播建立了一个 FWtachDog 机制，可以通过优化消息调度达到插帧的效果，使得界面更加流畅；</p>
+</li>
+<li><p><strong>input 处理</strong>：input 是一次 Vsync 调度最先执行的逻辑，主要处理 input 事件。如果有大量的事件堆积或者在事件分发逻辑中加入大量耗时业务逻辑，会造成当前帧的时长被拉大，造成卡顿。抖音基础技术同学也有尝试过事件采样的方案，减少 event 的处理，取得了不错的效果；</p>
+</li>
+<li><p><strong>动画处理</strong>：主要是 animator 动画的更新，同理，动画数量过多，或者动画的更新中有比较耗时的逻辑，也会造成当前帧的渲染卡顿。对动画的降帧和降复杂度其实解决的就是这个问题；</p>
+</li>
+<li><p><strong>view 处理</strong>：主要是接下来的三大流程，过度绘制、频繁刷新、复杂的视图效果都是此处造成卡顿的主要原因。比如我们平时所说的降低页面层级，主要解决的就是这个问题；</p>
+</li>
+<li><p><strong>measure/layout/draw</strong>：view 渲染的三大流程，因为涉及到遍历和高频执行，所以这里涉及到的耗时问题均会被放大，比如我们会降不能在 draw 里面调用耗时函数，不能 new 对象等等；</p>
+<blockquote>
+<p>//以下对应的是**<u>淡蓝色、红色、橘色</u>**色块对应的阶段</p>
+</blockquote>
+</li>
+<li><p><strong>DisplayList 的更新</strong>：这里主要是 canvas 和 displaylist 的映射，一般不会存在卡顿问题，反而可能存在映射失败导致的显示问题； </p>
+</li>
+<li><p><strong>OpenGL 指令转换</strong>：这里主要是将 canvas 的命令转换为 OpenGL 的指令，一般不存在问题。不过这里倒是有一个可以探索的点，会不会存在一类特殊的 canvas 指令，转换后的 OpenGL 指令消耗比较大，进而导致 GPU 的损耗？有了解的同学可以探讨一下；</p>
+</li>
+<li><p><strong>指令buffer 交换</strong>：这里主要指 OpenGL 指令集交换给 GPU，这个一般和指令的复杂度有关。一个有意思的事儿是这里一度被我们作为线上采集 GPU 指标的数据源，但是由于多缓冲的因素数据准确度不够被放弃了；</p>
+</li>
+<li><p><strong>GPU 处理</strong>：顾名思义，这里是 GPU 对数据的处理，耗时主要和任务量和纹理复杂度有关。这也就是我们降低 GPU 负载有助于降低卡顿的原因；</p>
+</li>
+<li><p><strong>layer 合成</strong>：这里主要是 layer 的 compose 的工作，一般接触不到。偶尔发现 sf 的 vsync 信号被 delay 的情况，造成 buffer 供应不及时，暂时还不清楚原因；</p>
+</li>
+<li><p><strong>光栅化</strong>：这里暂时忽略，底层系统行为；</p>
+</li>
+<li><p><strong>Display</strong>：这里暂时忽略，底层系统行为；</p>
+</li>
+<li><p><strong>Buffer 切换</strong>：主要是屏幕的显示，这里 buffer 的数量也会影响帧的整体延迟，不过是系统行为，不能干预。</p>
+</li>
+</ol>
+<p>Google 将这个过程划分为：<strong>其他时间/VSync 延迟、输入处理、动画、测量/布局、绘制、同步和上传、命令问题、交换缓冲区。</strong>也就是我们常用的 GPU 严格模式，其实道理是一样的。到这里，我们也就回答出来了第二个问题：<strong>16ms 内都需要完成什么</strong>？</p>
+<blockquote>
+<p>准确地说，这里仍可以进一步细化：16ms 内完成 APP 侧数据的生产；16ms 内完成 sf layer 的合成</p>
+</blockquote>
+<p><img src="/2022/03/10/RenderBlock/d7d51e9d3d90434dbbb8ecfac3950d72~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0-20231106110643352.awebp" alt="图片"></p>
+<p>View 的视觉效果正是通过这一整条复杂的链路一步步展示出来的，有了这个前提，那就可以得出一个结论：<strong>上述任意链路发生卡顿，均会造成卡顿</strong>。</p>
+<h1 id="补充硬件绘制"><a href="#补充硬件绘制" class="headerlink" title="补充硬件绘制"></a>补充硬件绘制</h1><h3 id="DisplayList更新详解"><a href="#DisplayList更新详解" class="headerlink" title="DisplayList更新详解"></a>DisplayList更新详解</h3><p>硬件绘制还引入了一个 DisplayList 的概念，<br><strong>DisplayList</strong></p>
+<blockquote>
+<p>每个 View 内部都有一个DisplayList，当某个 View 需要重绘时，将它标记为 Dirty。当需要重绘时，仅仅只需要重绘一个 View 的 DisplayList，而不是像软件绘制那样需要向上递归。这样可以大大减少绘图的操作数量，因而提高了渲染效率</p>
+</blockquote>
+<p>Display List 是一个缓存绘制命令的 Buffer，Display List 的本质是一个缓冲区，它里面记录了即将要执行的绘制命令序列。Display List 是视图的基本绘制元素，包含元素原始属性（位置、尺寸、角度、透明度等），对应 Canvas 的 drawXxx()方法。类似于左边图中所示一样，onDraw会被DisplayList所表示。ViewTree中每一个View都会有对应的DisplayList来代表。</p>
+<p>本例子中，点击Item2，触发onDraw之后，DisplayList开启了如下的操作：</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227154924508.png" alt="图片"><img src="/2022/03/10/RenderBlock/640.png" alt="图片"></p>
+<h2 id="Sync"><a href="#Sync" class="headerlink" title="Sync"></a><strong>Sync</strong></h2><p>在Java层（UI Thread），我们收集组合所有信息，然后把这些信息sync给Native层，由RenderThread用GPU渲染。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155727677.png" alt="图片"></p>
+<p>Damage Area: 这个概念类似于Dirty Region，意思是需要被重新绘制的区域，在我们这个例子中就是item2的区域。</p>
+<p>Upload non-HW Bitmaps: 把non-HW Bitmaps上传到GPU的RAM里，此时一帧刚刚开始，有比较充足的时间。相反的是，</p>
+<blockquote>
+<p>对Hardward Bitmap没有这步操作，Hardward Bitmap是一种新的位图配置，是在Android Oh中添加的 通常当你有一个位图时我们必须在Java端分配内存，然后在需要绘制的时候 我们必须在GPU上复制位图，这在文本时间上是昂贵的，它使我们的RAM数量增加了一倍。使用Oreo中可用的硬件位图，它已经存在GPU一侧了 如果你不打算修改这个位图，从内存角度来看确实是一个非常有效的存储位图的方式。</p>
+</blockquote>
+<h2 id="RenderThread"><a href="#RenderThread" class="headerlink" title="RenderThread"></a><strong>RenderThread</strong></h2><p>Android 5.0 (Lollipop)引入的，此线程只在Native层跟GPU交互，在Java层没有任何调用。渲染之前，我们生成DisplayList，然后我们把这些信息sync给GPU。它是串行执行的，但是RenderThread在这之中能够以原子操作（Atomic Operations）形式执行 例如波纹动画动画，矢量动画等。这些渲染转移到RenderThread来分担之后， UI Thread就可以在idle的时候做些别的事，比如RecyclerView的prefech机制就是设计在此时发生。</p>
+<h3 id="DLOps"><a href="#DLOps" class="headerlink" title="**DLOps **"></a>**DLOps **</h3><p><strong>（Display List Operations）</strong></p>
+<p>在GPU得到 Display List 后，DL 会转换成 DLOps。注意这个变成绿色的Fill操作，经过一系列**优化重排序(Optimization, Reordering and Batching)**后，它的位置被提到上面跟其他的Fill放在一起。优化(Optimization)包括将View setAlpha()，setHarewareLayer()这些操作的指令移到最前面执行，避免在GPU内进行昂贵的State变更操作。</p>
+<blockquote>
+<p>重排序(Reordering)意思是当存在一系列的drawText(), drawRect()之类指令穿插存在时，相同的指令会被放在相邻的顺序执行。</p>
+<p>而Batching表示一个drawText call就可以把整个屏幕上的需要drawText的地方全部做完。</p>
+</blockquote>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155727690.png" alt="图片"></p>
+<h3 id="Clip-Reject"><a href="#Clip-Reject" class="headerlink" title="Clip Reject"></a><strong>Clip Reject</strong></h3><p>在 Clip Reject中，我们判断哪些操作是必须的，换句话说哪些操作是相关脏区(Damaged Area)的。例如下图中，只有右边的三个操作是跟把item2背景变绿这个效果相关的。所以我们只需要执行右边三个DLOps。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155727687-3663847.png" alt="图片"></p>
+<p>接下来我们需要拿到缓冲区，虽然这里写的是Get Buffer，但实际情况是buffer不是申请来的，有关GPU的操作一执行，SurfaceFlinger就会分配Buffer过来，让我们执行这些操作。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155727683.png" alt="图片"></p>
+<p>然后我们发出一系列GL指令来做画背景，画线，复制bitmap之类的实际操作。当这些操作全部结束时，我们会通知SurfaceFlinger去swap buffer。这时这一帧就完成了，它将被显示在屏幕上。同时，在 SurfaceFlinger 和 HardwareCompositor 中会进行Surface合成。Status Bar，System Bar 和 Content在这里会合成在一起，然后展示在屏幕上。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155727687.png" alt="图片"></p>
+<h1 id="补充Composition"><a href="#补充Composition" class="headerlink" title="补充Composition"></a>补充<strong>Composition</strong></h1><p><img src="/2022/03/10/RenderBlock/640-20231227155918487.png" alt="图片"></p>
+<p>在上面的两个例子中，都略过了composition这一步具体里面发生了什么。在这节我们会进行进一步解释，<strong>SurfaceFlinger和HardwareCompositor是怎么把不同的window合成</strong>，然后展示到屏幕上的。在我们开始前，我们需要先搞清楚下面这三个概念：<strong>BufferQueue, Producer, Consumer</strong>。</p>
+<h2 id="BufferQueue"><a href="#BufferQueue" class="headerlink" title="BufferQueue"></a><strong>BufferQueue</strong></h2><p>BufferQueue就是有若干个Buffer的Queue。Graphic Buffer存在在这里。一般会有1～3个Buffer，取决于setBufferQueue时的配置。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155918416.png" alt="图片"></p>
+<h3 id="Producer"><a href="#Producer" class="headerlink" title="Producer"></a><strong>Producer</strong></h3><ul>
+<li>就和其他所有生产消费者模型一样，它负责生产内容，具体一点，在这里它生产要被展示在屏幕上的数据。</li>
+<li>调用dequeBuffer()来从BufferQueue获得队首Buffer。这时它可以直接在Buffer写入Pixel数据，或调用OpenGL，或者使用Canvas。</li>
+<li>当内容生产完之后，调用queueBuffer()将这个Buffer还给BufferQueue，放到队尾。</li>
+</ul>
+<h3 id="Comsumer"><a href="#Comsumer" class="headerlink" title="Comsumer"></a><strong>Comsumer</strong></h3><ul>
+<li>消费者要消费数据来展示到屏幕上。</li>
+<li>调用acquireBuffer()拿到BufferQueue中第一个可用的(一般在队尾)Buffer，读取里面的数据。</li>
+<li>内容消费完成后，调用releaseBuffer()给放回队首。</li>
+</ul>
+<h2 id="Create-Window"><a href="#Create-Window" class="headerlink" title="Create Window"></a><strong>Create Window</strong></h2><p>当我们创建一个Window时，例如activity，dialog，popup window等。在Producer侧，WindowManager会在内部创建个Window对象(这里会创建ViewRootImp来关联view的操作，surface也是跟window一一绑定)。而在Consumer侧，SurfaceFlinger会管理各个Surface相对应的生成一个Layer对象（layer的东西也太多了）。Layer是系统组件之一，它创建和管理BufferQueue。之后在App中会生成一个Surface对象。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155918728-3663958.png" alt="图片"></p>
+<h2 id="Surface"><a href="#Surface" class="headerlink" title="Surface"></a><strong>Surface</strong></h2><ul>
+<li>Surface 对应了一块屏幕缓冲区，每个 Window 对应一个 Surface，任何 View 都是画在 Surface 上的，传统的 View 共享一块屏幕缓冲区。</li>
+<li>所有的绘制必须在 UI 线程中进行。</li>
+<li>我们不能直接操作 Surface 实例，要通过 SurfaceHolder，在 SurfaceView 中可以通过 getHolder() 方法获取到 SurfaceHolder 实例。</li>
+</ul>
+<h3 id="SurfaceView"><a href="#SurfaceView" class="headerlink" title="SurfaceView"></a><strong>SurfaceView</strong></h3><p>简单的说 SurfaceView 就是一个有 Surface 的 View，SurfaceView 控制这个 Surface 的格式和尺寸以及绘制位置。SurfaceView的实现原理相当于在Window的Surface打个洞，漏出SurfaceView的Surface。他们两个的Surface是完全相互独立的存在。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155918728.png" alt="图片"></p>
+<h3 id="Surface-Texture"><a href="#Surface-Texture" class="headerlink" title="Surface Texture"></a><strong>Surface Texture</strong></h3><p>Consumer是OpenGL。SurfaceTexture 会创建 BufferQueue 和 Surface。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155918645.png" alt="图片"></p>
+<h3 id="TextureView"><a href="#TextureView" class="headerlink" title="TextureView"></a><strong>TextureView</strong></h3><ul>
+<li>创建SurfaceTexture。</li>
+<li>RenderThread是Consumer，Producer可以自己选择。</li>
+<li>就像个功能更强大的ImageView一样，更新得更快速。</li>
+</ul>
+<blockquote>
+<p>在Android O或N之前的版本上，TexutreView是比SurfaceView更推荐使用的，因为一方面可以享受更快速的渲染，另一方面可以避免SurfaceView的种种问题，比如两个Window造成的效率折损，渲染不同步导致画面割裂等。但是这些问题已经都被解决了，在18年谷歌I/O大会上更推荐在新版本的安卓上使用SurfaceView，而不是TextureView。</p>
+</blockquote>
+<p>回到我们本节的主题Composition上。我们在应用中创建很多window，每个都有自己的layer，SurfaceFlinger来收集这些layer，SurfaceFlinger其实不是直接跟Display显示器交互，而是跟Hardware Composer沟通（HWC），它是一个硬件抽象层，我们通常为了省电，避免GPU直接在屏幕上合成显示。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155918629.png" alt="图片"></p>
+<h2 id="Hardware-Composer-HAL"><a href="#Hardware-Composer-HAL" class="headerlink" title="Hardware Composer HAL"></a><strong>Hardware Composer HAL</strong></h2><p>是一个硬件抽象层用于<strong>确定通过可用硬件来合成缓冲区的最有效方法</strong>。</p>
+<blockquote>
+<p>作为 HAL，其实现是特定于设备的，而且通常由显示硬件原始设备制造商 (OEM) 完成。</p>
+</blockquote>
+<p>当您考虑使用叠加平面时，很容易发现这种方法的好处，它会在显示硬件（而不是 GPU）中合成多个缓冲区。例如，假设有一部普通 Android 手机，其屏幕方向为纵向，状态栏在顶部，导航栏在底部，其他区域显示应用内容。每个层的内容都在单独的缓冲区中。您可以使用以下任一方法处理合成：</p>
+<ul>
+<li>将应用内容渲染到暂存缓冲区中，然后在其上渲染状态栏，再在其上渲染导航栏，最后将暂存缓冲区传送到显示硬件。</li>
+<li>将三个缓冲区全部传送到显示硬件，并指示它从不同的缓冲区读取屏幕不同部分的数据。</li>
+</ul>
+<p>后一种方法可以显著提高效率。显示处理器性能差异很大。叠加层的数量（无论层是否可以旋转或混合）以及对定位和重叠的限制很难通过 API 表达。为了适应这些选项，HWC 会执行以下计算：</p>
+<ol>
+<li>SurfaceFlinger 向 HWC 提供一个完整的Layer列表，并询问“您希望如何处理这些层？”</li>
+<li>HWC 的响应方式是将每个层标记为FrameBuffer或OVERLAY。</li>
+<li>SurfaceFlinger 会处理（计算的当前显示设备的脏区域DirtyRegion等工作）所有OVERLAY，将输出buffer传送到 HWC，并让 HWC 处理其余部分。</li>
+</ol>
+<p>举个例子：SurfaceFlinger告诉HWC现在有3个Layer你想怎么办。HWC一看，第一个简单，OVERLAY就可以，第二个第三个我处理不了，需要GPU先处理下才行，就标记成FrameBuffer。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155918598.png" alt="图片"></p>
+<p>标记成FrameBuffer的这两层会被先行处理，处理这两层时，需要再添加一层来放output，被绿箭头指着的这层就是output，叫做Scratch Layer（叫什么名不重要，后面不会出现，只是为了避免混淆）。</p>
+<p><img src="/2022/03/10/RenderBlock/640-20231227155918645-3663958.png" alt="图片"><img src="/2022/03/10/RenderBlock/640-20231227155918776.png" alt="图片"></p>
+<p>现在，剩下这两层Layer会被<strong>SurfaceFlinger用set()传到HWC，之后被渲染到屏幕上</strong>。感兴趣的大家可以用这个命令打印出SurfaceFlinger的大量信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell dumpsys SurfaceFlinger</span><br></pre></td></tr></table></figure>
+
+
+
+<p>到这里，整个渲染的流程就已经串联完了。我们应用的 UI 是如何变成屏幕上的像素的，相信大家看到这里已经有了一个基本的概念。了解这些的工作原理可以帮助我们弄清楚如何为App获得最佳性能。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>RenderBlock</p><p><a href="http://example.com/2022/03/10/RenderBlock/">http://example.com/2022/03/10/RenderBlock/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-03-10</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-07-04</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Graphic/">Graphic</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/03/16/TaskPerFrame/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">TaskPerFrame</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/02/24/LiveData/"><span class="level-item">LiveData</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#RenderThread的作用："><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">RenderThread的作用：</span></span></a></li><li><a class="level is-mobile" href="#2-3-生产者和消费者"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">2.3 生产者和消费者</span></span></a></li><li><a class="level is-mobile" href="#2-4-机制上的保护"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">2.4 机制上的保护</span></span></a></li><li><a class="level is-mobile" href="#2-5-再看卡顿的成因"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2.5 再看卡顿的成因</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#渲染流程"><span class="level-left"><span class="level-item">1.1.4.1</span><span class="level-item">渲染流程</span></span></a></li></ul></li></ul></ul><li><a class="level is-mobile" href="#补充硬件绘制"><span class="level-left"><span class="level-item">2</span><span class="level-item">补充硬件绘制</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#DisplayList更新详解"><span class="level-left"><span class="level-item">2.1.1</span><span class="level-item">DisplayList更新详解</span></span></a></li></ul><li><a class="level is-mobile" href="#Sync"><span class="level-left"><span class="level-item">2.2</span><span class="level-item">Sync</span></span></a></li><li><a class="level is-mobile" href="#RenderThread"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">RenderThread</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#DLOps"><span class="level-left"><span class="level-item">2.3.1</span><span class="level-item">**DLOps **</span></span></a></li><li><a class="level is-mobile" href="#Clip-Reject"><span class="level-left"><span class="level-item">2.3.2</span><span class="level-item">Clip Reject</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#补充Composition"><span class="level-left"><span class="level-item">3</span><span class="level-item">补充Composition</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#BufferQueue"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">BufferQueue</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Producer"><span class="level-left"><span class="level-item">3.1.1</span><span class="level-item">Producer</span></span></a></li><li><a class="level is-mobile" href="#Comsumer"><span class="level-left"><span class="level-item">3.1.2</span><span class="level-item">Comsumer</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Create-Window"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">Create Window</span></span></a></li><li><a class="level is-mobile" href="#Surface"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">Surface</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#SurfaceView"><span class="level-left"><span class="level-item">3.3.1</span><span class="level-item">SurfaceView</span></span></a></li><li><a class="level is-mobile" href="#Surface-Texture"><span class="level-left"><span class="level-item">3.3.2</span><span class="level-item">Surface Texture</span></span></a></li><li><a class="level is-mobile" href="#TextureView"><span class="level-left"><span class="level-item">3.3.3</span><span class="level-item">TextureView</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Hardware-Composer-HAL"><span class="level-left"><span class="level-item">3.4</span><span class="level-item">Hardware Composer HAL</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Category: Network - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Crow&#039;s Sky"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"Crow's Sky","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":""}</script><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">Categories</a></li><li><a href="/categories/Common/">Common</a></li><li class="is-active"><a href="#" aria-current="page">Network</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-07-08T09:20:14.000Z" title="7/8/2024, 5:20:14 PM">2024-07-08</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-25T09:18:59.126Z" title="7/25/2024, 5:18:59 PM">2024-07-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">11 minutes read (About 1698 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/07/08/Https/">Https</a></h1><div class="content"><h1 id="Http和Https"><a href="#Http和Https" class="headerlink" title="Http和Https"></a>Http和Https</h1><ul>
+<li>其实HTTPS就是从 HTTP 加上 SSL/TLS （加密处理+认证+完整性保护）</li>
+</ul>
+<p>完整的https通信过程，三次RTT：tcp握手一次RTT，TLS握手两次RTT</p>
+<p><img src="/2024/07/08/Https/b25fb999193d980d1419422cea9f8eb9322855.png" alt="img"></p>
+<h2 id="HTTPS工作原理"><a href="#HTTPS工作原理" class="headerlink" title="HTTPS工作原理"></a>HTTPS工作原理</h2><p><img src="/2024/07/08/Https/141293392-2748beda-9928-4efd-97aa-ec81b38b83e2.png" alt="image"></p>
+<ul>
+<li>一、首先客户端发起连接请求，将自身支持的加密（RSA）和哈希算法（sha256）连带发给服务器（服务器端有非对称加密的公钥和私钥）</li>
+<li>二、服务器端接受请求，选取一组加密和哈希算法后，将服务器证书（含公钥）发送给客户端</li>
+<li>三、客户端收到服务器端证书并使用根证书验证证书后，从中取出公钥，然后本地生成一段随机数，将此随机数用公钥加密后发送给服务器端</li>
+<li>四、服务器端用私钥解密出这段随机数作为对称加密的秘钥。之后双方就可以进行对称加密（DES、AES等）。</li>
+</ul>
+<h2 id="证书校验过程"><a href="#证书校验过程" class="headerlink" title="证书校验过程"></a>证书校验过程</h2><p>校验证书的过程：</p>
+<p><strong>第一步是校验证书网站域名、有效期等。</strong></p>
+<p><strong>第二步是校验证书本身是否可信：主要是依靠验证证书的信任链条完成。</strong></p>
+<p>  <strong>比如根证书A-&gt;B-&gt;服务端证书C，那么首先要验证C是由B签署的，这一步的具体步骤是：</strong></p>
+<pre><code>1. **用B证书的公钥解密C证书的签名信息后拿到C证书的hash值（签署时该Hash值由B的私钥加密生成），**
+2. **然后再用hash算法（B证书上带的签名算法）计算B证书的&lt;u&gt;待签名数据&lt;/u&gt;后得到计算hash值，**
+3. **将证书解密的hash值与计算hash值比较即可。**
+</code></pre>
+<p><strong>第三步是使用CRL（证书吊销列表）或OCSP（在线证书状态协议）确认证书是否已被吊销。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">证书内容可简化为:</span><br><span class="line">待签名数据：</span><br><span class="line">  版本: v3</span><br><span class="line">  序列号: 123456</span><br><span class="line">  签名算法: SHA256withRSA</span><br><span class="line">  颁发者信息: CN&#x3D;A, O&#x3D;A Corporation, C&#x3D;US</span><br><span class="line">  有效期: 2022-01-01 至 2023-01-01</span><br><span class="line">  主题信息: CN&#x3D;B, O&#x3D;B Corporation, C&#x3D;US</span><br><span class="line">  主题公钥: (公钥数据)</span><br><span class="line">  扩展字段: (可选)</span><br><span class="line">签名：</span><br><span class="line">  签名: (签名数据)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/08/Https/image-20240703175159171.png" alt="image-20240703175159171"></p>
+<img src="/2024/07/08/Https/image-20211123141219076.png" alt="image-20211123141219076" style="zoom:30%;">
+
+<img src="/2024/07/08/Https/image-20211123141130160.png" alt="image-20211123141130160" style="zoom:50%;">
+
+
+
+
+
+<h2 id="抓包软件怎么实现的"><a href="#抓包软件怎么实现的" class="headerlink" title="抓包软件怎么实现的"></a>抓包软件怎么实现的</h2><p>以我熟悉的抓包软件<strong>whistle</strong>为例，抓包软件能抓https内容的核心是：你的手机安装了<strong>whistle的自签名根证书</strong>，同时你的<strong>请求都是代理给whistle</strong>的，然后whistle会发送给客户端<strong>经自签名根证书签署过的伪造服务器证书</strong>，故而能通过客户端的证书校验，从而拿到请求原文。</p>
+<p><strong>手机安装了抓包软件的自签名证书后，抓包工具在作为代理进行HTTPS流量捕获时，实际上充当了中间人。抓包开启后，客户端https请求的握手对象实际上是抓包软件，服务端拿到的请求地址是 抓包软件的地址。手机的请求也实际上是与抓包软件在交互，抓包软件再与服务器交互。故而抓包软件能记录并修改客户端的请求与响应</strong></p>
+<p><img src="/2024/07/08/Https/image-20240703170642767.png" alt="image-20240703170642767"></p>
+<p><strong>自签名证书</strong>：抓包软件生成一个自签名的证书（自签名证书是一种灵活且方便的SSL/TLS证书解决方案，是由证书的所有者自己签发的，适用于于开发测试环境和内部网络。然而，由于它不是由受信任的三方证书颁发机构即CA签发的，使得它无法提供可靠的身份验证，无法适用于公网）</p>
+<ol>
+<li><strong>客户端信任自签名证书</strong>：<ul>
+<li>当用户在设备上安装抓包软件的自签名证书后，这个证书被设备作为受信任的根证书。设备会信任由这个自签名证书签发的所有证书。</li>
+</ul>
+</li>
+<li><strong>中间人代理握手</strong>：<ul>
+<li>抓包软件充当“中间人”，拦截客户端的HTTPS请求。客户端发出的请求首先到达抓包软件。</li>
+<li>抓包软件向客户端提供一个由它自己的自签名根证书签署的伪造服务器证书（目标服务器的替身证书）。</li>
+<li>因为客户端已经信任抓包软件的自签名证书，所以它会信任这个伪造的服务器证书，并与抓包软件进行TLS握手。</li>
+</ul>
+</li>
+</ol>
+<p>这样，手机上的浏览器或应用程序在连接时<strong>实际上是与抓包软件建立的https握手</strong>。</p>
+<p>抓包软件的主要目的是捕获、分析和调试网络流量。其工作步骤如下：</p>
+<ol>
+<li><strong>客户端通过代理发送请求</strong>：<ul>
+<li>抓包软件配置为代理，客户端配置通过此代理发送所有网络请求。</li>
+<li>抓包软件生成一个自签名证书，客户端将其安装为受信任的根证书。</li>
+</ul>
+</li>
+<li><strong>代理解析并再发送请求</strong>：<ul>
+<li>客户端的请求首先由抓包软件接收。对于HTTPS请求，抓包软件会使用自签名证书解密这些请求。</li>
+<li>抓包软件记录和分析解密后的请求内容，然后重新加密并发送到目标服务器。</li>
+</ul>
+</li>
+<li><strong>服务器响应经过代理返回客户端</strong>：<ul>
+<li>目标服务器返回响应，抓包软件解密并记录这些响应数据。</li>
+<li>抓包软件再重新加密这些数据并发送回客户端。</li>
+</ul>
+</li>
+</ol>
+<p>VPN与抓包软件的原理类似，都是通过一层中间人，将客户端的请求实际上代理到中间人层发起请求。</p>
+<p>不同的是由于抓包软件使客户端安装的自签名证书，客户端在证书校验时遇到抓包软件自签名证书签署的伪造服务器证书会校验通过，使客户端的请求都能在中间人层解密后查看和修改，之后抓包再转发。</p>
+<p>而VPN则是通过加密隧道（加密整个传输链路）：使用协议如IPsec、OpenVPN、L2TP等），在原本就由ssl/tls加密的数据上再加密一层，之后无法感知传输内容原原本本的转发。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-19T09:20:14.000Z" title="11/19/2021, 5:20:14 PM">2021-11-19</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-07-08T09:36:08.977Z" title="7/8/2024, 5:36:08 PM">2024-07-08</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 8572 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/19/HttpProtocol/">HttpProtocol</a></h1><div class="content"><h1 id="Http-缓存"><a href="#Http-缓存" class="headerlink" title="Http 缓存"></a>Http 缓存</h1><p>在请求一个静态文件的时候（图片，css，js）等，这些文件的特点是文件不经常变化，将这些不经常变化的文件存储起来，对客户端来说是一个优化用户浏览体验的方法。那么这个就是客户端缓存的意义了。</p>
+<p>简述：</p>
+<ul>
+<li><p>强制缓存是根据上次响应header中的Cache-Control:Max-age<del>或是Expries</del>，<strong>客户端直接判断缓存</strong>是否能用该资源缓存；</p>
+</li>
+<li><p>协商缓存需要<strong>客户端</strong>用记录下来的上次响应header中的ETag或是Last-Modified，通过与向服务器的请求request的header中赋值If-None-Match或If-Modified-Since，由<strong>服务器判断资源是否更新</strong>，结果由code和是否存在body明确是否命中缓存；</p>
+</li>
+</ul>
+<p>同时出现的优先级排序： 强制缓存 &gt; 协商缓存；ETag &amp; If-None-Match &gt; Last-Modified &amp; If-Modified-Since <del>;Cache-Control &gt; Expries；</del></p></div><a class="article-more button is-small is-size-7" href="/2021/11/19/HttpProtocol/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T12:20:27.000Z" title="11/11/2021, 8:20:27 PM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-04-24T09:35:45.501Z" title="4/24/2024, 5:35:45 PM">2024-04-24</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">an hour read (About 10996 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Tcp/">tcp</a></h1><div class="content"><p>简述：</p>
+<p>Tcp是</p>
+<p>面向链接的<br>面向字节流的<br>可靠的（几个点）</p>
+<p>保证可靠的手段：</p>
+<ul>
+<li><p>数据分块——握手时协商确定MSS，大于MSS的tcp数据包分段（也就是拆包）；序列号；校验和；<u>确认ack包</u>；</p>
+</li>
+<li><p>超时重传——发送方使用一个保守估计的时间作为收到数据包的确认的超时上限RTO。如果超过这个上限仍未收到确认包，发送方将重传这个数据包。每当发送方收到确认包后，会重置这个重传定时器。</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减为当前cwnd一半，执行慢启动每轮往返拥塞倍增</p>
+</li>
+<li><p>滑动窗口实现的流量控制；接收方在ack包中设置rwnd控制发送方发送速度。</p>
+</li>
+<li><p>拥塞控制算法——小于阈值之前从1开始每轮往返拥塞窗口cwnd倍增（慢启动），拥塞窗口大于阈值后步长为一的递增（拥塞避免）。接收方收到失序报文段后立即发出<u>重复确认ack包</u>，发送方连续三次重复确认则直接发送缺乏ack的丢包（快速重传），同时把阈值减为cwnd/2并调整拥塞窗口为新阈值而后执行拥塞避免算法（快速恢复）；</p>
+</li>
+</ul>
+<p>Ps:</p>
+<p>超时重传会触发拥塞控制之重置拥塞窗口为1个MSS，阈值减为当前cwnd一半，执行慢启动每轮往返拥塞倍增；</p>
+<p>三次重复确认会执行快速重传快速恢复，阈值减为当前cwnd一半，拥塞窗口为新阈值值，执行拥塞避免，每轮往返递增；</p></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Tcp/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-11-11T02:54:51.000Z" title="11/11/2021, 10:54:51 AM">2021-11-11</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.403Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Network/">Network</a></span><span class="level-item">12 minutes read (About 1813 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/11/11/Socket/">Socket</a></h1><div class="content"><h1 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h1><h2 id="1-什么是Socket"><a href="#1-什么是Socket" class="headerlink" title="1 什么是Socket"></a>1 什么是Socket</h2><ul>
+<li><p>网络上的两个程序通过一个双向的通讯连接实现数据的交换，这个双向链路的一端称为一个Socket。Socket通常用来实现客户方和服务方的连接。Socket是TCP/IP协议的一个十分流行的编程界面，一个Socket由一个IP地址和一个端口号唯一确定。</p>
+</li>
+<li><p>但是，Socket所支持的协议种类也不光TCP/IP、UDP，因此两者之间是没有必然联系的。在Java环境下，Socket编程主要是指基于TCP/IP协议的网络编程。</p>
+</li>
+<li><p>socket连接就是所谓的长连接，客户端和服务器需要互相连接，理论上客户端和服务器端一旦建立起连接将不会主动断掉的，但是有时候网络波动还是有可能的</p>
+</li>
+<li><p>Socket偏向于底层。一般很少直接使用Socket来编程，框架底层使用Socket比较多，</p></li></ul></div><a class="article-more button is-small is-size-7" href="/2021/11/11/Socket/#more">Read more</a></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>SystemStartProcess - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="简述： 开机后系统将Rom文件加载进Ram内存中，loader检查Ram，kernel启动Swapper进程和kthreadd进程（创建内核守护进程）。 NativeFramework中init.cpp运行后启动init进程，init进程解析init.rc文件后，孵化如installd、logd、adbd等用户守护进程、启动servicemanager、surfaceflinger、bootan"><meta property="og:type" content="blog"><meta property="og:title" content="SystemStartProcess"><meta property="og:url" content="http://example.com/2021/06/30/SystemStartProcess/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="简述： 开机后系统将Rom文件加载进Ram内存中，loader检查Ram，kernel启动Swapper进程和kthreadd进程（创建内核守护进程）。 NativeFramework中init.cpp运行后启动init进程，init进程解析init.rc文件后，孵化如installd、logd、adbd等用户守护进程、启动servicemanager、surfaceflinger、bootan"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2021/06/30/SystemStartProcess/image-20210730142407367.png"><meta property="og:image" content="http://example.com/2021/06/30/SystemStartProcess/systemStart-16276379809581.png"><meta property="og:image" content="http://example.com/2021/06/30/SystemStartProcess/092aa5a8a65e4ffa99223f0626b1296ftplv-k3u1fbpfcp-watermark.awebp"><meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0fb2d5546d09457b8510e6ad725ad18e~tplv-k3u1fbpfcp-watermark.awebp"><meta property="og:image" content="http://gityuan.com/images/boot/zygote/zygote_start.jpg"><meta property="og:image" content="http://example.com/2021/06/30/SystemStartProcess/system_server_boot_process-20230313170656976.jpg"><meta property="og:image" content="http://example.com/2021/06/30/SystemStartProcess/640"><meta property="og:image" content="http://example.com/2021/06/30/SystemStartProcess/640-1850222.png"><meta property="og:image" content="http://example.com/2021/06/30/SystemStartProcess/640-20231206172015185.png"><meta property="article:published_time" content="2021-06-30T08:45:09.000Z"><meta property="article:modified_time" content="2024-03-25T07:35:03.405Z"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2021/06/30/SystemStartProcess/image-20210730142407367.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2021/06/30/SystemStartProcess/"},"headline":"SystemStartProcess","image":["http://example.com/2021/06/30/SystemStartProcess/image-20210730142407367.png","http://example.com/2021/06/30/SystemStartProcess/systemStart-16276379809581.png","http://gityuan.com/images/boot/zygote/zygote_start.jpg","http://example.com/2021/06/30/SystemStartProcess/system_server_boot_process-20230313170656976.jpg","http://example.com/2021/06/30/SystemStartProcess/640-1850222.png","http://example.com/2021/06/30/SystemStartProcess/640-20231206172015185.png"],"datePublished":"2021-06-30T08:45:09.000Z","dateModified":"2024-03-25T07:35:03.405Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"简述： 开机后系统将Rom文件加载进Ram内存中，loader检查Ram，kernel启动Swapper进程和kthreadd进程（创建内核守护进程）。 NativeFramework中init.cpp运行后启动init进程，init进程解析init.rc文件后，孵化如installd、logd、adbd等用户守护进程、启动servicemanager、surfaceflinger、bootan"}</script><link rel="canonical" href="http://example.com/2021/06/30/SystemStartProcess/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-06-30T08:45:09.000Z" title="6/30/2021, 4:45:09 PM">2021-06-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.405Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">38 minutes read (About 5739 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">SystemStartProcess</h1><div class="content"><p><img src="/2021/06/30/SystemStartProcess/image-20210730142407367.png" alt="image-20210730142407367"></p>
+<p>简述：</p>
+<p>开机后系统将Rom文件加载进Ram内存中，loader检查Ram，kernel启动Swapper进程和kthreadd进程（创建<strong>内核守护进程</strong>）。</p>
+<p>NativeFramework中init.cpp运行后启动init进程，init进程解析init.rc文件后，孵化如installd、logd、adbd等<strong>用户守护进程</strong>、启动<strong>servicemanager、surfaceflinger、bootanim</strong>等服务、孵化出<strong>Zygote</strong>虚拟机进程(java进程)。</p>
+<p>JavaFramework中Zygote注册<strong>ZygoteSocket</strong>、<strong>加载虚拟机、预加载通用类、资源</strong>；之后孵化<strong>system_server</strong>进程，启动如<strong>AMS</strong>(startService可监听<strong>RootPhase</strong>)、<strong>WMS</strong>、<strong>PKMS</strong>、PMS等服务。</p>
+<p>App：由Zygote孵化的第一个App——<strong>Launcher</strong>(桌面)，用户点击Launcher上的app图片，通过<strong>JNI</strong>调用AMS从<strong>Zygote</strong>进程中fork出新的App。</p>
+<span id="more"></span>
+
+<p>ps:ServiceManager.addService()启动WMS、PKMS、IMS等服务，SystemServiceManager.startService()启动AMS、PMS</p>
+<h2 id="系统启动流程："><a href="#系统启动流程：" class="headerlink" title="系统启动流程："></a><strong>系统启动流程</strong>：</h2><p>BootRom-&gt;<strong>BootLoader</strong>-&gt;Linux Kernel-&gt;<strong>Init</strong>-&gt;Zygote-&gt;<strong>SystemServer</strong>-&gt;<strong>Launcher(UI)</strong></p>
+<p><strong>BootLoader层</strong>：主要包括Boot Rom和Boot Loader</p>
+<p><strong>Kernel层：</strong>主要是Android内核层</p>
+<p><strong>Native层：</strong>主要是包括init进程以及其fork出    来的用户空间的守护进程、HAL层、开机动画等</p>
+<p><strong>JAVA Framework层：</strong>主要是AMS、WMS、PMS等Service的初始化</p>
+<p><strong>Application层：</strong>主要指SystemUI、Launcher的启动</p>
+<hr>
+<p>电源键按下</p>
+<p>-&gt; <strong>Loader &amp; Kernel</strong></p>
+<p>BootLoader 加载 rom 到 ram</p>
+<p>linux内核进程 - 创建swapper(pid=0) ;内核守护进程kthreadd(pid=2) 与 各类驱动如binder driver</p>
+<p>-&gt; <strong>native framework</strong></p>
+<p><strong>init(pid=1)进程， 解析并运行所有的init.rc相关文件，孵化出installd、adbd等用户守护进程；启动zygote、servicemanager和surfaceflinger服务进程；孵化Zygote进程(java)</strong></p>
+<ul>
+<li><p>init进程会孵化出ueventd、logd、healthd、installd、adbd、lmkd等用户守护进程；</p>
+</li>
+<li><p>init进程还启动<strong>servicemanager</strong>、<strong>surfaceflinger</strong>、bootanim(开机动画)等重要服务进程</p>
+</li>
+<li><p>init进程孵化出<strong>Zygote</strong>进程，Zygote进程是Android系统的第一个Java进程(即虚拟机进程)</p>
+</li>
+<li><p>(Native FrameWork层)Media Server进程，是由init进程fork而来，负责启动和管理整个C++ framework，包含AudioFlinger，Camera Service等服务。</p>
+</li>
+</ul>
+<p>-&gt; <strong>java framework - Zygote</strong></p>
+<p><strong>Zygote （创建虚拟机AndroidRunTime/VM + 预加载类和资源 ，同时所有app进程，包括”第一个app：桌面/Launch”，由zygote fork出，继承zygote拥有的一切）</strong></p>
+<ul>
+<li>Zygote进程，是由init进程通过解析init.rc文件后fork生成的，Zygote进程主要包含：<ul>
+<li>加载ZygoteInit类，注册Zygote Socket服务端套接字</li>
+<li>加载虚拟机 Dalivk/ART</li>
+<li>提前加载类preloadClasses</li>
+<li>提前加载资源preloadResouces</li>
+</ul>
+</li>
+</ul>
+<p>-&gt; <strong>java framework - system_server</strong></p>
+<p><strong>system_server (因从zygote fork而来，故具有AndroidRunTime/VM 与预加载的类与资源 <em>copy on write机制</em>  ，由此开始启动线程承载ActivityManager，WindowManager，PackageManager，PowerManager等服务。管理所有app)</strong></p>
+<ul>
+<li>System Server进程，是由Zygote进程fork而来，<code>System Server是Zygote孵化的第一个进程</code>，System Server负责启动和管理整个Java framework，包含ActivityManager，WindowManager，PackageManager，PowerManager等服务（通过context.getSystemService(String)可获得）。</li>
+</ul>
+<p><img src="/2021/06/30/SystemStartProcess/systemStart-16276379809581.png" alt="systemStart"></p>
+<hr>
+<hr>
+<h2 id="附录-init启动过程"><a href="#附录-init启动过程" class="headerlink" title="附录 init启动过程"></a>附录 init启动过程</h2><p><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/system/core/+/android-4.2.2_r1.2/rootdir/init.rc">init.cpp进程解析的init.rc文件</a></p>
+<p>init进程是Linux系统中用户空间的第一个进程，进程号固定为1。Kernel启动后，在用户空间启动init进程，并调用init中的main()方法执行init进程的职责。对于init进程的功能分为4部分：</p>
+<ul>
+<li><p>创建一块共享的内存空间，用于属性服务器;</p>
+</li>
+<li><p>解析并运行所有的init.rc相关文件（孵化出ueventd、logd、healthd、installd、adbd、lmkd等用户守护进程；启动<strong>zygote、servicemanager和surfaceflinger</strong>服务进程）</p>
+<p>//注：7.0之前的版本，服务进程的启动都是直接写在init.rc中的，7.0之后init.rc被拆分成多个，比如bootanimation.rc,surfacefligner.rc等</p>
+</li>
+<li><p><strong>【epoll机制】</strong>进入死循环epoll_wait等待消息，直到系统属性变化事件(property_set改变属性值)，或者收到子进程的信号SIGCHLD，再或者keychord 键盘输入事件则唤醒</p>
+</li>
+</ul>
+<h2 id="附录-Zygote启动过程"><a href="#附录-Zygote启动过程" class="headerlink" title="附录 Zygote启动过程"></a>附录 Zygote启动过程</h2><p>Zygote是由<a target="_blank" rel="noopener" href="http://gityuan.com/2016/02/05/android-init/">init进程</a>通过解析init.zygote.rc文件而创建的，zygote所对应的可执行程序app_process，所对应的源文件是App_main.cpp，进程名为zygote。</p>
+<p><strong><code>Zygote进程</code></strong> ， 它由 <strong><code>init进程</code></strong> 启动，启动时会创建一个Davlik虚拟机实例，并把Java运行时库加载到进程中，并注册一些Android核心类的JNI到前面创建的Dalvik虚拟机实例中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">service zygote &#x2F;system&#x2F;bin&#x2F;app_process -Xzygote &#x2F;system&#x2F;bin --zygote --start-system-server</span><br><span class="line">    class main</span><br><span class="line">    socket zygote stream 660 root system</span><br><span class="line">    onrestart write &#x2F;sys&#x2F;android_power&#x2F;request_state wake</span><br><span class="line">    onrestart write &#x2F;sys&#x2F;power&#x2F;state on</span><br><span class="line">    onrestart restart media</span><br><span class="line">    onrestart restart netd</span><br><span class="line">    </span><br><span class="line">&#x2F;&#x2F;service → ATL语言语法，启动一个服务进程；</span><br><span class="line">zygote → 启动的程序名称，这指zygote进程；</span><br><span class="line">&#x2F;system&#x2F;bin&#x2F;app_process → 可执行文件路径( app_main.cpp )；</span><br><span class="line">-Xzygote &#x2F;system&#x2F;bin → 指定参数传到app_main.cpp中；</span><br><span class="line">--zygote --start-system-server → 传的具体参数值；</span><br><span class="line"></span><br><span class="line">简单点说就是：启动了Zygote进程，传递的参数可在 &#x2F;frameworks&#x2F;base&#x2F;cmds&#x2F;app_process&#x2F;app_main.cpp 中找到.</span><br></pre></td></tr></table></figure>
+
+<p>//app_main.cpp:</p>
+<p><img src="/2021/06/30/SystemStartProcess/092aa5a8a65e4ffa99223f0626b1296ftplv-k3u1fbpfcp-watermark.awebp" alt="img"></p>
+<p>对传进来的参数做匹配，zygote、startSystem标志位设置为true，接着定位下哪里用到了zygote这个标记：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0fb2d5546d09457b8510e6ad725ad18e~tplv-k3u1fbpfcp-watermark.awebp" alt="img"></p>
+<p>跟下：**<code>runtime.start()</code>** 定位到 frameworks/base/core/jni/**<code>AndroidRuntime.cpp</code>**，关键代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ① 初始化jni接口</span></span><br><span class="line">JniInvocation jni_invocation;</span><br><span class="line">jni_invocation.<span class="built_in">Init</span>(<span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ② 创建VM虚拟机</span></span><br><span class="line">JNIEnv* env;</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">startVm</span>(&amp;mJavaVM, &amp;env) != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">onVmCreated</span>(env);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ③ 注册JNI方法</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">startReg</span>(env) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">ALOGE</span>(<span class="string">&quot;Unable to register all android natives\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ④ 调用className类的static void main(String args[]) 方法</span></span><br><span class="line">slashClassName = <span class="built_in">toSlashClassName</span>(className);</span><br><span class="line">jclass startClass = env-&gt;<span class="built_in">FindClass</span>(slashClassName);</span><br><span class="line"><span class="comment">// 找到main函数</span></span><br><span class="line">jmethodID startMeth = env-&gt;<span class="built_in">GetStaticMethodID</span>(startClass, <span class="string">&quot;main&quot;</span>,</span><br><span class="line">    <span class="string">&quot;([Ljava/lang/String;)V&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (startMeth == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">ALOGE</span>(<span class="string">&quot;JavaVM unable to find main() in &#x27;%s&#x27;\n&quot;</span>, className);</span><br><span class="line">    <span class="comment">/* keep going */</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 通过 JNI 调用 main 函数，从 C++ 到 Java</span></span><br><span class="line">    env-&gt;<span class="built_in">CallStaticVoidMethod</span>(startClass, startMeth, strArray);</span><br><span class="line">    <span class="keyword">if</span> (env-&gt;<span class="built_in">ExceptionCheck</span>())</span><br><span class="line">        <span class="built_in">threadExitUncaughtException</span>(env);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以这里创建了一个虚拟机，注册JNI方法，然后调用 <strong><code>com.android.internal.os.ZygoteInit</code></strong> 的 **<code>main()</code><strong>，跟下frameworks/base/core/java/com/android/internal/os/</strong><code>ZygoteInit.java</code>**：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String argv[])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// ① 注册一个name为zygote的socket，用于和其他进程通信</span></span><br><span class="line">        registerZygoteSocket(socketName);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ② 预加载所需资源到VM中，如class、resource、OpenGL、公用Library等；</span></span><br><span class="line">        <span class="comment">// 所有fork的子进程共享这份空间而无需重新加载，减少了应用程序的启动时间，</span></span><br><span class="line">        <span class="comment">// 但也增加了系统的启动时间，Android启动最耗时的部分之一。</span></span><br><span class="line">        preload();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ③ 初始化gc，只是通知VM进行垃圾回收，具体回收时间、怎么回收，由VM内部算法决定。</span></span><br><span class="line">        <span class="comment">// gc()需在fork前完成，这样将来复制的子进程才能有尽可能少的垃圾内存没释放；</span></span><br><span class="line">        gcAndFinalize();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ④ 启动system_server，即fork一个Zygote子进程</span></span><br><span class="line">        <span class="keyword">if</span> (startSystemServer) &#123;</span><br><span class="line">            startSystemServer(abiList, socketName);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ⑤ 进入循环模式，获取客户端连接并处理</span></span><br><span class="line">        runSelectLoop(abiList);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ⑥ 关闭和清理zygote socket</span></span><br><span class="line">        closeServerSocket();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (MethodAndArgsCaller caller) &#123;</span><br><span class="line">        caller.run();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (RuntimeException ex) &#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;Zygote died with exception&quot;</span>, ex);</span><br><span class="line">        closeServerSocket();</span><br><span class="line">        <span class="keyword">throw</span> ex;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟下 **<code>startSystemServer()</code>**：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">startSystemServer</span><span class="params">(String abiList, String socketName)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> MethodAndArgsCaller, RuntimeException </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pid;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// fork出system_server进程，返回pid，此处pid为0</span></span><br><span class="line">        pid = Zygote.forkSystemServer(</span><br><span class="line">            parsedArgs.uid, parsedArgs.gid,</span><br><span class="line">            parsedArgs.gids,</span><br><span class="line">            parsedArgs.debugFlags,</span><br><span class="line">            <span class="keyword">null</span>,</span><br><span class="line">            parsedArgs.permittedCapabilities,</span><br><span class="line">            parsedArgs.effectiveCapabilities);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalArgumentException ex) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(ex);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* 进入子进程 */</span></span><br><span class="line">        <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// Android 5.0上有两个Zygote进程：zygote 和 zygote64</span></span><br><span class="line">            <span class="comment">// 对于有两个zygote进程的情况，需等待第二个zygote创建完成；</span></span><br><span class="line">            <span class="keyword">if</span> (hasSecondZygote(abiList)) &#123;</span><br><span class="line">                waitForSecondaryZygote(socketName);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 完成system_server进程的剩余工作</span></span><br><span class="line">            handleSystemServerProcess(parsedArgs);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Tips</strong>：fork()方法被调用一次，返回两次，区别是：子进程的返回值是0，父进程的返回值是子进程的进程id，可以保证子进程的进程id不可能为0。</p>
+</blockquote>
+<p><img src="http://gityuan.com/images/boot/zygote/zygote_start.jpg" alt="zygote_start"></p>
+<ol>
+<li><p>解析init.zygote.rc中的参数，创建AppRuntime并调用AppRuntime.start()方法；</p>
+</li>
+<li><p>调用AndroidRuntime的<strong>startVM()方法创建虚拟机</strong>，再调用startReg()注册JNI函数；</p>
+</li>
+<li><p>通过JNI方式调用ZygoteInit.main()，第一次进入Java世界；</p>
+</li>
+<li><p><strong>registerZygoteSocket()建立socket通道</strong>，zygote作为通信的服务端，用于响应客户端请求；</p>
+</li>
+<li><p><strong>preload()预加载</strong>通用类、drawable和color资源、openGL以及共享库以及WebView，用于提高app启动效率；</p>
+</li>
+<li><p>zygote完毕大部分工作，接下来再通过**startSystemServer()**，fork得力帮手system_server进程，也是上层JavaFramework的运行载体。</p>
+<p><strong>所有APP进程都是由Zygote进程孵化(fork)</strong> 而来的，fork时不仅仅会获得Zygote进程中的Dalvik虚拟机实例拷贝，还会与Zygote一起 **<code>共享Java运行时库</code>**。</p>
+</li>
+<li><p>zygote功成身退，调用<strong>runSelectLoop()，</strong>随时待命，当接收到请求创建新进程请求时立即唤醒并执行相应工作。</p>
+</li>
+</ol>
+<h2 id="附录-system-server启动的服务"><a href="#附录-system-server启动的服务" class="headerlink" title="附录 system_server启动的服务"></a>附录 system_server启动的服务</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">       startBootstrapServices(); <span class="comment">// 启动引导服务:AMS、PKMS</span></span><br><span class="line">       startCoreServices();      <span class="comment">// 启动核心服务</span></span><br><span class="line">       startOtherServices();     <span class="comment">// 启动其他服务:WMS</span></span><br><span class="line">   &#125; <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">       Slog.e(<span class="string">&quot;System&quot;</span>, <span class="string">&quot;************ Failure starting system services&quot;</span>, ex);</span><br><span class="line">       <span class="keyword">throw</span> ex;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>引导服务(7个)：<strong>ActivityManagerService</strong>、PowerManagerService、LightsService、DisplayManagerService、<strong>PackageManagerService</strong>、UserManagerService、SensorService；</li>
+<li>核心服务(3个)：BatteryService、UsageStatsService、WebViewUpdateService；</li>
+<li>其他服务(70个+)：<strong>WindowManagerService、</strong>AlarmManagerService、VibratorService等。</li>
+</ol>
+<p>合计总大约80个系统服务：</p>
+<table>
+<thead>
+<tr>
+<th><code>ActivityManagerService</code></th>
+<th><code>PackageManagerService</code></th>
+<th><code>WindowManagerService</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>PowerManagerService</code></td>
+<td><code>BatteryService</code></td>
+<td><code>BatteryStatsService</code></td>
+</tr>
+<tr>
+<td><code>DreamManagerService</code></td>
+<td><code>DropBoxManagerService</code></td>
+<td><code>SamplingProfilerService</code></td>
+</tr>
+<tr>
+<td><code>UsageStatsService</code></td>
+<td><code>DiskStatsService</code></td>
+<td><code>DeviceStorageMonitorService</code></td>
+</tr>
+<tr>
+<td>SchedulingPolicyService</td>
+<td><code>AlarmManagerService</code></td>
+<td>DeviceIdleController</td>
+</tr>
+<tr>
+<td>ThermalObserver</td>
+<td>JobSchedulerService</td>
+<td><code>AccessibilityManagerService</code></td>
+</tr>
+<tr>
+<td>DisplayManagerService</td>
+<td>LightsService</td>
+<td><code>GraphicsStatsService</code></td>
+</tr>
+<tr>
+<td>StatusBarManagerService</td>
+<td>NotificationManagerService</td>
+<td>WallpaperManagerService</td>
+</tr>
+<tr>
+<td>UiModeManagerService</td>
+<td>AppWidgetService</td>
+<td>LauncherAppsService</td>
+</tr>
+<tr>
+<td>TextServicesManagerService</td>
+<td>ContentService</td>
+<td>LockSettingsService</td>
+</tr>
+<tr>
+<td>InputMethodManagerService</td>
+<td>InputManagerService</td>
+<td><code>MountService</code></td>
+</tr>
+<tr>
+<td>FingerprintService</td>
+<td>TvInputManagerService</td>
+<td>DockObserver</td>
+</tr>
+<tr>
+<td>NetworkManagementService</td>
+<td>NetworkScoreService</td>
+<td><code>NetworkStatsService</code></td>
+</tr>
+<tr>
+<td>NetworkPolicyManagerService</td>
+<td>ConnectivityService</td>
+<td>BluetoothService</td>
+</tr>
+<tr>
+<td>WifiP2pService</td>
+<td>WifiService</td>
+<td>WifiScanningService</td>
+</tr>
+<tr>
+<td>AudioService</td>
+<td>MediaRouterService</td>
+<td>VoiceInteractionManagerService</td>
+</tr>
+<tr>
+<td>MediaProjectionManagerService</td>
+<td>MediaSessionService</td>
+<td></td>
+</tr>
+<tr>
+<td>DevicePolicyManagerService</td>
+<td>PrintManagerService</td>
+<td><code>BackupManagerService</code></td>
+</tr>
+<tr>
+<td><code>UserManagerService</code></td>
+<td>AccountManagerService</td>
+<td><code>TrustManagerService</code></td>
+</tr>
+<tr>
+<td><code>SensorService</code></td>
+<td>LocationManagerService</td>
+<td>VibratorService</td>
+</tr>
+<tr>
+<td>CountryDetectorService</td>
+<td>GestureLauncherService</td>
+<td>PersistentDataBlockService</td>
+</tr>
+<tr>
+<td>EthernetService</td>
+<td>WebViewUpdateService</td>
+<td>ClipboardService</td>
+</tr>
+<tr>
+<td>TelephonyRegistry</td>
+<td>TelecomLoaderService</td>
+<td>NsdService</td>
+</tr>
+<tr>
+<td>UpdateLockService</td>
+<td>SerialService</td>
+<td>SearchManagerService</td>
+</tr>
+<tr>
+<td>CommonTimeManagementService</td>
+<td>AssetAtlasService</td>
+<td>ConsumerIrService</td>
+</tr>
+<tr>
+<td>MidiServiceCameraService</td>
+<td>TwilightService</td>
+<td>RestrictionsManagerService</td>
+</tr>
+<tr>
+<td>MmsServiceBroker</td>
+<td>RttService</td>
+<td>UsbService</td>
+</tr>
+</tbody></table>
+<p>system_server进程，从源码角度划分为引导服务、核心服务、其他服务3类。 以下这些系统服务的注册过程, 见<a target="_blank" rel="noopener" href="http://gityuan.com/2016/10/01/system_service_common/">Android系统服务的注册方式</a><br>方式1. ServiceManager.addService():</p>
+<ul>
+<li>功能：向ServiceManager注册该服务.</li>
+<li>特点：服务往往直接或间接继承于Binder服务；</li>
+<li>举例：input, window, package；</li>
+</ul>
+<p>方式2. SystemServiceManager.startService:</p>
+<ul>
+<li>功能：<ul>
+<li>创建服务对象；</li>
+<li>执行该服务的onStart()方法；该方法会执行上面的SM.addService()；</li>
+<li>根据启动到不同的阶段会回调onBootPhase()方法；</li>
+<li>另外，还有多用户模式下用户状态的改变也会有回调方法；例如onStartUser();</li>
+</ul>
+</li>
+<li>特点：服务往往自身或内部类继承于SystemService；</li>
+<li>举例：power, activity；</li>
+</ul>
+<p>两种方式真正注册服务的过程都会调用到ServiceManager.addService()方法. 对于方式2多了一个服务对象创建以及 根据不同启动阶段采用不同的动作的过程。可以理解为方式2比方式1的功能更丰富。</p>
+<h2 id="附录-BootPhase"><a href="#附录-BootPhase" class="headerlink" title="附录 BootPhase"></a>附录 BootPhase</h2><p>系统开机启动过程, 当执行到system_server进程时, 将启动过程划分了几个阶段, 定义在SystemService.java文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static final int PHASE_WAIT_FOR_DEFAULT_DISPLAY &#x3D; 100; </span><br><span class="line">public static final int PHASE_LOCK_SETTINGS_READY &#x3D; 480;</span><br><span class="line">public static final int PHASE_SYSTEM_SERVICES_READY &#x3D; 500;</span><br><span class="line">public static final int PHASE_ACTIVITY_MANAGER_READY &#x3D; 550;</span><br><span class="line">public static final int PHASE_THIRD_PARTY_APPS_CAN_START &#x3D; 600;</span><br><span class="line">public static final int PHASE_BOOT_COMPLETED &#x3D; 1000;</span><br></pre></td></tr></table></figure>
+
+<p>这些阶段跟系统服务大致的顺序图,如下:</p>
+<p><img src="/2021/06/30/SystemStartProcess/system_server_boot_process-20230313170656976.jpg" alt="system_server服务启动流程"></p>
+<p>PHASE_BOOT_COMPLETED=1000，该阶段是发生在Boot完成和home应用启动完毕, 对于系统服务更倾向于监听该阶段，而非监听广播ACTION_BOOT_COMPLETED</p>
+<h2 id="附录-Android系统架构"><a href="#附录-Android系统架构" class="headerlink" title="附录 Android系统架构"></a>附录 Android系统架构</h2><p><img src="/2021/06/30/SystemStartProcess/640" alt="图片"></p>
+<p><strong>第一步：</strong>手机开机后，引导芯片启动，<strong>引导芯片开始从固化在ROM里的预设代码执行，加载引导程序到到RAM</strong>，bootloader检查RAM，<strong>初始化硬件参数等功能</strong>；</p>
+<p><strong>第二步：</strong>硬件等参数初始化完成后，进入到Kernel层，<strong>Kernel层主要加载一些硬件设备驱动，初始化进程管理等操作</strong>。在Kernel中首先启动swapper进程（pid=0），用于初始化进程管理、内管管理、加载Driver等操作，再启动kthread进程(pid=2),这些linux系统的内核进程，kthread是所有内核进程的鼻祖；</p>
+<p><strong>第三步：</strong>Kernel层加载完毕后，<strong>硬件设备驱动与HAL层进行交互。初始化进程管理等操作会启动INIT进程 ，这些在Native层中</strong>；</p>
+<p><strong>第四步：</strong>init进程(pid=1，init进程是所有进程的鼻祖，第一个启动)启动后，<strong>会启动adbd，logd等用户守护进程，并且会启动servicemanager(binder服务管家)等重要服务，同时孵化出zygote进程</strong>，这里属于C++ Framework，代码为C++程序；</p>
+<p><strong>第五步：zygote</strong> 进程是由 **init进程解析init.rc文件后fork生成，它会加载虚拟机，启动System Server(zygote孵化的第一个进程)**；System Server负责启动和管理整个Java Framework，包含ActivityManager，WindowManager，PackageManager，PowerManager等服务；</p>
+<p><strong>第六步：zygote同时会启动相关的APP进程，它启动的第一个APP进程为Launcher(UI)</strong> ，然后启动Email，SMS等进程，所有的APP进程都有zygote fork生成。</p>
+<h2 id="关键概念厘清"><a href="#关键概念厘清" class="headerlink" title="关键概念厘清"></a>关键概念厘清</h2><p>swapper进程是唯一一个不由其他进程fork/clone出来的进程，它是直接由内核创建，pid为0；</p>
+<p>swapper进程fork出两个关键进程：</p>
+<ul>
+<li><p>Init进程(pid=1)，一切<strong>用户空间</strong>进程鼻祖</p>
+<p><img src="/2021/06/30/SystemStartProcess/640-1850222.png" alt="img"></p>
+</li>
+<li><p>kthreadd进程(pid=2)，一切<strong>内核空间</strong>进程鼻祖</p>
+</li>
+</ul>
+<h3 id="子进程的创建"><a href="#子进程的创建" class="headerlink" title="子进程的创建"></a>子进程的创建</h3><p>Init进程采用被动创建的方式来创建子进程：哪些子进程需要创建，那就使用脚本语言.rc来配置相应的信息，Init进程会在LoadBootScripts方法中把所有的配置好信息都收集起来，当init进程启动后会根据配置信息来创建子进程。</p>
+<p>xxx.rc</p>
+<ol>
+<li>配置子进程基础信息：这一步主要用来配置子进程的基础信息，比如子进程的名字、可执行文件路径等，init进程就可以立马明白是哪个子进程被创建</li>
+<li>配置触发条件：主要配置子进程何时或者满足什么条件的情况下被创建，因为不同子进程的创建条件都是不一样的，因此init进程可以从这一步得知是在“什么时候”或者“什么条件满足”的时候来创建子进程</li>
+<li>配置前置命令：主要配置子进程在创建之前需要执行一些提前操作或者提前执行的命令，比如有的子进程在创建之前需要提前创建一些目录等操作</li>
+<li>配置创建子进程命令：这一步非常的简单，init进程遇到这个命令，就开始执行创建子进程的操作</li>
+</ol>
+<p>用init脚本语言来配置创建子进程的步骤如下：</p>
+<ol>
+<li>首先子进程在以.rc的脚本文件中，使用service关键字来配置子进程相关的信息</li>
+<li>其次 在init.rc文件中使用import关键字引入脚本文件，使用on关键字来配置子进程的触发条件</li>
+<li>触发条件配置完毕后，如若子进程在创建之前需要配置一些前置操作或命令，则基于触发条件下配置这些信息</li>
+<li>最后使用start关键字来配置创建子进程的命令。</li>
+</ol>
+<h3 id="Init进程的运行"><a href="#Init进程的运行" class="headerlink" title="Init进程的运行"></a>Init进程的运行</h3><p><strong>Init进程进入循环工作模式</strong></p>
+<p><img src="/2021/06/30/SystemStartProcess/640-20231206172015185.png" alt="图片"></p>
+<ol>
+<li><p>是否有关机或重启的消息，有的话执行关机或重启</p>
+</li>
+<li><p>调用ActionManager的ExecuteOneCommand方法，ActionManager会检查是否有触发器，有的话触发对应的Action执行，有些Action会包含创建子进程的start命令，根据start命令后面的servicename，开始创建对应的子进程 </p>
+</li>
+<li><p>若有control类型的message，则把它交给对应的Service</p>
+</li>
+</ol>
+<h3 id="子进程的销毁"><a href="#子进程的销毁" class="headerlink" title="子进程的销毁"></a>子进程的销毁</h3><p>上面谈到了子进程”生“的问题，那现在咱们聊聊子进程”死“的问题。作为Android用户空间所有进程的鼻祖，从生物学的角度来看，我肯定比我的孩子、孙子们要先死掉，但是在Android系统却恰恰相反，我的生命周期尽然是最长的，我的很多子子孙孙都死了很多次了，我还依然活着，因此我创建的子进程万一死掉的话，那它的善后事情需要我来处理（真是白发人送黑发人啊）。</p>
+<p>那有人就会问了，你是如何知道你创建的子进程死掉的，这是个好问题，那我就来讲给大家听。</p>
+<h4 id="监听子进程死掉"><a href="#监听子进程死掉" class="headerlink" title="监听子进程死掉"></a><strong>监听子进程死掉</strong></h4><p>监听子进程死掉非常的简单，主要是用到了Linux的以下知识点：signal机制。它的主要作用是实现进程之间的通信，signal机制是最“吝啬”的、但是是最简单的进程之间的通信方式。为啥要说它是最“吝啬”呢？主要原因是signal对进程之间传递的数据仅且只能只能传递一个int类型的信号，但是像socket等通信方案对传递的数据并没有这样的限制，你说它“吝啬”不。</p>
+<p>简单主要体现在：若对哪个信号有兴趣，可以使用sigaction函数注册这个信号，当这个信号发生时，注册的函数就会被调用。这里一直在提信号，监听子进程状态有一个信号是SIGCHLD，父进程可以注册这个SIGCHLD来监听子进程的状态，状态主要包括死掉（死掉包含正常死掉或者异常死掉比如crash）、停止、继续等。</p>
+<p><strong>epoll机制</strong></p>
+<p>epoll是“多路复用“技术最好的实现方案，“多路复用”看到这种专业性的词是不是一头雾水啊，咱们举个例子：正常咱们进行阻塞类型的IO读操作（比如从一个socket中读取数据），是不是都会创建一个单独的线程来监听是否有数据到达，如果没有数据到达则线程进入阻塞状态，有的话则线程就开始读取数据。那假如有20个甚至更多的阻塞IO读操作，是不是需要创建对应个数的线程。</p>
+<p>这些线程如果大部分都没有可读数据的情况下是不是都处于阻塞状态，这难道不是大大得浪费吗？因此“多路复用”技术就出现了，它的设计理念是：启动一个线程，谁有需要监听IO是否有可读数据到达的操作都可以交给这个线程。这里的“多路”指的就是上面例子中创建的多个线程，“复用”指的就是指用一个线程来进行监听操作。</p>
+<p>epoll机制在Android中使用非常的广泛，比如Handler的MessageQueue在没有Message的情况下进入阻塞，以及input事件从systemserver进程传递到app进程，甚至vsyn信号从surfaceflinger传递到app进程都用到了epoll机制。</p>
+<p>好了，有了上面的知识，那我就来介绍下我监听子进程死掉的思路：</p>
+<ol>
+<li>首先我先使用sigaction函数来注册SIGCHLD信号，这样就可以监听到子进程的状态了</li>
+<li>其次使用signalfd函数为SIGCHLD信号生成一个fd（文件描述符）</li>
+<li>再次使用epoll来见监听上一步生成的fd是否有可读数据</li>
+<li>如监听到fd上有可读数据，则证明子进程的状态发生了变化，还需要使用waitpid函数来获取是哪个子进程死掉了</li>
+</ol>
+<p>如上4步就可以监听到子进程死掉了，下面是具体的代码，有兴趣的同学可以看下。</p>
+<p><strong>system/core/init/init.cpp</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">static void InstallSignalFdHandler(Epoll* epoll) &#123;</span><br><span class="line">    &#x2F;&#x2F;初始化sigaction，SIG_DFL：代表使用默认的信号处理行为。</span><br><span class="line">    const struct sigaction act &#123; .sa_handler &#x3D; SIG_DFL, .sa_flags &#x3D; SA_NOCLDSTOP &#125;;</span><br><span class="line">    &#x2F;&#x2F;注册SIGCHLD信号</span><br><span class="line">    sigaction(SIGCHLD, &amp;act, nullptr);</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;声明mask信号集</span><br><span class="line">    sigset_t mask;</span><br><span class="line">    &#x2F;&#x2F;初始化并清空一个信号集，使其不包含任何信号</span><br><span class="line">    sigemptyset(&amp;mask);</span><br><span class="line">    &#x2F;&#x2F;把SIGCHLD信号加入mask信号集中</span><br><span class="line">    sigaddset(&amp;mask, SIGCHLD);</span><br><span class="line"></span><br><span class="line">    省略代码......</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;SIG_BLOCK：代表将mask添加到当前的信号屏蔽集中</span><br><span class="line">    if (sigprocmask(SIG_BLOCK, &amp;mask, nullptr) &#x3D;&#x3D; -1) &#123;</span><br><span class="line">        PLOG(FATAL) &lt;&lt; &quot;failed to block signals&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; Register a handler to unblock signals in the child processes.</span><br><span class="line">    &#x2F;&#x2F;在子进程创建成功后，恢复SIGCHLD为非屏蔽</span><br><span class="line">    const int result &#x3D; pthread_atfork(nullptr, nullptr, &amp;UnblockSignals);</span><br><span class="line">    if (result !&#x3D; 0) &#123;</span><br><span class="line">        LOG(FATAL) &lt;&lt; &quot;Failed to register a fork handler: &quot; &lt;&lt; strerror(result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;调用signalfd函数为mask生成一个fd</span><br><span class="line">    signal_fd &#x3D; signalfd(-1, &amp;mask, SFD_CLOEXEC);</span><br><span class="line">    if (signal_fd &#x3D;&#x3D; -1) &#123;</span><br><span class="line">        PLOG(FATAL) &lt;&lt; &quot;failed to create signalfd&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    constexpr int flags &#x3D; EPOLLIN | EPOLLPRI;</span><br><span class="line">    &#x2F;&#x2F;使用epoll来监听signal_fd上的数据</span><br><span class="line">    if (auto result &#x3D; epoll-&gt;RegisterHandler(signal_fd, HandleSignalFd, flags); !result.ok()) &#123;</span><br><span class="line">        LOG(FATAL) &lt;&lt; result.error();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;如果fd上有数据就会调用这个方法</span><br><span class="line">static void HandleSignalFd() &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;读取到siginfo信息</span><br><span class="line">    signalfd_siginfo siginfo;</span><br><span class="line">    ssize_t bytes_read &#x3D; TEMP_FAILURE_RETRY(read(signal_fd, &amp;siginfo, sizeof(siginfo)));</span><br><span class="line">    if (bytes_read !&#x3D; sizeof(siginfo)) &#123;</span><br><span class="line">        PLOG(ERROR) &lt;&lt; &quot;Failed to read siginfo from signal_fd&quot;;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;判断当前的ssi_signo</span><br><span class="line">    switch (siginfo.ssi_signo) &#123;</span><br><span class="line">        case SIGCHLD:</span><br><span class="line">            &#x2F;&#x2F;只看SIGCHLD</span><br><span class="line">            ReapAnyOutstandingChildren();</span><br><span class="line">            break;</span><br><span class="line"></span><br><span class="line">        省略无关代码......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">system&#x2F;core&#x2F;init&#x2F;sigchld_handler.cpp</span><br><span class="line"></span><br><span class="line">void ReapAnyOutstandingChildren() &#123;</span><br><span class="line">    while (ReapOneProcess() !&#x3D; 0) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static pid_t ReapOneProcess() &#123;</span><br><span class="line">    siginfo_t siginfo &#x3D; &#123;&#125;;</span><br><span class="line">    &#x2F;&#x2F;调用waitpid方法来获取死掉的子进程的信息</span><br><span class="line">    if (TEMP_FAILURE_RETRY(waitid(P_ALL, 0, &amp;siginfo, WEXITED | WNOHANG | WNOWAIT)) !&#x3D; 0) &#123;</span><br><span class="line">        PLOG(ERROR) &lt;&lt; &quot;waitid failed&quot;;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    const pid_t pid &#x3D; siginfo.si_pid;</span><br><span class="line">    if (pid &#x3D;&#x3D; 0) &#123;</span><br><span class="line">        DCHECK_EQ(siginfo.si_signo, 0);</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    省略无关代码......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如上面监听到子进程死掉的时候会通过waitpid方法获取到子进程的pid，还记得在创建子进程的时候，子进程的配置信息都会放在Service类中，根据pid可以找到对应的Service，Service持有了创建子进程的时候持有的各种socket等资源，这些资源会被清除掉，并且会通知kernel层杀掉子进程，进而在kernel层清除掉子进程占据的各种资源。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>SystemStartProcess</p><p><a href="http://example.com/2021/06/30/SystemStartProcess/">http://example.com/2021/06/30/SystemStartProcess/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-06-30</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-03-25</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/07/29/Surface/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Surface</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/06/15/CpuArch/"><span class="level-item">CpuArch</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#系统启动流程："><span class="level-left"><span class="level-item">1</span><span class="level-item">系统启动流程：</span></span></a></li><li><a class="level is-mobile" href="#附录-init启动过程"><span class="level-left"><span class="level-item">2</span><span class="level-item">附录 init启动过程</span></span></a></li><li><a class="level is-mobile" href="#附录-Zygote启动过程"><span class="level-left"><span class="level-item">3</span><span class="level-item">附录 Zygote启动过程</span></span></a></li><li><a class="level is-mobile" href="#附录-system-server启动的服务"><span class="level-left"><span class="level-item">4</span><span class="level-item">附录 system_server启动的服务</span></span></a></li><li><a class="level is-mobile" href="#附录-BootPhase"><span class="level-left"><span class="level-item">5</span><span class="level-item">附录 BootPhase</span></span></a></li><li><a class="level is-mobile" href="#附录-Android系统架构"><span class="level-left"><span class="level-item">6</span><span class="level-item">附录 Android系统架构</span></span></a></li><li><a class="level is-mobile" href="#关键概念厘清"><span class="level-left"><span class="level-item">7</span><span class="level-item">关键概念厘清</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#子进程的创建"><span class="level-left"><span class="level-item">7.1</span><span class="level-item">子进程的创建</span></span></a></li><li><a class="level is-mobile" href="#Init进程的运行"><span class="level-left"><span class="level-item">7.2</span><span class="level-item">Init进程的运行</span></span></a></li><li><a class="level is-mobile" href="#子进程的销毁"><span class="level-left"><span class="level-item">7.3</span><span class="level-item">子进程的销毁</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#监听子进程死掉"><span class="level-left"><span class="level-item">7.3.1</span><span class="level-item">监听子进程死掉</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

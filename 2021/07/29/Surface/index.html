@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Surface - Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="SurfaceView: View 的子类，但不与宿主 Window 共享 Surface, 而是有自己独立的 Surface, 且可以在一个独立的线程中进行绘制，因此 SurfaceView 一般用来实现比较复杂的图像或动画&amp;#x2F;视频的显示。可以参考 Android双缓存与SurfaceView。由于其内容是绘制在一个独立的 Surface 上，因此无法用 scrollTo&amp;#x2F;By 等方法去移动操作"><meta property="og:type" content="blog"><meta property="og:title" content="Surface"><meta property="og:url" content="http://example.com/2021/07/29/Surface/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="SurfaceView: View 的子类，但不与宿主 Window 共享 Surface, 而是有自己独立的 Surface, 且可以在一个独立的线程中进行绘制，因此 SurfaceView 一般用来实现比较复杂的图像或动画&amp;#x2F;视频的显示。可以参考 Android双缓存与SurfaceView。由于其内容是绘制在一个独立的 Surface 上，因此无法用 scrollTo&amp;#x2F;By 等方法去移动操作"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2021/07/29/Surface/178bc0e274ca4b6c9fe052eb6b4357de~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp"><meta property="og:image" content="http://example.com/2021/07/29/Surface/55cb26adefcd435494c329752b9506c7~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp"><meta property="og:image" content="http://example.com/2021/07/29/Surface/SurfaceFlinger%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.jpg"><meta property="article:published_time" content="2021-07-29T09:45:07.000Z"><meta property="article:modified_time" content="2024-03-25T07:35:03.404Z"><meta property="article:author" content="White Crow"><meta property="article:tag" content="Graphic"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2021/07/29/Surface/178bc0e274ca4b6c9fe052eb6b4357de~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2021/07/29/Surface/"},"headline":"Surface","image":["http://example.com/2021/07/29/Surface/SurfaceFlinger%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.jpg"],"datePublished":"2021-07-29T09:45:07.000Z","dateModified":"2024-03-25T07:35:03.404Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"SurfaceView: View 的子类，但不与宿主 Window 共享 Surface, 而是有自己独立的 Surface, 且可以在一个独立的线程中进行绘制，因此 SurfaceView 一般用来实现比较复杂的图像或动画&#x2F;视频的显示。可以参考 Android双缓存与SurfaceView。由于其内容是绘制在一个独立的 Surface 上，因此无法用 scrollTo&#x2F;By 等方法去移动操作"}</script><link rel="canonical" href="http://example.com/2021/07/29/Surface/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-29T09:45:07.000Z" title="7/29/2021, 5:45:07 PM">2021-07-29</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.404Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">24 minutes read (About 3625 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Surface</h1><div class="content"><ul>
+<li>SurfaceView: View 的子类，但不与宿主 Window 共享 Surface, 而是有自己独立的 Surface, 且可以在一个独立的线程中进行绘制，因此 SurfaceView 一般用来实现比较复杂的图像或动画/视频的显示。可以参考 <a target="_blank" rel="noopener" href="https://juejin.cn/post/6897029276752625671">Android双缓存与SurfaceView</a>。由于其内容是绘制在一个独立的 Surface 上，因此无法用 scrollTo/By 等方法去移动操作 Canvas 里的内容，但是可对整个 View 进行平移，缩放，旋转等变换操作。</li>
+<li>GLSurfaceView: 基于 SurfaceView 再次进行扩展，在 SurfaceView 基础上封装了 EGL 环境管理以及 Render 线程，专门为 OpenGl 显示渲染使用。参考 <a target="_blank" rel="noopener" href="https://ljd1996.github.io/2019/08/19/Android-OpenGL-ES%E7%AC%94%E8%AE%B0/">Android-OpenGL-ES笔记</a>。</li>
+<li>TextrueView: Android 4.0 后引入 TextureView, 它将 SurfaceTexture 和 View 结合到了一起。与 SurfaceView 相比，它并没有创建一个单独的 Surface 来绘制，解决了 SurfaceView 无法在 Canvas 内容上做动画的问题。另外 TextureView 必须在硬件加速开启的窗口中使用。</li>
+</ul>
+<span id="more"></span>
+
+<p>View的完整工作流程，从cpu计算控件数据，到surfaceFlinger合成这些数据，再到vsync信号达到后开始绘制（见/ScreenDraw章）；</p>
+<h1 id="Surface"><a href="#Surface" class="headerlink" title="Surface"></a>Surface</h1><p>Window的核心变量。</p>
+<p><code>Android</code> 系统采用一种称为 <code>Surface</code> 的图形架构，简而言之，每一个 <code>Activity</code> 都关联有至少一个 <code>Window</code>（窗口），每一个 <code>Window</code> 都对应有一个 <code>Surface</code>。</p>
+<p><code>Surface</code> 这里直译过来叫做 <strong>绘图表面</strong> ，顾名思义，其可在内存中生成一个图形缓冲区队列，用于描述 <code>UI</code>，经与系统服务的<code>WindowServiceManager</code> 通信后、通过 <code>SurfaceFlinger</code> 服务持续合成并送显到显示屏。</p>
+<p><img src="/2021/07/29/Surface/178bc0e274ca4b6c9fe052eb6b4357de~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt="2.png"></p>
+<p>由此可见，通常情况下，一个 <code>Activity</code> 的 <code>UI</code> 渲染本质是 <strong>系统提供一块内存，并创建一个图形缓冲区进行维护</strong>；这块内存就是 <code>Surface</code>，最终页面所有 <code>View</code> 的 <code>UI</code> 状态数据，都会被填充到同一个 <code>Surface</code> 中。</p>
+<h1 id="SurfaceView-amp-TextureView"><a href="#SurfaceView-amp-TextureView" class="headerlink" title="SurfaceView &amp; TextureView"></a>SurfaceView &amp; TextureView</h1><p>SurfaceView 本身的输出不是通过 Android 的 UI Renderer（HWUI），而是直接走系统的窗口合成器 SurfaceFlinger，</p>
+<p>//暂时CV，待完善</p>
+<h1 id="1-Surface"><a href="#1-Surface" class="headerlink" title="1 Surface"></a>1 Surface</h1><p>Surface 就是“表面”的意思，可以<strong>简单理解为内存中的一段绘图缓冲区</strong>。在 SDK 的文档中，对 Surface 的描述是这样的：“Handle onto a raw buffer that is being managed by the screen compositor”，意思是“由屏幕显示内容合成器（screen compositor）所管理的原生缓冲器的句柄”， 这句话包括下面两个意思：</p>
+<ul>
+<li>通过 Surface（因为 Surface 是句柄）就可以获得原生缓冲器以及其中的内容。就像在C语言中，可以通过一个文件的句柄，就可以获得文件的内容一样；</li>
+<li>原生缓冲器（rawbuffer）是用于保存当前窗口的像素数据的。</li>
+</ul>
+<p>简单的说 Surface 对应了一块屏幕缓冲区，每个 Window 对应一个 Surface，任何 View 都是画在 Surface 上的，传统的 view 共享一块屏幕缓冲区，所有的绘制必须在 UI 线程中进行。我们不能直接操作 Surface 实例，要通过 SurfaceHolder，在 SurfaceView 中可以通过 getHolder() 方法获取到 SurfaceHolder 实例。 Surface 是一个用来画图形的地方，但是我们知道画图都是在一个 Canvas 对象上面进行的，Surface 中的 Canvas 成员，是专门用于提供画图的地方，就像黑板一样，其中的原始缓冲区是用来保存数据的地方。 Surface 本身的作用类似一个句柄，得到了这个句柄就可以得到其中的Canvas、原始缓冲区以及其他方面的内容，所以简单的说 Surface 是用来管理数据的（句柄）。 说完 surface 就可以说 SurfaceView 了。</p>
+<h1 id="2-SurfaceView"><a href="#2-SurfaceView" class="headerlink" title="2 SurfaceView"></a>2 SurfaceView</h1><h2 id="2-1-SurfaceView-简介"><a href="#2-1-SurfaceView-简介" class="headerlink" title="2.1 SurfaceView 简介"></a>2.1 SurfaceView 简介</h2><p>简单的说 SurfaceView 就是一个有 Surface 的 View，SurfaceView 控制这个 Surface 的格式和尺寸以及绘制位置。传统 View 及其派生类的更新只能在 UI 线程，然而 UI 线程还同时处理其他交互逻辑，这就无法保证 view 更新的速度和帧率了，而 SurfaceView 可以用独立的线程来进行绘制。因此可以提供更高的帧率，例如游戏，摄像头取景等场景就比较适合用 SurfaceView 来实现。 <strong>SurfaceView 的核心在于提供了两个线程：UI线程和渲染线程，两个线程通过“双缓冲”机制来达到高效的界面刷新效果。</strong> </p>
+<h2 id="2-2-SurfaceView-实现机制"><a href="#2-2-SurfaceView-实现机制" class="headerlink" title="2.2 SurfaceView 实现机制"></a>2.2 SurfaceView 实现机制</h2><p><strong>SurfaceView 继承自 View，所以它也是一个 View。但是这个 View 和普通的 View 有点不同。SurfaceView 有自己的 Surface，在 Android 中，一个 View 有自己的 Surface，在 WMS 中中就有对应的 WindowState，对应在 SurfaceFlinger 中就有 Layer。</strong></p>
+<p><img src="/2021/07/29/Surface/55cb26adefcd435494c329752b9506c7~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt="SurfaceView 实现机制"></p>
+<p>一般的 Activity 包含的多个 View 会组成 View hierachy 的树形结构，只有最顶层的 DectorView 才是对 WMS 可见的，这个 DecorView 在 WMS 中有一个对应的 WindowState，相应的，在 SurfaceFlinger 中有对应的 Layer。而 SurfaceView 正因为它有自己的 Surface，有自己的 Window，它在 WMS 中有对应的 WindowState，在 SurfaceFlinger 中有 Layer。 虽然在 App 端它仍在 View hierachy 中，但在 Server 端（WMS 和 SurfaceFlinger）中，它与宿主窗口是分离的。这样的好处是对这个 Surface 的渲染可以放到单独的线程中去做，渲染时可以有自己的 GL context。这对于一些游戏、视频等性能相关的应用非常有益，因为它不会影响主线程对事件的响应。 但是这也有缺点，因为这个 Surface 不在 View hierachy 中，它的显示也不受 View 的属性控制，所以不能进行平移、缩放等动画，它也不能放在其它 ViewGroup 中，SurfaceView 不能嵌套使用，而且不能使用某些 View 的特性，例如 View.setAlpha()。 从 Android7.0 开始，SurfaceView 的窗口位置与其他 View 渲染同步更新。这意味着在屏幕上平移和缩放 SurfaceView 不会导致渲染失真。</p>
+<h1 id="3-TextureView"><a href="#3-TextureView" class="headerlink" title="3 TextureView"></a>3 TextureView</h1><p>因为上面所说的 SurfaceView 不在主窗口中，它没法做动画没法使用一些 View 的特性方法，所以<strong>在 Android 4.0中引入了 TextureView，它是一个结合了 View 和 SurfaceTexture 的 View 对象</strong>。 TextureView <strong>是一个可以把内容流作为外部纹理输出在上面的 View</strong>，和 SurfaceView 不同，它不会在 WMS 中单独创建窗口，而是作为 View hierachy 中的一个普通 view，<strong>因此它可以和其他普通 View 一样进行平移、旋转、缩放等动画</strong>。但是 TextureView 必须在硬件加速的窗口中，它显示的内容流数据可以来自 App 进程或者远程进程。 TextureView 继承自 View，它与其它的 View 一样在 View hierachy 中管理与绘制。TextureView 重载了 draw() 方法，其中主要 SurfaceTexture 中收到的图像数据作为纹理更新到对应的 HardwareLayer 中。 SurfaceTexture.OnFrameAvailableListener 用于通知 TextureView 内容流有新图像到来。SurfaceTextureListener 接口用于让 TextureView 的使用者知道 SurfaceTexture 已准备好，这样就可以把 SurfaceTexture 交给相应的内容源。 Surface 为 BufferQueue 的 Producer 接口实现类，使生产者可以通过它的软件或硬件渲染接口为 SurfaceTexture 内部的 BufferQueue 提供 graphic buffer。 SurfaceTexture 可以用作非直接输出的内容流，这样就提供二次处理的机会。与 SurfaceView 直接输出相比，这样会有若干帧的延迟。同时，由于它本身管理 BufferQueue，因此内存消耗也会稍微大一些。</p>
+<h1 id="4-SurfaceTexture"><a href="#4-SurfaceTexture" class="headerlink" title="4 SurfaceTexture"></a>4 SurfaceTexture</h1><p><strong>SurfaceTexture 是 Surface 和 OpenGL ES(GLES) 纹理的组合。SurfaceTexture 用于提供输出到 GLES 纹理的 Surface。</strong> SurfaceTexture 是从 Android 3.0(API level 11)开始加入，与 SurfaceView 不同的是，<strong>它对图像流的处理并不直接显示，而是转为 GL 外部纹理，因此用于图像流数据的二次处理</strong>。 比如 Camera 的预览数据，变成纹理后可以交给 GLSurfaceView 直接显示，也可以通过 SurfaceTexture 交给TextureView 作为 View heirachy 中的一个硬件加速层来显示。 首先，SurfaceTexture 从图像流 （来自 Camera 预览、视频解码、GL 绘制场景等）中获得帧数据，当调用updateTexImage()时，根据内容流中最近的图像更新 SurfaceTexture 对应的 GL 纹理对象。 SurfaceTexture 包含一个应用是其使用方的 BufferQueue。当生产方将新的缓冲区排入队列时，onFrameAvailable() 回调会通知应用。然后，应用调用 updateTexImage()，这会释放先前占有的缓冲区，从队列中获取新缓冲区并执行 EGL 调用，从而使 GLES 可将此缓冲区作为外部纹理使用。</p>
+<h1 id="5-SurfaceView-与-TextureView-的对比"><a href="#5-SurfaceView-与-TextureView-的对比" class="headerlink" title="5 SurfaceView 与 TextureView 的对比"></a>5 SurfaceView 与 TextureView 的对比</h1><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>SurfaceView</th>
+<th>TextureView</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>内存</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>耗电</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>绘制</td>
+<td>及时</td>
+<td>1-3帧延迟</td>
+</tr>
+<tr>
+<td>动画和截图</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+</tbody></table>
+<p>从性能和安全性角度出发，<strong>优先选 SurfaceView，TextureView 是一个不得已的选择</strong>：</p>
+<ul>
+<li><strong>在 Android 7.0 上系统 Surfaceview 的性能比 TextureView 更有优势</strong>，支持对象的内容位置和包含的应用内容同步更新，平移、缩放不会产生黑边。 <strong>在7.0以下系统如果使用场景有动画效果，可以选择性使用TextureView</strong>。</li>
+<li>由于失效（invalidation）和缓冲的特性，<strong>TextureView 增加了额外1~3帧的延迟显示画面更新</strong>。</li>
+<li>TextureView 总是使用 GL 合成，而 SurfaceView 可以使用硬件 overlay 后端，可以占用更少的内存。</li>
+<li>TextureView 的内部缓冲队列导致比 SurfaceView 使用更多的内存。</li>
+<li>SurfaceView 内部自己持有 Surface，Surface 创建、销毁、大小改变时系统来处理的，通过 SurfaceHolder  的 callback 回调通知。</li>
+<li>当画布创建好时，可以将 surface 绑定到 MediaPlayer 中。SurfaceView 如果为用户可见的时候，创建 SurfaceView 的 SurfaceHolder 用于显示视频流解析的帧图片，如果发现 SurfaceView 变为用户不可见的时候，则立即销毁 SurfaceView 的 SurfaceHolder，以达到节约系统资源的目的。</li>
+</ul>
+<p>作者：ByteSaid<br>链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7156157715230752782">https://juejin.cn/post/7156157715230752782</a><br>来源：稀土掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<h1 id="SurfaceFlinger"><a href="#SurfaceFlinger" class="headerlink" title="SurfaceFlinger"></a>SurfaceFlinger</h1><blockquote>
+<p>SurfaceFlinger 接受缓冲区，对它们进行合成，然后发送到屏幕。WindowManager 为 SurfaceFlinger 提供缓冲区和窗口元数据，而 SurfaceFlinger 可使用这些信息将 Surface 合成到屏幕。</p>
+</blockquote>
+<blockquote>
+<p>SurfaceFlinger 用来管理消费当前可见的 Surface, 所有被渲染的可见 Surface 都会被 SurfaceFlinger 通过 WindowManager 提供的信息合成(使用 OpenGL 和 HardWare Composer)提交到屏幕的后缓冲区，等待屏幕的下一个 Vsync 信号到来，再显示到屏幕上。SufaceFlinger 通过屏幕后缓冲区与屏幕建立联系，同时通过 Surface 与上层建立联系，起到了一个承上启下的作用。</p>
+</blockquote>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>在 SurfaceFlinger 的启动流程中：</p>
+<ol>
+<li>首先会创建 SurfaceFlinger 对象，在构造器中创建了 DispSync 同步模型对象；</li>
+<li>然后执行初始化 SurfaceFlinger 的逻辑：<ul>
+<li>注册监听，接收 HWC 的相关事件。</li>
+<li>启动 APP 和 SF 的 EventThread 线程，用来管理基于 DispSync 创建的两个 DispSyncSource 延时源对象，分别是用于绘制(app–mEventThreadSource)和合成(SurfaceFlinger–mSfEventThreadSource)。启动了 EventThread 线程后，会一直阻塞在 waitForEventLocked 方法中(期间会根据需要设置监听器)，直到<strong>接收到 Vsync 信号</strong>且<strong>至少有一个连接正在等待 Vsync 信号</strong>才会继续执行线程逻辑，即通知监听者；</li>
+<li>通过 MessageQueue.setEventThread 方法创建了一个连接，并通过 Looper.addFd 方法监听 BitTube 数据。</li>
+<li>创建 HWComposer 对象(通过 HAL 层的 HWComposer 硬件模块 或 软件模拟产生 Vsync 信号)，<strong>现在的 Android 系统基本上都可以看成是通过硬件 HWComposer 产生 Vsync 信号，而不使用软件模拟，所以下面解析都只谈及硬件 HWComposer 的 Vsync 信号</strong>；</li>
+<li>初始化非虚拟的显示屏；</li>
+<li>启动开机动画服务；</li>
+</ul>
+</li>
+<li>最后执行 SurfaceFlinger.run 逻辑，该方法会在 SurfaceFlinger 主线程通过死循环执行 MessageQueue.waitMessage 方法等待消息的到来，其内部调用了 Looper.pollOnce 方法，该方法会从 Looper.addFd 方法监听的 BitTube 中读取数据，当有数据到来时执行对应的回调方法。</li>
+</ol>
+<p>当硬件或软件模拟发出 Vsync 信号时：</p>
+<ol>
+<li>回调 SF 相关方法，SF 调用 DispSync 同步模型的方法处理 Vsync 信号(统计和计算模型的偏移和周期)，并根据返回值判断是否使能/关闭 HWC Vsync 信号的发出。</li>
+<li>DispSync 根据计算的偏移和周期计算下次 Vsync 信号发生时间，并通知监听者 Vsync 信号到达的事件，传递给 DispSyncSource 延时源，延时源通过 EventThread 来管理 Vsync 信号的收发。</li>
+<li>EventThread 调用连接 Connection 对象向 BitTube 发送数据，触发 addFd 函数中设置的回调方法，回调方法进而调用 SF.onMessageReceived 函数，然后进行图像的合成等工作。</li>
+</ol>
+<p>另一方面，Choreographer 会通过上面创建的 APP 延时源 mEventThreadSource 对象及其对应的 EventThread 线程来监听同步模拟发出的 Vsync 信号，然后进行绘制(measure/layout/draw)操作。具体逻辑见 <a target="_blank" rel="noopener" href="https://ljd1996.github.io/2020/09/07/Android-Choreographer%E5%8E%9F%E7%90%86/">Android-Choreographer原理</a>。</p>
+<p>将 SurfaceFlinger 的工作流程总结如下图：</p>
+<p><img src="/2021/07/29/Surface/SurfaceFlinger%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.jpg" alt="SurfaceFlinger工作流程"></p>
+<h2 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h2><h1 id="BufferQueue"><a href="#BufferQueue" class="headerlink" title="BufferQueue"></a>BufferQueue</h1></div><div class="article-licensing box"><div class="licensing-title"><p>Surface</p><p><a href="http://example.com/2021/07/29/Surface/">http://example.com/2021/07/29/Surface/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-07-29</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-03-25</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Graphic/">Graphic</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2021/07/30/Kotlin/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Kotlin</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2021/06/30/SystemStartProcess/"><span class="level-item">SystemStartProcess</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Surface"><span class="level-left"><span class="level-item">1</span><span class="level-item">Surface</span></span></a></li><li><a class="level is-mobile" href="#SurfaceView-amp-TextureView"><span class="level-left"><span class="level-item">2</span><span class="level-item">SurfaceView &amp; TextureView</span></span></a></li><li><a class="level is-mobile" href="#1-Surface"><span class="level-left"><span class="level-item">3</span><span class="level-item">1 Surface</span></span></a></li><li><a class="level is-mobile" href="#2-SurfaceView"><span class="level-left"><span class="level-item">4</span><span class="level-item">2 SurfaceView</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#2-1-SurfaceView-简介"><span class="level-left"><span class="level-item">4.1</span><span class="level-item">2.1 SurfaceView 简介</span></span></a></li><li><a class="level is-mobile" href="#2-2-SurfaceView-实现机制"><span class="level-left"><span class="level-item">4.2</span><span class="level-item">2.2 SurfaceView 实现机制</span></span></a></li></ul></li><li><a class="level is-mobile" href="#3-TextureView"><span class="level-left"><span class="level-item">5</span><span class="level-item">3 TextureView</span></span></a></li><li><a class="level is-mobile" href="#4-SurfaceTexture"><span class="level-left"><span class="level-item">6</span><span class="level-item">4 SurfaceTexture</span></span></a></li><li><a class="level is-mobile" href="#5-SurfaceView-与-TextureView-的对比"><span class="level-left"><span class="level-item">7</span><span class="level-item">5 SurfaceView 与 TextureView 的对比</span></span></a></li><li><a class="level is-mobile" href="#SurfaceFlinger"><span class="level-left"><span class="level-item">8</span><span class="level-item">SurfaceFlinger</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#启动"><span class="level-left"><span class="level-item">8.1</span><span class="level-item">启动</span></span></a></li><li><a class="level is-mobile" href="#合成"><span class="level-left"><span class="level-item">8.2</span><span class="level-item">合成</span></span></a></li></ul></li><li><a class="level is-mobile" href="#BufferQueue"><span class="level-left"><span class="level-item">9</span><span class="level-item">BufferQueue</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
