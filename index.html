@@ -428,170 +428,7 @@
 <p><strong>StackOverFlowError</strong> ︰若Java 虚拟机栈的内存大小不允许动态扩展，那么当线程请求栈的深度超过当前Java 虚拟机栈的最大深度的时候，就抛出StackOverFlowError错误。<br><strong>OutOfMemoryError</strong> :如果虚拟机栈可以动态扩展（当前大部分的 Java 虚拟机都可动态扩展，只不过 Java 虚拟机规范中也允许固定长度的虚拟机栈），当扩展时无法申请到足够的内存时会抛出 OutOfMemoryError 异常。</p>
 </blockquote>
 <p>没栈的结构（堆heap、方法区Method Area）只可能发生 OOM</p></div><a class="article-more button is-small is-size-7" href="/2024/04/19/JMM/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-03-25T07:35:03.229Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-14T09:49:26.170Z" title="5/14/2024, 5:49:26 PM">2024-05-14</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">13 minutes read (About 1991 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/03/25/GraphicsOverriew/">Graphics</a></h1><div class="content"><h3 id="移动端渲染"><a href="#移动端渲染" class="headerlink" title="移动端渲染"></a><strong>移动端渲染</strong></h3><p><img src="/2024/03/25/GraphicsOverriew/3d5bf360cf944e2ab413b60b93c31515~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt="img"></p></div><a class="article-more button is-small is-size-7" href="/2024/03/25/GraphicsOverriew/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-03-25T07:35:02.998Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.998Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Common/">Common</a><span> / </span><a class="link-muted" href="/categories/Common/Code/">Code</a></span><span class="level-item">4 minutes read (About 598 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/03/25/CodeOptimization/">CodeOptimization</a></h1><div class="content"><h2 id="代码优化"><a href="#代码优化" class="headerlink" title="# 代码优化"></a># 代码优化</h2><h2 id="1：纯函数"><a href="#1：纯函数" class="headerlink" title="1：纯函数"></a>1：纯函数</h2><p>纯函数是函数编程中的一个概念，指的是一个方法函数，就像一个数学的函数式一样，同样的参数输入会得到同样的输出。<br>可以近似理解为函数内部不依赖任何的外部状态，外部变量。</p>
-<h2 id="2：空安全"><a href="#2：空安全" class="headerlink" title="2：空安全"></a>2：空安全</h2><p>java是强对象类型语言，故对于java来说我们很容易关注到类型强转的错误</p></div><a class="article-more button is-small is-size-7" href="/2024/03/25/CodeOptimization/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-02-21T03:26:37.000Z" title="2/21/2024, 11:26:37 AM">2024-02-21</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-09-05T11:48:29.510Z" title="9/5/2024, 7:48:29 PM">2024-09-05</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">26 minutes read (About 3954 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/02/21/WorkNote/">WorkNote</a></h1><div class="content"><h1 id="APM基建"><a href="#APM基建" class="headerlink" title="APM基建"></a>APM基建</h1><p>方案有dokit和matrix，dokit功能更多，线下监控；Matrix优化更好，支持线上监控；</p>
-<p>最终选择了功能更全一点的dokit，以期达到线下监控，线下处理，线上预防。</p>
-<p>基于滴滴开源框架Dokit + 自定义扩展的性能监控（如图片尺寸浪费、内存泄露误报、）</p>
-<p>其中dokit中包括了原理与BlockCanary类似的耗时方法监控、Choreographer帧耗时统计、图片尺寸超限、函数耗时、启动耗时</p>
-<p>耗时方法监控核心是根据handler原理，通过给Looper.loop() 中设置printer(无论是通过反射替换Looper的<em>mLogging</em>还是通过<em>setMessageLogging</em>设置printer)，监控超过 设定阈值(matrix700ms) 的主线程消息（超过5s报为ANR），printer 中判断start和end，来获取主线程dispatch该message的开始和结束时间，并判定该时间超过阈值为主线程卡慢发生，并 打印当时堆栈 + 方法耗时(matrix/dokit)</p>
-<p>堆栈和方法耗时 dokit和matrix是每个方法插桩，但matrix的优化更细节</p>
-<p>帧率检测核心是利用系统 Choreographer 模块，向该模块注册一个 FrameCallback 监听对象，同时通过另外一条线程循环记录主线程堆栈信息，并在每次 Vsync 事件 doFrame 通知回来时，循环注册该监听对象，间接统计两次 Vsync 事件的时间间隔，当超出阈值时，取出记录的堆栈进行分析上报。</p>
-<p>帧率检测新版本可以考虑用</p>
-<h1 id="一次完整的图片优化过程"><a href="#一次完整的图片优化过程" class="headerlink" title="一次完整的图片优化过程"></a>一次完整的图片优化过程</h1><ol>
-<li><p>域名收敛，使用正则将多个域名收敛成一个，提高链接复用；</p>
-<p>推服务端使用Http2，减少堵塞</p>
-<p>同时收敛webp格式，若该图片存在webp则替换为webp链接，兜底为原链接，节省下载流量和加载速度；</p>
-<p>调整链接中图片尺寸以符合CDN裁切尺寸（300，500等）；</p>
-<p>单元测试覆盖（如果是现在我会用chatgpt写）</p>
-</li>
-<li><p>开发网络图片大小不当报警，通过插桩图片加载框架，上报图片下载尺寸与实际尺寸不符的case（页面类名+view id）</p>
-<p><strong>目标：</strong>监控图片下载尺寸浪费，优化图片渲染速度，减少图片下行流量（优化磁盘大小，fresco本身能够裁剪图片获得适当的内存大小。）</p>
-<p><strong>细节：</strong> 从 调用图片加载 到 图片真正加载完成 的时机和代码是分离的，那么 调用图片加载时候拿到的view信息 需要和 图片加载完成时拿到的<strong>下载尺寸</strong> 匹配，于是维护了一个key为url，value为view信息的ConcurrentHashMap，在加载完成时从中取出对应值判断</p>
-<p><strong>其他：</strong>这个功能同时也能识别图片过小带来的尺寸拉伸导致的图片模糊问题。</p>
-</li>
-<li><p>修复了fresco加载gif图片bug带来的内存暴涨</p>
-<p>细节：首先描述一下现象，fresco加载gif图片，当该gif图是多次轮播时，通过Android profile的内存监控可看到内存一路上升，直到gc后又继续上涨；原因：gif图中的每一帧会在解析时包裹成一个内部对象<code>AnimatedImageResult</code>，复用gif图帧的开关默认是关闭的，且复用代码有bug，复用缓存的key被设置为<code>AnimatedImageResult</code>的hashcode值，导致每次播放同一帧时，每次都会重新解析加载到内存，每一帧会有多份内存存在；</p>
-<p>解决方案：1、打开复用开关；2、修改复用的key，为解析后ByteBuffer的System.identityHashCode值 + option的hashcode值</p>
-<p>相当于用解析后单帧的hashcode作为缓存key</p>
-<p>PS:fresco 后续补充：</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/facebook/fresco/commit/40937a700e76e0f68353857f5bd0b567b6e909f1">https://github.com/facebook/fresco/commit/40937a700e76e0f68353857f5bd0b567b6e909f1</a></p>
-<p>fresco将之前试验性质的代码移除，有较大的缓存改动。故PR不再会被接收（如ExperimentalBitmapAnimationDrawableFactory这个类已经被替换了），同时gif图缓存新增一个AnimatedCache.kt的类，通过source(gif图url)+frameIndexNumber的方式生成缓存key。</p>
-<p>现在通过更新frasco版本应该就可以有正常的gif图缓存了</p>
-</li>
-</ol>
-<ol>
-<li>基于内部框架奥创完成了购物车、订单页面的重构</li>
-<li>完成一次完整的页面直开优化</li>
-</ol>
-<h1 id="一次基于内部框架奥创、MVVM设计的购物车、订单重构"><a href="#一次基于内部框架奥创、MVVM设计的购物车、订单重构" class="headerlink" title="一次基于内部框架奥创、MVVM设计的购物车、订单重构"></a>一次基于内部框架奥创、MVVM设计的购物车、订单重构</h1><p>背景是项目是14年左右开始迭代的，模块的耦合很重，设计落后，维护性很差，于是当时借助一次产品发起的改版方案，重构了订单。</p>
-<p>奥创是一个前后端协作的组件化协议，将页面根据各自功能拆分为多个组件，奥创协议下发每个组件所需的字段、组件对应的页面层级位置等。</p>
-<p>端侧可以获得一份清晰的组件列表、组件位置（只分粘顶、滑动、粘底）。端侧在RecyclerView中注册每个组件对应的ViewModel和ViewHolder，解析协议中组件的数据得到组件ViewModel，recyclerView中每个组件ViewHodle将根据组件唯一Id取到对应的ViewModel。</p>
-<p>整体设计是由数据驱动，MVVM架构下，viewmodel中的数据由生命周期安全的LiveData持有，ViewHolder作为View层监听相对应数据的变化。网络请求放在页面ViewModel的Repository层中。</p>
-<h1 id="一次完整的页面秒开方案"><a href="#一次完整的页面秒开方案" class="headerlink" title="一次完整的页面秒开方案"></a>一次完整的页面秒开方案</h1><h2 id="预请求"><a href="#预请求" class="headerlink" title="预请求"></a>预请求</h2><h3 id="精细化推测下单"><a href="#精细化推测下单" class="headerlink" title="精细化推测下单"></a>精细化推测下单</h3><p>购物车页刷新完数据后通过对用户行为的预测，直接发起下个页面的请求并缓存内存LRUCache，这种情况进入下个页面时大概率能直接拿到缓存。节省了整个请求时间。</p>
-<p>一个商品、当天加购、商品数量为1。整点前后十分钟内不启用。</p>
-<p>优点是速度很快，缺点是必不可免的存在流量浪费，需要根据线上的数据调整规则，以达到最佳的请求能效。</p>
-<p>经调整后的缓存利用率能达到30%左右。调整前20%不到。</p>
-<h3 id="前一页面中曝光即加载（失败尝试）"><a href="#前一页面中曝光即加载（失败尝试）" class="headerlink" title="前一页面中曝光即加载（失败尝试）"></a>前一页面中曝光即加载（失败尝试）</h3><p>从搜索列表到detail的缓存利用率只有5%不到，从购物车到detail的缓存利用率有14%。流量浪费比较严重。</p>
-<p>最后只保留了购物车的曝光即加载。</p>
-<h2 id="提前请求"><a href="#提前请求" class="headerlink" title="提前请求"></a>提前请求</h2><h3 id="页面请求前置-京喜方案"><a href="#页面请求前置-京喜方案" class="headerlink" title="页面请求前置(京喜方案)"></a>页面请求前置(京喜方案)</h3><p>直接将请求前置，在onCreate最前面就发起请求，节省了inflateLayout的开销(几十到几百ms)，（<del>为什么不用AsyncLayoutInflater：限制较多，如异步线程中没有初始化looper，view需手动加到Viewparent等</del>）</p>
-<p>需要注意的是，如果请求直接失败的情况下，由于布局未inflate完成可能导致失败视图展示有问题，这种情况下失败视图操作需要post一下。</p>
-<p>优点是改动小，适用性广；</p>
-<h3 id="路由层请求"><a href="#路由层请求" class="headerlink" title="路由层请求"></a>路由层请求</h3><p>将目标页面的请求抽离到预请求框架提供的接口实现类中，路由层提供注册对应页面的url处理的能力，一旦监听到路由层有相关的url跳转，预请求接口实现类发起一次预请求，在页面实际发起请求时，转为向预请求框架请求数据。如有已发起预请求的标记则走预请求框架，否则继续走正常发起请求逻辑。</p>
-<p>节省了路由耗时+activity启动耗（十几ms）、inflate耗时(几十到几百ms)</p>
-<h3 id="异步布局"><a href="#异步布局" class="headerlink" title="异步布局"></a>异步布局</h3><p>AsyncLayoutInflater框架是Google提供的可用于异步线程中解析布局的工具，原理就是在新建的<strong>单线程</strong>中<strong>循环执行</strong>提交到**任务队列(容量固定为10的ArrayBlockingQueue)**的任务。</p>
-<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ol>
-<li>所填充的布局中自定义View中不能直接使用Handler，因为其布局中所有子View都是在异步线程中创建的，故默认没有初始化Looper</li>
-<li>单线程易阻塞</li>
-<li>提交超过10个任务会导致主线程等待</li>
-<li>view需手动加到Viewparent</li>
-<li>不支持设置LayoutInflater. Factory或LayoutInflater. Factory2</li>
-<li>锁可能导致inflater不及时，导致反而比不用异步布局慢</li>
-</ol>
-<h4 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h4><p>但是异步布局<strong>并不需要担心View测绘</strong>时抛出<code>&quot;Only the original thread that created a view hierarchy can touch its views.&quot;</code>异常。</p>
-<p>因为：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ViewRootImpl.java</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">checkThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mThread != Thread.currentThread()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> CalledFromWrongThreadException(</span><br><span class="line">                <span class="string">&quot;Only the original thread that created a view hierarchy can touch its views.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>checkThread判断的是更新UI（<code>requestLayout or invalidate</code>）时，<strong>ViewRootImpl的创建线程与更新UI线程</strong>是否一致</p>
-<p>ViewRootImpl线程是在初始化的时候赋值的。而ViewRootImpl的初始化是在：</p>
-<ol>
-<li><p>PhoneWindow(如Activity)在setContentView时先installDecor()，然后将setContentView的入参view添加到DecorView布局中的R.id.content上</p>
-</li>
-<li><p>之后会等到AMS发来Resume消息的时候，走ActivityThread.handleResumeActivity时，调用<code>wm.addView(decor, l);</code>，走到activity.mWindowManager.addView -&gt; WindowManagerImpl.addView -&gt; WindowManagerGlobal.addView</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WindowManagerGlobal.java</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(View view, ViewGroup.LayoutParams params,</span></span></span><br><span class="line"><span class="function"><span class="params">            Display display, Window parentWindow, <span class="keyword">int</span> userId)</span>  </span>&#123;</span><br><span class="line">    ViewRootImpl root;</span><br><span class="line">    ...</span><br><span class="line">    root = <span class="keyword">new</span> ViewRootImpl(view.getContext(), display);</span><br><span class="line">    view.setLayoutParams(wparams);</span><br><span class="line"></span><br><span class="line">    mViews.add(view);</span><br><span class="line">    mRoots.add(root);</span><br><span class="line">    mParams.add(wparams);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于ActivityThread所在线程其实就是主线程（ActivityThread.main调用了Looper.prepareMainLooper()、Looper.loop()，整个应用都是存活在这个looper的调度中的），所以调用ActivityThread.handleResumeActivity初始化ViewRootImpl的时候，就是在主线程。</p>
-</li>
-</ol>
-<p><strong>故而不管是不是用异步布局填充最后checkThread时还是比较是否为主线程</strong></p>
-<h4 id="改进方式"><a href="#改进方式" class="headerlink" title="改进方式"></a>改进方式</h4><p>可以通过拷贝一份AsyncLayoutInflater，然后改动代码的方式：</p>
-<ol>
-<li><p>通过增加线程池调度，规避只能单线程inflater的弊端，解决注意事项2</p>
-</li>
-<li><p>可以通过在inflater前，反射调用线程池中每个线程设置MainLooper()，解决注意事项1</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">forceSetMainLoop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Field field = Looper.class.getDeclaredField(<span class="string">&quot;sThreadLocal&quot;</span>);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        Object object = field.get(Looper.getMainLooper());</span><br><span class="line">        <span class="keyword">if</span> (object <span class="keyword">instanceof</span> ThreadLocal) &#123;</span><br><span class="line">            ThreadLocal threadLocal = (ThreadLocal&lt;Looper&gt;) object;</span><br><span class="line">            threadLocal.set(Looper.getMainLooper());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>页面没出来之前（空闲时渲染）直接填充布局，生成View后缓存到内存中，使用时直接取用，空间换时间的方式降低页面耗时，简单将就是填充一份View备用，需要时直接取用后再异步填充取代回去。</p>
-</li>
-<li><p><del>重写cloneInContext（LayoutInflater.from(context)最后走到的是ContextThemeWrapper的getSystemService。<code>mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(this);</code>故重写该方法直接返回新的LayoutInflater即可）</del></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ContextThemeWrapper.java</span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getSystemService</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (LAYOUT_INFLATER_SERVICE.equals(name)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mInflater == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mInflater;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> getBaseContext().getSystemService(name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//改进后be like:</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> LayoutInflater <span class="title">cloneInContext</span><span class="params">(Context newContext)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> BasicInflater(newContext);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>现在we对异步布局的使用都是在实际填充前就使用异步布局填充完布局生成viewCache（key为resId，value为View），使用时如果发现存在view cache则直接使用并移除缓存，没有就走普通的LayoutInflater在主线程直接inflater</p>
-<p>//比如首页现在是在启动阶段就异步填充布局，详情在路由跳转时候开三个线程去填充。</p>
-<h3 id="Chunk流式加载"><a href="#Chunk流式加载" class="headerlink" title="Chunk流式加载"></a>Chunk流式加载</h3><p>借助Http1.1的chunk机制，服务端将数据拆分，服务端较耗时的数据拆分到第二个chunk返回，第一个chunk只返回必要的信息。</p>
-<p>如营销类、活动等信息接口查询较慢，放到第二个chunk中返回。</p>
-<p>现在responese格式大致是：</p>
-<p>id:1</p>
-<p>xxxx</p>
-<p>id:2</p>
-<p>yyyy</p>
-<p>然后okhttp架构组那边解析成原格式，分两次回调。</p>
-<p>本身okhttp就支持chunk，端侧只需要根据两次返回合并结果（floorcontainer）就行。</p>
-<p>优点是首屏渲染耗时加快了，服务端第一次接口返回耗时减少。</p>
-<p>缺点是会导致闪烁，比如价格组件由于第一次返回的数据不正确需隐藏，需要等第二次数据回来才显示，会有一次跳变。</p>
-<h2 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h2><h3 id="一、首屏的定义："><a href="#一、首屏的定义：" class="headerlink" title="一、首屏的定义："></a>一、首屏的定义：</h3><p>起点一定是从点击开始；</p>
-<p>结束可为：</p>
-<ul>
-<li>下个页面onResume执行一个handle.post()</li>
-<li>（淘宝定义）在固定机型(最多的占比)下，下个页面前三张图加载完成（用户体验视角定义首屏时间）</li>
-</ul>
-<p>现在自己首屏起点是activity的oncreate（路由匹配到detail的起点）到recyclerView第一屏viewholder所有onbind调用中，注册viewTreeObserver.OnGlobalLayoutListener都返回。</p>
-<h3 id="二、优化首屏的手段："><a href="#二、优化首屏的手段：" class="headerlink" title="二、优化首屏的手段："></a>二、优化首屏的手段：</h3><ol>
-<li><p>预加载</p>
-<p>上述几种方案，可以普遍使用路由拦截请求方案</p>
-</li>
-<li><p>磁盘缓存</p>
-<p>如购物车数据使用本地缓存、购物车中的商品数据请求后缓存磁盘。</p>
-</li>
-<li><p>闲时资源预热</p>
-<p>主要针对dx模板之类的</p>
-<p>模板预下载，即在启动后idleHandle中提交一个下载dx模板的线程到线程池中；</p>
-</li>
-<li><p>引擎预热</p>
-<p>dx引擎预热</p>
-<p>在请求没回来前提前初始化dxengine</p>
-</li>
-<li><p>推后端优化</p>
-<p>减少机器内RT</p>
-</li>
-<li><p>上下行包大小优化</p>
-<p>精简协议，减少包大小</p>
-</li>
-<li><p>上个页面onPause时间排查</p>
-<p>比如上个页面onPause中处理太多事情导致下一页面唤起延迟</p>
-</li>
-<li><p>布局加载优化</p>
-</li>
-<li><p>异步布局</p>
-</li>
-</ol>
-<h1 id="一次rtl引发的惨案"><a href="#一次rtl引发的惨案" class="headerlink" title="一次rtl引发的惨案"></a>一次rtl引发的惨案</h1><h2 id="Case-1："><a href="#Case-1：" class="headerlink" title="Case 1："></a>Case 1：</h2><p>原始数据为</p>
-<p><img src="/2024/02/21/WorkNote/image-20240318195423266.png" alt="image-20240318195423266"></p>
-<p>端侧显示为</p>
-<img src="/2024/02/21/WorkNote/image-20240318201435400.png" alt="image-20240318201435400" style="zoom: 50%;">
-
-<p>前提：  数字18,186.37、美元$、冒号、逗号、小数点是弱字符； 空格是中性字符；  阿拉伯语是强rtl字符； 字母MXN是强ltr字符；</p>
-<p><strong>BIDI算法基本规则：</strong></p>
-<ol>
-<li><p><strong>文本的全局方向取决于句子中首个强字符</strong></p>
-</li>
-<li><p><strong>确定了文本的全局显示方向后，若局部出现了反向字符，则连续的反向字符保持其局部顺序</strong><br><strong>e.g: 若在连续的阿拉伯文中出现了中文单词，如”奔跑吧”，则其仍按照中文顺序显示，不会显示为”吧跑奔”</strong></p>
-</li>
-<li><p><strong>弱字符保持自身方向</strong></p>
-</li>
-<li><p><strong>没有被强字符包裹的中性字符追随全局方向</strong></p>
-</li>
-</ol>
-<p>解析：</p>
-<p>首先，整体的文本方向是由第一个强字符决定的，也就是rtl方向；</p>
-<p><img src="/2024/02/21/WorkNote/image-20240318202931647.png" alt="image-20240318202931647" style="zoom:33%;">阿拉伯文本强rtl字符</p>
-<p>冒号 为弱字符保持自身方向(单个看不出来)，按全局方向摆放在其左</p>
-<p>空格 为中性字符追随全局方向(单个看不出来)，按全局方向摆放在其左</p>
-<p>18,186.37 整个弱字符方向串保持自身方向，为ltr，按全局方向摆放在其左</p>
-<p>MXN为强ltr字符，按全局方向摆放在其左</p>
-<p>$为弱字符方向，按全局方向摆放在其后</p>
-<p>解决：</p>
-<p>使用强制ltr的领宽度字符 u202A 和 终止符u202C</p>
-<p>使 Total + “\u202A” + 价格 + “\u202C”</p>
-<p>强制价格（金额+货币单位）作为一个方向串走 ltr</p>
-<h2 id="Case2"><a href="#Case2" class="headerlink" title="Case2:"></a>Case2:</h2></div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2023-12-22T06:24:28.000Z" title="12/22/2023, 2:24:28 PM">2023-12-22</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-13T06:09:15.701Z" title="6/13/2024, 2:09:15 PM">2024-06-13</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">10 minutes read (About 1496 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/12/22/Fragment/">Fragment</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://developer.android.com/guide/fragments/lifecycle?hl=zh-cn">https://developer.android.com/guide/fragments/lifecycle?hl=zh-cn</a></p>
+<h2 id="2：空安全"><a href="#2：空安全" class="headerlink" title="2：空安全"></a>2：空安全</h2><p>java是强对象类型语言，故对于java来说我们很容易关注到类型强转的错误</p></div><a class="article-more button is-small is-size-7" href="/2024/03/25/CodeOptimization/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2023-12-22T06:24:28.000Z" title="12/22/2023, 2:24:28 PM">2023-12-22</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-13T06:09:15.701Z" title="6/13/2024, 2:09:15 PM">2024-06-13</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">10 minutes read (About 1496 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/12/22/Fragment/">Fragment</a></h1><div class="content"><p><a target="_blank" rel="noopener" href="https://developer.android.com/guide/fragments/lifecycle?hl=zh-cn">https://developer.android.com/guide/fragments/lifecycle?hl=zh-cn</a></p>
 <h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p>//简述：还有一个生命周期是<code> onViewCreated()</code>，该生命周期会在onCreateView后立即调用（此时布局inflate已完成），故而一般fragment的onCreateView中执行inflate layout操作后返回rootView，之后在<code>onViewCreated</code>中执行具体的View操作。    </p>
 <p><img src="/2023/12/22/Fragment/168137f2adfe6b44~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75-8250473.png" alt="168137f2adfe6b44~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75"></p>
 <h1 id="Use"><a href="#Use" class="headerlink" title="Use"></a>Use</h1><h2 id="FragmentTransaction的4种提交方式"><a href="#FragmentTransaction的4种提交方式" class="headerlink" title="FragmentTransaction的4种提交方式"></a>FragmentTransaction的4种提交方式</h2><h3 id="commit-："><a href="#commit-：" class="headerlink" title="commit()："></a>commit()：</h3><p>commit是<strong>非同步提交（我认为不应称为异步）</strong>且<strong>检查是否存储状态</strong>的</p>
@@ -1029,7 +866,13 @@
 <h4 id="1-1-1-没有新的物理页分配，那么PTE都更新了些什么内容呢？"><a href="#1-1-1-没有新的物理页分配，那么PTE都更新了些什么内容呢？" class="headerlink" title="1.1.1 没有新的物理页分配，那么PTE都更新了些什么内容呢？"></a>1.1.1 没有新的物理页分配，那么PTE都更新了些什么内容呢？</h4><p>PTE也即页表的条目，它的内容反映了一个虚拟地址到物理地址之间的映射关系。如果没有新的物理页分配，那这些新的虚拟地址都和哪些物理地址之间建立了映射关系呢？答案是所有的虚拟地址都和同一个zero page（页内容全为0）建立了映射关系。</p>
 <h4 id="1-1-2-如果后续使用mmap返回的虚拟地址访问内存，会有什么情况产生呢？"><a href="#1-1-2-如果后续使用mmap返回的虚拟地址访问内存，会有什么情况产生呢？" class="headerlink" title="1.1.2 如果后续使用mmap返回的虚拟地址访问内存，会有什么情况产生呢？"></a>1.1.2 如果后续使用mmap返回的虚拟地址访问内存，会有什么情况产生呢？</h4><p>拿到mmap返回的虚拟地址后，并不会有新的物理页分配。此时若是直接读取虚拟地址中的值，则会通过PTE追踪到刚刚建立映射关系的zero page，因此读取出来的值都是0。</p>
 <p>如果此时往虚拟地址中写入数据，将会在page fault handler中触发一个正常的copy-on-write机制。需要写多少页，就会新分配多少物理页。所以我们可以看到，真实的物理页是符合lazy(on-demand) allocation原则的。这一点，极大地保证了物理资源的合理分配和使用。</p>
-</div></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous is-invisible is-hidden-mobile"><a href="/page/0/">Previous</a></div><div class="pagination-next"><a href="/page/2/">Next</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link is-current" href="/">1</a></li><li><a class="pagination-link" href="/page/2/">2</a></li><li><a class="pagination-link" href="/page/3/">3</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">79</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-02-16T08:45:30.000Z" title="2/16/2022, 4:45:30 PM">2022-02-16</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:03.380Z" title="3/25/2024, 3:35:03 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">a minute read (About 127 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/02/16/PackageManager/">PackageManager</a></h1><div class="content"><p><img src="/2022/02/16/PackageManager/4d40d322bc9245f98b676235b5625bc6~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp.png" alt="img"></p>
+<p>PackageManger的核心作用：</p>
+<ol>
+<li>在系统启动过程中，通过**PackageManagerService(PKMS)*<em>对特定系统文件(如package.list, package.xml)进行扫描解析后，将所有app的信息整合存储，通过</em>IPackageManger*对外暴露</li>
+<li>通过<strong>PackageInstallerService</strong>提供Apk/Apex的安装、更新、卸载等操作(<em>IPackageInstaller</em>)</li>
+<li>应用运行过程中的权限检查</li>
+</ol></div><a class="article-more button is-small is-size-7" href="/2022/02/16/PackageManager/#more">Read more</a></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous is-invisible is-hidden-mobile"><a href="/page/0/">Previous</a></div><div class="pagination-next"><a href="/page/2/">Next</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link is-current" href="/">1</a></li><li><a class="pagination-link" href="/page/2/">2</a></li><li><a class="pagination-link" href="/page/3/">3</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">78</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2024 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
             article: {
                 highlight: {
                     clipboard: true,
