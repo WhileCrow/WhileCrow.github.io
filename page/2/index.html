@@ -259,7 +259,25 @@
 <p>一级缓存为屏内缓存，分为没有变化的可以直接复用的ViewHolder和被notifyXXX标记为需要重新绑定的ViewHolder；</p>
 <p>二级缓存为离屏2个的ViewHolder缓存，直接复用</p>
 <p>三级缓存为自定义缓存，较少用</p>
-<p>四级缓存为超出上述缓存的需要重新绑定的ViewHolder</p></div><a class="article-more button is-small is-size-7" href="/2021/10/15/RecyclerView/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-09-30T06:00:40.000Z" title="9/30/2021, 2:00:40 PM">2021-09-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-08-16T04:36:26.746Z" title="8/16/2024, 12:36:26 PM">2024-08-16</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">30 minutes read (About 4561 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/09/30/Glide/">Glide</a></h1><div class="content"><h2 id="Glide缓存"><a href="#Glide缓存" class="headerlink" title="Glide缓存"></a>Glide缓存</h2><p><strong>磁盘(DiskLruCache) -&gt; LRUCache(不活跃资源) -&gt; WeakReference(使用中资源)</strong></p>
+<p>四级缓存为超出上述缓存的需要重新绑定的ViewHolder</p></div><a class="article-more button is-small is-size-7" href="/2021/10/15/RecyclerView/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-09-30T06:00:40.000Z" title="9/30/2021, 2:00:40 PM">2021-09-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-09-10T07:17:39.663Z" title="9/10/2024, 3:17:39 PM">2024-09-10</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">33 minutes read (About 4919 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/09/30/Glide/">Glide</a></h1><div class="content"><p>Glide缓存：</p>
+<h3 id="三级缓存："><a href="#三级缓存：" class="headerlink" title="三级缓存："></a>三级缓存：</h3><ul>
+<li><p><strong>活动缓存(activeResources: Map&lt;Key, ResourceWeakReference&gt;)</strong></p>
+<p><strong>key为EngineKey对象，value为弱引用的图片缓存ResourceWeakReference实例</strong></p>
+<p>正在使用的图片缓存（被ImageView或Activity引用的），在ImageView移除或Activity销毁时被移到<strong>内存缓存</strong></p>
+</li>
+<li><p><strong>内存缓存(memoryCache: LruCache&lt;Key, Resource&lt;?&gt;&gt;)</strong></p>
+<p><strong>key为EngineKey对象，value为图片缓存Resource实例</strong></p>
+<p>当图片不再显示时，图片会从活动缓存移到内存缓存。存储的是暂时不用的图片缓存（依靠<strong>图片引用计数器acquired</strong>变量实现，当acquired大于0时存在于活动缓存中，为0是移到内存缓存中）</p>
+</li>
+<li><p><strong>磁盘缓存（diskLruCache: LinkedHashMap&lt;String, Entry&gt;）</strong></p>
+<p><strong>key为使用EngineKey所有参数经过哈希算法加密后的字符串，value为File实例</strong></p>
+<p>磁盘缓存大小默认250MB，根据缓存策略的不同可能存储原始图片或转换后的图片。磁盘缓存的存储顺序记录在journal文件中，有时该文件过大会导致glide初始过慢。</p>
+<blockquote>
+<p>DiskCacheStrategy.ALL ：     //表示既缓存原始图片，也缓存转换过后的图片。<br>DiskCacheStrategy.NONE：     //表示不缓存任何内容。<br>DiskCacheStrategy.RESOURCE： //表示只缓存原始图片。 (推荐)<br>DiskCacheStrategy.DATA：     //表示只缓存转换过后的图片。<br>DiskCacheStrategy.AUTOMATIC  //表示智能判断选择模式（默认选项）。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="Glide缓存"><a href="#Glide缓存" class="headerlink" title="Glide缓存"></a>Glide缓存</h2><p><strong>磁盘(DiskLruCache) -&gt; LRUCache(不活跃资源) -&gt; WeakReference(使用中资源)</strong></p>
 <p><strong>内存缓存分为弱引用的和 LruCache ，其中正在使用的图片使用弱引用缓存，暂时不使用的图片用 LruCache缓存，这一点是通过 图片引用计数器（acquired变量）来实现的</strong></p>
 <p><img src="/2021/09/30/Glide/b784f4ad31217d419faedc0d0efc595f.jpg" alt="b784f4ad31217d419faedc0d0efc595f"></p>
 <p>Glide生成key（内存缓存Key类型为EngineKey）的方式远比我们想象的要复杂，决定缓存Key的参数有8种，其中包括图片URL、宽、高。</p>
