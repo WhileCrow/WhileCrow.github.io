@@ -31,32 +31,88 @@
 <p>一级缓存为屏内缓存，分为没有变化的可以直接复用的ViewHolder和被notifyXXX标记为需要重新绑定的ViewHolder；</p>
 <p>二级缓存为离屏2个的ViewHolder缓存，直接复用</p>
 <p>三级缓存为自定义缓存，较少用</p>
-<p>四级缓存为超出上述缓存的需要重新绑定的ViewHolder</p></div><a class="article-more button is-small is-size-7" href="/2021/10/15/RecyclerView/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-09-30T06:00:40.000Z" title="9/30/2021, 2:00:40 PM">2021-09-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-09-10T07:17:39.663Z" title="9/10/2024, 3:17:39 PM">2024-09-10</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">33 minutes read (About 4919 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/09/30/Glide/">Glide</a></h1><div class="content"><p>Glide缓存：</p>
-<h3 id="三级缓存："><a href="#三级缓存：" class="headerlink" title="三级缓存："></a>三级缓存：</h3><ul>
-<li><p><strong>活动缓存(activeResources: Map&lt;Key, ResourceWeakReference&gt;)</strong></p>
-<p><strong>key为EngineKey对象，value为弱引用的图片缓存ResourceWeakReference实例</strong></p>
-<p>正在使用的图片缓存（被ImageView或Activity引用的），在ImageView移除或Activity销毁时被移到<strong>内存缓存</strong></p>
-</li>
-<li><p><strong>内存缓存(memoryCache: LruCache&lt;Key, Resource&lt;?&gt;&gt;)</strong></p>
-<p><strong>key为EngineKey对象，value为图片缓存Resource实例</strong></p>
+<p>四级缓存为超出上述缓存的需要重新绑定的ViewHolder</p></div><a class="article-more button is-small is-size-7" href="/2021/10/15/RecyclerView/#more">Read more</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-09-30T06:00:40.000Z" title="9/30/2021, 2:00:40 PM">2021-09-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-09-12T09:36:49.093Z" title="9/12/2024, 5:36:49 PM">2024-09-12</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a></span><span class="level-item">an hour read (About 6740 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/09/30/Glide/">Glide</a></h1><div class="content"><h2 id="三级缓存："><a href="#三级缓存：" class="headerlink" title="三级缓存："></a>三级缓存：</h2><p><strong>磁盘(DiskLruCache) -&gt; LRUCache(不活跃资源) -&gt; ActiveResources(使用中资源WeakReference)</strong></p>
+<p><strong>内存缓存分为 ActiveResources弱引用 的和 LruCache ，其中正在使用的图片使用弱引用缓存，暂时不使用的图片用 LruCache缓存，这一点是通过 图片引用计数器（acquired变量）来实现的</strong></p>
+<h3 id="活动缓存"><a href="#活动缓存" class="headerlink" title="活动缓存"></a>活动缓存</h3><p><strong>活动缓存(activeResources: Map&lt;Key, ResourceWeakReference&gt;)</strong></p>
+<p><strong>key为EngineKey<u>对象</u>，value为<u>弱引用</u>的图片缓存ResourceWeakReference实例</strong></p>
+<p>正在使用的图片缓存（被ImageView或Activity引用的），在<strong>ImageView移除或Activity销毁时被移到内存缓存</strong></p>
+<ul>
+<li>资源被包装成带引用计数的EngineResource，标记引用资源的次数（当引用数<strong>acquired</strong>不为0时阻止被回收或降级，降级即是存储到LruCache中）</li>
+<li>这一级缓存<strong>没有大小限制</strong>，所以使用了资源的弱引用</li>
+<li>存：每当<strong>下载资源后会在onEngineJobComplete()中存入ActiveResource</strong>，或者<strong>LruCache命中后，将资源从中LruCache移除并存入ActiveResource。</strong></li>
+<li>取：<strong>每当资源释放时，会降级到LruCache中（请求对应的context onDestroy了或者被gc了）</strong></li>
+<li>开一个<strong>后台线程</strong>，监听ReferenceQueue，不停地从中获取<strong>被gc的缓存</strong>，将其从ActiveResource中移除，并重新构建一个新资源将其<strong>降级为LruCache</strong>（这一步并不会影响页面展示，图片内存没有销毁，只是被降级到有大小限制的LruCache中）</li>
+<li>ActiveResource是为了缓解LruCache中缓存造成压力，因为LruCache中没有命中的缓存只有等到容量超限时才会被清除，强引用即使内存吃紧也不会被gc，现在当LruCache命中后移到ActiveResource，弱引用持有，当内存吃紧时能被回收。</li>
+</ul>
+<h5 id="活动缓存是感知生命周期的"><a href="#活动缓存是感知生命周期的" class="headerlink" title="活动缓存是感知生命周期的"></a>活动缓存是感知生命周期的</h5><p>​    当绑定的context<strong>销毁onDestory时</strong>，RequestManager会将该事件传递给RequestTracker，然后触发该请求Resource的clear，再调用Engine.release，将改activiteResource降级到LruCache</p>
+<h3 id="内存缓存LRUCache"><a href="#内存缓存LRUCache" class="headerlink" title="内存缓存LRUCache"></a>内存缓存LRUCache</h3><p><strong>内存缓存LRUCache(memoryCache: LruCache&lt;Key, Resource&lt;?&gt;&gt;)</strong></p>
+<p><strong>key为EngineKey<u>对象</u>，value为图片缓存Resource实例</strong></p>
 <p>当图片不再显示时，图片会从活动缓存移到内存缓存。存储的是暂时不用的图片缓存（依靠<strong>图片引用计数器acquired</strong>变量实现，当acquired大于0时存在于活动缓存中，为0是移到内存缓存中）</p>
+<ul>
+<li><p>使用 <strong>LinkedHashMap实现</strong>， 存储从活跃图片降级的资源，使用Lru算法淘汰最近最少使用的</p>
+<p><code>Map&lt;T, Y&gt; cache = new LinkedHashMap&lt;&gt;(100, 0.75f, true);</code></p>
 </li>
-<li><p><strong>磁盘缓存（diskLruCache: LinkedHashMap&lt;String, Entry&gt;）</strong></p>
-<p><strong>key为使用EngineKey所有参数经过哈希算法加密后的字符串，value为File实例</strong></p>
+<li><p>存：从活跃图片<strong>降级的资源</strong>（退出当前界面，或者ActiveResource资源被回收）</p>
+</li>
+<li><p>取：网络请求资源之前，从缓存中取，如没命中活动资源则取活动资源，没命中活动资源则取内存缓存LRUCache，若命中则直接从LruCache中移除了，没命中则走磁盘或网络。</p>
+</li>
+<li><p><strong>内存缓存最大空间(maxSize) = 每个进程可用的最大内存（activityManager.getMemoryClass()  *  0.4</strong></p>
+<p><strong>(低配手机的话是: 每个进程可用的最大内存 * 0.33)</strong></p>
+<blockquote>
+<p>activityManager.getMemoryClass值：</p>
+<ul>
+<li>低端设备可能在 16-32 MB 范围内。</li>
+<li>中档设备通常在 64-128 MB 范围内。</li>
+<li>高端设备和新款设备可能在 256 MB 或更高。//当设置largeHeap时，最多可申请512M</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h3 id="磁盘缓存"><a href="#磁盘缓存" class="headerlink" title="磁盘缓存"></a>磁盘缓存</h3><p><strong>磁盘缓存（diskLruCache: LinkedHashMap&lt;String, Entry&gt;）</strong></p>
+<p><strong>key为使用EngineKey所有参数经过哈希算法加密后的<u>字符串</u>，value为File实例</strong></p>
 <p>磁盘缓存大小默认250MB，根据缓存策略的不同可能存储原始图片或转换后的图片。磁盘缓存的存储顺序记录在journal文件中，有时该文件过大会导致glide初始过慢。</p>
 <blockquote>
 <p>DiskCacheStrategy.ALL ：     //表示既缓存原始图片，也缓存转换过后的图片。<br>DiskCacheStrategy.NONE：     //表示不缓存任何内容。<br>DiskCacheStrategy.RESOURCE： //表示只缓存原始图片。 (推荐)<br>DiskCacheStrategy.DATA：     //表示只缓存转换过后的图片。<br>DiskCacheStrategy.AUTOMATIC  //表示智能判断选择模式（默认选项）。</p>
 </blockquote>
-</li>
+<ul>
+<li>根据<strong>缓存策略的不同</strong>，可能存储源数据和经过变换的数据。</li>
+<li>在内存中用<strong>LinkedHashMap实现的LruCache</strong>记录一组Entry，Entry内部包含一组文件，文件名即是key，并且有开启<strong>后台线程执行删除文件操作以控制磁盘缓存大小</strong>。</li>
+<li>写磁盘缓存即是触发Writer将数据写入磁盘，并在内存构建对应的File缓存在LinkedHashMap中</li>
+<li>磁盘缓存的存储顺序记录在journal文件中，有时该文件过大会导致glide初始过慢。</li>
 </ul>
-<h2 id="Glide缓存"><a href="#Glide缓存" class="headerlink" title="Glide缓存"></a>Glide缓存</h2><p><strong>磁盘(DiskLruCache) -&gt; LRUCache(不活跃资源) -&gt; WeakReference(使用中资源)</strong></p>
-<p><strong>内存缓存分为弱引用的和 LruCache ，其中正在使用的图片使用弱引用缓存，暂时不使用的图片用 LruCache缓存，这一点是通过 图片引用计数器（acquired变量）来实现的</strong></p>
-<p><img src="/2021/09/30/Glide/b784f4ad31217d419faedc0d0efc595f.jpg" alt="b784f4ad31217d419faedc0d0efc595f"></p>
-<p>Glide生成key（内存缓存Key类型为EngineKey）的方式远比我们想象的要复杂，决定缓存Key的参数有8种，其中包括图片URL、宽、高。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EngineKey key = keyFactory.buildKey(model, signature, width, height, transformations,</span><br><span class="line">        resourceClass, transcodeClass, options);</span><br></pre></td></tr></table></figure>
+<h2 id="感知生命周期"><a href="#感知生命周期" class="headerlink" title="感知生命周期"></a>感知生命周期</h2><p><strong>通过链式调用中with(xxx)传入的activity或Fragment，Glide实现了对所属activity或者fragment生命周期监听：通过new一个隐形的fragment(RequestManagerFragment.class)，嵌入到所要监听的fragment或者activity中，这样当宿主activity或fragment的生命周期回调时，可以通过嵌入的fragment监听宿主生命周期回调，并在RequestManager中执行</strong></p>
+<p>**onStart():  继续请求resumeRequests() **</p>
+<p><strong>onStop():  暂停请求pauseRequests()</strong></p>
+<p><strong>onDestory():  销毁请求、对应页面的活动缓存降级到内存缓存LRUCache，移除监听等操作</strong></p>
+<h2 id="Glide缓存Key"><a href="#Glide缓存Key" class="headerlink" title="Glide缓存Key"></a>Glide缓存Key</h2><p>Glide生成key（两级内存缓存Key类型为EngineKey对象，磁盘缓存Key类型为EngineKey的哈希字符串）的方式涉及的参数有8种，其中包括图片URL、宽、高。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EngineKey key = keyFactory.buildKey(model, signature, width, height, transformations,</span><br><span class="line">        resourceClass, transcodeClass, options);</span><br></pre></td></tr></table></figure>
 
-<p>这里可以得出一个结论，几乎任意配置的改变都会导致同一张图片生成多个缓存key。举个例子：同一张图片加载到2个不同大小的ImageView会生成2个缓存图片</p>
-<h2 id="Glide-QA"><a href="#Glide-QA" class="headerlink" title="Glide QA"></a>Glide QA</h2><h3 id="glide是怎么拿到的width-height（view未测绘前拿不到宽高）"><a href="#glide是怎么拿到的width-height（view未测绘前拿不到宽高）" class="headerlink" title="glide是怎么拿到的width,height（view未测绘前拿不到宽高）"></a><strong>glide是怎么拿到的width,height（view未测绘前拿不到宽高）</strong></h3><p>width,height能拿到的原因是ViewTarget会为所持有的View注册view树绘制回调</p>
+
+
+
+
+<p>//TODO from here</p>
+<h2 id="Glide-数据加载流程"><a href="#Glide-数据加载流程" class="headerlink" title="Glide 数据加载流程"></a>Glide 数据加载流程</h2><ul>
+<li>RequestBuilder 构建 Request和 Target，将请求委托给RequestManager，RequestManager触发Request.begin(),然后调用Engine.load()加载资源，若有内存缓存则返回，否则启动异步任务加载磁盘缓存，若无则从网络加载</li>
+<li>DecodeJob 负责加载数据（可能从磁盘，或网络，onDataFetcherReady），再进行数据解码（onDataFetcherReady），再进行数据变换（Transformation），写ActiveResource，（将变换后的数据回调给Target），将变换后的资源写文件（ResourceEncoder）</li>
+</ul>
+<h2 id="感知内存吃紧"><a href="#感知内存吃紧" class="headerlink" title="感知内存吃紧"></a>感知内存吃紧</h2><p>注册ComponentCallbacks2，实现细粒度内存管理：</p>
+<ol>
+<li>onLowMemory(){清除内存}</li>
+<li>onTrimMemory(){修剪内存}</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">memoryCache.trimMemory(level); <span class="comment">// 内存缓存</span></span><br><span class="line">bitmapPool.trimMemory(level); <span class="comment">// bitmap池</span></span><br><span class="line">arrayPool.trimMemory(level); <span class="comment">// 字节数组池</span></span><br></pre></td></tr></table></figure>
+
+<p>可以设置在onTrimMemory时，取消所有正在进行的请求。</p>
+<h3 id="Glide线程池"><a href="#Glide线程池" class="headerlink" title="Glide线程池"></a>Glide线程池</h3><ol>
+<li>磁盘缓存线程池，一个核心线程：用于io图片编码</li>
+<li>加载资源线程池，最多不超过4个核心线程数，用于处理网络请求，图片解码转码</li>
+<li>动画线程池，最多不超过2个线程</li>
+<li>磁盘缓存清理线程池</li>
+<li>ActiveResource 开启一个后台线程监听ReferenceQueue 所有线程池都默认采用优先级队列</li>
+</ol>
+<h3 id="加载Gif流程"><a href="#加载Gif流程" class="headerlink" title="加载Gif流程"></a>加载Gif流程</h3><p>读取流的前三个字节，若判断是gif，则会命中gif解码器-将资源解码成GifDrawable，它持有GifFrameLoader会将资源解码成一张张Bitmap并且传递给DelayTarget的对象，该对象每次资源加载完毕都会通过handler发送延迟消息回调 onFrameReady() 以触发GifDrawable.invalidataSelf()重绘。加载下一帧时会重新构建DelayTarget</p>
+<h2 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h2><h3 id="glide是怎么拿到的width-height（view未测绘前拿不到宽高）"><a href="#glide是怎么拿到的width-height（view未测绘前拿不到宽高）" class="headerlink" title="glide是怎么拿到的width,height（view未测绘前拿不到宽高）"></a><strong>glide是怎么拿到的width,height（view未测绘前拿不到宽高）</strong></h3><p>width,height能拿到的原因是ViewTarget会为所持有的View注册view树绘制回调</p>
 <p><code>addOnPreDrawListener(OnPreDrawListener listener)</code></p>
 <p><img src="Glide//image-20240709154704558.png" alt="image-20240709154704558"></p>
 <h3 id="Glide的缓存大小默认是多少"><a href="#Glide的缓存大小默认是多少" class="headerlink" title="Glide的缓存大小默认是多少"></a>Glide的缓存大小默认是多少</h3><p><strong>内存缓存最大空间(maxSize) = 每个进程可用的最大内存（activityManager.getMemoryClass()  *  0.4</strong></p>
@@ -76,136 +132,20 @@
 <p><img src="Glide//image-20240815114741925.png" alt="image-20240815114741925"></p>
 <p>这里有个点：随着图片磁盘缓存的存取，由于每次存取磁盘图片glide都会将存取操作记录到日志文件(journal文件)，日志文件会逐渐增大到可能几兆大小，导致glide初始化延迟（glide的初始化中，磁盘缓存初始化时会涉及到将日志文件读取到内存中操作）。</p>
 <p>这里可以增加一个首页模块的磁盘缓存目录，比如<code>项目/cache/image_manager_disk_home_cache</code>，启动时先初始化首页的磁盘缓存(现为10m)再初始化主体的磁盘缓存，避免日志文件过大导致的初始化时间太长阻塞App启动。</p>
-<p>//todo </p>
-<h2 id="Glide"><a href="#Glide" class="headerlink" title="Glide"></a>Glide</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
-<li>会根据控件大小进行下采样，以解码出符合需求的大小，对内存更友好</li>
-<li>内存缓存+磁盘缓存</li>
-<li>感知生命周期，取消任务，防止内存泄漏</li>
-<li>感知内存吃紧，进行回收</li>
-<li>BitmapPool，防止内存抖动的进行bitmap��换</li>
-<li>定义请求优先级</li>
-</ol>
-<h3 id="手写一个图片库注意事项"><a href="#手写一个图片库注意事项" class="headerlink" title="手写一个图片库注意事项"></a>手写一个图片库注意事项</h3><ol>
-<li>获取资源：异步并发下载图片，最大化利用cpu资源</li>
-<li>资源解码：按实际需求异步解码，多线程并发是否能加快解码速度</li>
-<li>资源变换：使用资源池，复用变换的资源，避免内存抖动</li>
-<li>缓存：磁盘缓存原始图片，或变换的资源。内存缓存刚使用过的资源，使用lru策略控制大小</li>
-<li>感知生命周期：避免内存泄漏</li>
-<li>感知内存吃紧：清理缓存</li>
-</ol>
-<h3 id="Glide-数据加载流程"><a href="#Glide-数据加载流程" class="headerlink" title="Glide 数据加载流程"></a>Glide 数据加载流程</h3><ul>
-<li>RequestBuilder 构建 Request和 Target，将请求委托给RequestManager，RequestManager触发Request.begin(),然后调用Engine.load()加载资源，若有内存缓存则返回，否则启动异步任务加载磁盘缓存，若无则从网络加载</li>
-<li>DecodeJob 负责加载数据（可能从磁盘，或网络，onDataFetcherReady），再进行数据解码（onDataFetcherReady），再进行数据变换（Transformation），写ActiveResource，（将变换后的数据回调给Target），将变换后的资源写文件（ResourceEncoder）</li>
+<h3 id="ActiveResources弱引用问题"><a href="#ActiveResources弱引用问题" class="headerlink" title="ActiveResources弱引用问题"></a>ActiveResources弱引用问题</h3><p>glide 当前页面的图片缓存是存在activiteResource的弱引用的，也就是说当gc时当前页面的图片缓存会被回收？那岂不是当前页面会空白</p>
+<blockquote>
+<p>在 Glide 中，活动资源缓存（Active Resources Cache）确实使用了弱引用（WeakReference）来缓存当前页面的图片资源。弱引用允许垃圾回收器在内存紧张时回收这些资源，从而避免内存泄漏。然而，这并不意味着当前页面显示的图片会变得空白。以下详细解释了这种机制和它的工作原理。</p>
+<h3 id="活动资源缓存和弱引用"><a href="#活动资源缓存和弱引用" class="headerlink" title="活动资源缓存和弱引用"></a>活动资源缓存和弱引用</h3><p><strong>活动资源缓存</strong>（Active Resources Cache）是用于存储当前正在使用的图像资源，例如，正在显示在 ImageView 中的图片。为了避免内存泄漏，Glide 使用 WeakReference 来存储这些资源。</p>
+<h4 id="弱引用的工作原理"><a href="#弱引用的工作原理" class="headerlink" title="弱引用的工作原理"></a>弱引用的工作原理</h4><ul>
+<li><strong>弱引用</strong>：弱引用不会阻止垃圾回收器回收对象。当垃圾回收器发现一个对象只有弱引用时，会回收该对象。</li>
+<li><strong>活动资源缓存中的弱引用</strong>：Glide 为当前正在显示的图片资源创建弱引用，并将其存储在活动资源缓存中。</li>
 </ul>
-<h3 id="预加载"><a href="#预加载" class="headerlink" title="预加载"></a>预加载</h3><p>preload，加载到一个PreloadTarget，等资源加载好了，就调用clear，将资源从ActiveResource移除存到Lrucache中</p>
-<h3 id="感知内存吃紧"><a href="#感知内存吃紧" class="headerlink" title="感知内存吃紧"></a>感知内存吃紧</h3><p>注册ComponentCallbacks2，实现细粒度内存管理：</p>
+<h3 id="解决空白问题的机制"><a href="#解决空白问题的机制" class="headerlink" title="解决空白问题的机制"></a>解决空白问题的机制</h3><p>尽管活动资源缓存使用弱引用，但 Glide 采取了一些措施来避免当前页面显示的图片变为空白。这些措施包括：</p>
 <ol>
-<li>onLowMemory(){清除内存}</li>
-<li>onTrimMemory(){修剪内存}</li>
+<li><strong>重新加载图片</strong>：当一个图片资源被垃圾回收器回收且内存缓存（Memory Cache）中也没有时，Glide 会重新加载图片，确保图片能够继续显示。</li>
+<li><strong>内存缓存备份</strong>：除了活动资源缓存，Glide 还使用内存缓存（Memory Cache）来存储已经加载的图片。如果一个图片资源在活动资源缓存中被回收，Glide 会尝试从内存缓存中获取该图片。</li>
 </ol>
-<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">memoryCache<span class="selector-class">.trimMemory</span>(level); <span class="comment">// 内存缓存</span></span><br><span class="line">bitmapPool<span class="selector-class">.trimMemory</span>(level); <span class="comment">// bitmap池</span></span><br><span class="line">arrayPool<span class="selector-class">.trimMemory</span>(level); <span class="comment">// 字节数组池</span></span><br></pre></td></tr></table></figure>
-
-<p>可以设置在onTrimMemory时，取消所有正在进行的请求。</p>
-<h3 id="BitmapPool"><a href="#BitmapPool" class="headerlink" title="BitmapPool"></a>BitmapPool</h3><ul>
-<li>BitmatPool 是 Glide 维护了一个图片复用池，LruBitmapPool 使用 Lru 算法保留最近使用的尺寸的 Bitmap。</li>
-<li>api19 后使用bitmap的字节数和config作为key，而之前使用宽高和congif，所以19以后复用度更高</li>
-<li>用类似LinkedHashMap存储，键值对中的值是一组Bitmap，相同字节数的Bitmap 存在一个List中（这样设计的目的是，将Lru策略运用在Bitmap大小上，而不是单个Bitmap上），控制BitmapPool大小通过删除数据组中最后一个Bitmap。</li>
-<li>BitmapPool 大部分用于Bitmap变换和gif加载时</li>
-</ul>
-<h3 id="ArrayPool"><a href="#ArrayPool" class="headerlink" title="ArrayPool"></a>ArrayPool</h3><ul>
-<li>是一个采用Lru策略的数组池，用于解码时候的字节数组的复用。</li>
-<li>清理内存意味着清理MemoryCache，BitmapPool,ArrayPool</li>
-</ul>
-<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>默认情况下，Glide 会在开始一个新的图片请求之前检查以下多级的缓存：</p>
-<ul>
-<li>活动资源 (Active Resources) - 现在是否有另一个 View 正在展示这张图片？</li>
-<li>内存缓存 (Memory cache) - 该图片是否最近被加载过并仍存在于内存中？</li>
-<li>资源类型（Resource） - 该图片是否之前曾被解码、转换并写入过磁盘缓存？</li>
-<li><del>数据来源 (Data) - 构建这个图片的资源是否之前曾被写入过文件缓存？</del></li>
-</ul>
-<p>在 Glide v4 里，所有缓存键都包含至少两个元素 活动资源，内存缓存，资源磁盘缓存的缓存键还包含一些其他数据，包括： 必选：Model 可选：签名 宽度和高度 可选的变换（Transformation） 额外添加的任何 选项(Options) 请求的数据类型 (Bitmap, GIF, 或其他)</p>
-<h3 id="磁盘缓存策略"><a href="#磁盘缓存策略" class="headerlink" title="磁盘缓存策略"></a>磁盘缓存策略</h3><ul>
-<li>如果缓存策略是AUTOMATIC（默认），对于网络图片只缓存原始数据，加载本地资源是存储变换过的数据，如果加载不同尺寸的图片，则会获取原始缓存并在此基础上做变换。</li>
-<li>如果缓存策略是ALL，会缓存原始图片以及每个尺寸的副本，</li>
-<li>如果缓存策略是SOURCE,只会缓存变换过的资源，如果另一个界面换一个尺寸显示图片，则会重新拉取网络 可通过自定义Key实现操控缓存命中策略（混入自己的值，比如修改时间）</li>
-</ul>
-<h3 id="内存缓存"><a href="#内存缓存" class="headerlink" title="内存缓存"></a>内存缓存</h3><ul>
-<li>内存缓存分为两级<ol>
-<li>活跃图片 ActiveResource<ul>
-<li>使用HashMap存储正在使用资源的弱引用</li>
-<li>资源被包装成带引用计数的EngineResource，标记引用资源的次数（当引用数不为0时阻止被回收或降级，降级即是存储到LruCache中）</li>
-<li>这一级缓存没有大小限制，所以使用了资源的弱引用</li>
-<li>存：每当下载资源后会在onEngineJobComplete()中存入ActiveResource，或者LruCache命中后，将资源从中LruCache移除并存入ActiveResource。</li>
-<li>取：每当资源释放时，会降级到LruCache中（请求对应的context onDestroy了或者被gc了）</li>
-<li>开一个后台线程，监听ReferenceQueue，不停地从中获取被gc的资源，将其从ActiveResource中移除，并重新构建一个新资源将其降级为LruCache</li>
-<li>ActiveResource是为了缓解LruCache中缓存造成压力，因为LruCache中没有命中的缓存只有等到容量超限时才会被清除，强引用即使内存吃紧也不会被gc，现在当LruCache命中后移到ActiveResource，弱引用持有，当内存吃紧时能被回收。</li>
-</ul>
-</li>
-<li>LruCache<ul>
-<li>使用 LinkedHashMap 存储从活跃图片降级的资源，使用Lru算法淘汰最近最少使用的</li>
-<li>存：从活跃图片降级的资源（退出当前界面，或者ActiveResource资源被回收）</li>
-<li>取：网络请求资源之前，从缓存中取，若命中则直接从LruCache中移除了。</li>
-</ul>
-</li>
-</ol>
-</li>
-<li>内存缓存只会缓存经过转换后的图片</li>
-<li>内存缓存键根据10多个参数生成，url，宽高</li>
-</ul>
-<h3 id="磁盘缓存"><a href="#磁盘缓存" class="headerlink" title="磁盘缓存"></a>磁盘缓存</h3><ul>
-<li>会将源数据或经过变换的数据存储在磁盘，在内存中用LinkedHashMap记录一组Entry，Entry内部包含一组文件，文件名即是key，并且有开启后台线程执行删除文件操作以控制磁盘缓存大小。</li>
-<li>写磁盘缓存即是触发Writer将数据写入磁盘，并在内存构建对应的File缓存在LinkedHashMap中</li>
-<li>根据缓存策略的不同，可能存储源数据和经过变换的数据。</li>
-</ul>
-<h3 id="感知生命周期"><a href="#感知生命周期" class="headerlink" title="感知生命周期"></a>感知生命周期</h3><ul>
-<li>构造RequestManager时传入context，可以是app的，activity的，或者是view的</li>
-<li>向界面添加无界面Fragment（SupportRequestManagerFragment），Fragment把生命周期传递给Lifecycle，Fragment持有RequestManager，RequestManager监听Lifecycle，RequestManager向RequestTracker传递生命周期以暂停加载，RequestTracker遍历所有正在进行的请求，并暂停他们（移除回调resourceReady回调）</li>
-<li>当绑定context destroy时，RequestManager会将该事件传递给RequestTracker，然后触发该请求Resource的clear，再调用Engine.release，将resource降级到LruCache</li>
-<li>通过HashMap结构保存无界面Fragment以避免重复创建</li>
-</ul>
-<h3 id="取消请求"><a href="#取消请求" class="headerlink" title="取消请求"></a>取消请求</h3><p>通过移除回调，设置取消标志位实现：无法取消已经发出的请求，会在DecodeJob的异步任务的run()方法中判断，如果cancel，则返回。移除各种回调，会传递到DataFetcher，httpUrlConnection 读取数据后会判断是否cancel，如果是则返回null。并没有断开链接</p>
-<h3 id="感知网络变化"><a href="#感知网络变化" class="headerlink" title="感知网络变化"></a>感知网络变化</h3><ul>
-<li>通过 ConnectivityManager 监听网络变化，当网络恢复时，遍历请求列表，将没有完成的任务继续开始</li>
-</ul>
-<h3 id="Transformation"><a href="#Transformation" class="headerlink" title="Transformation"></a>Transformation</h3><ul>
-<li>所有的BitmapTransformation 都是从BitmapPool 拿到一个bitmap，然后将在原有bitmap基础上应用一个matrix再画到新bitmap上。</li>
-<li>变换也是一个key，用以在缓存的时候做区别</li>
-</ul>
-<h3 id="RecycleView图片错乱"><a href="#RecycleView图片错乱" class="headerlink" title="RecycleView图片错乱"></a>RecycleView图片错乱</h3><ul>
-<li>异步任务+视图复用导致</li>
-<li>解决方案：设置占位图+回收表项时取消图片加载（或者新得加载开始时取消旧的加载）+imageview加tag判断是否是自己的图片如果不是则先调用clear</li>
-</ul>
-<h3 id="Glide-缓存失效"><a href="#Glide-缓存失效" class="headerlink" title="Glide 缓存失效"></a>Glide 缓存失效</h3><ul>
-<li>是因为 Key 发生变化，Url是生成key的依据，Url可能发生变化比如把token追加在后面</li>
-<li>自定义生成key的方式，继承GlideUrl重写getCacheKey()</li>
-</ul>
-<h3 id="自定义加载"><a href="#自定义加载" class="headerlink" title="自定义加载"></a>自定义加载</h3><ul>
-<li>定义一个Model类用于包装需要加载的数据</li>
-<li>定义一个Key的实现类，用于实现第一步的Model中的数据的签名用于区分缓存</li>
-<li>定义一个DataFetcher的实现类，用于告诉Glide音频封面如何加载，并把加载结果回调出去</li>
-<li>定义一个ModelLoader的实现类用于包装DataFetcher</li>
-<li>定义一个ModelLoaderFactory的实现类用于生成ModelLoader实例</li>
-<li>将自定义加载配置到AppGlideModule中</li>
-</ul>
-<h3 id="Glide线程池"><a href="#Glide线程池" class="headerlink" title="Glide线程池"></a>Glide线程池</h3><ol>
-<li>磁盘缓存线程池，一个核心线程：用于io图片编码</li>
-<li>加载资源线程池，最多不超过4个核心线程数，用于处理网络请求，图片解码转码</li>
-<li>动画线程池，最多不超过2个线程</li>
-<li>磁盘缓存清理线程池</li>
-<li>ActiveResource 开启一个后台线程监听ReferenceQueue 所有线程池都默认采用优先级队列</li>
-</ol>
-<h3 id="加载Gif流程"><a href="#加载Gif流程" class="headerlink" title="加载Gif流程"></a>加载Gif流程</h3><p>读取流的前三个字节，若判断是gif，则会命中gif解码器-将资源解码成GifDrawable，它持有GifFrameLoader会将资源解码成一张张Bitmap并且传递给DelayTarget的对象，该对象每次资源加载完毕都会通过handler发送延迟消息回调 onFrameReady() 以触发GifDrawable.invalidataSelf()重绘。加载下一帧时会重新构建DelayTarget</p>
-<h3 id="请求优先级"><a href="#请求优先级" class="headerlink" title="请求优先级"></a>请求优先级</h3><p>通过给加载线程池配置优先级队列，加载任务DecodeJob 实现了 compareTo 方法，将priority相减</p>
-<h3 id="图片加载优化"><a href="#图片加载优化" class="headerlink" title="图片加载优化"></a>图片加载优化</h3><ol>
-<li>服务器存多种尺寸的图片</li>
-<li>自定义 AppGlideModule，按设备性能好坏设定MemoryCategory.HIGH,LOW,NORMAL，内存缓存和bitmapPool的大小系数，以及图片解码格式，ARGB_8888，RGB_565</li>
-<li>RecyclerView 在onViewRecycled 中调用clear ，因为recyclerView会默认会缓存5个同类表项，如果类型很多，内存中会持有表项，如果这些表项都包含图片，Glide 的ActiveResource会膨胀。导致gc</li>
-<li>如果 RecyclerView 包含一个很长的itemView，超过一屏，其中包含很多照片，最好把长itemView拆成多个itemView</li>
-<li>使用thumbnail，加载一个缩略图，最好是一个独立的链接，如果是本地的也不差</li>
-<li>使用preload，将资源提前加载到内存中。</li>
-<li>大部分情况下 RESOURCE ，即缓存经过变换的图片上是最好选择，节约内存和磁盘。对于gif资源只缓存原始资源DATA，因为gif是多张图每次编码解码反而耗时</li>
-<li>使用Glide实现变换，因为有BitmapPool供复用</li>
-</ol>
+</blockquote>
 <p>核心代码</p>
 <p>load可加载多种model的图片</p>
 <p><img src="Glide//image-20240815203503827.png" alt="image-20240815203503827"></p>
@@ -260,6 +200,138 @@
 <li><strong>resourceClass</strong>：表示 Glide 从源加载并解码后的资源类型（如 Bitmap、GifDrawable）。</li>
 <li><strong>transcodeClass</strong>：表示从 resourceClass 类型转换后的最终数据类型，可以是 Drawable、Bitmap 或其他自定义类型。</li>
 </ul>
+</blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://juejin.cn/post/7129306281650683935#heading-92">https://juejin.cn/post/7129306281650683935#heading-92</a></p>
+<blockquote>
+<h2 id="Glide"><a href="#Glide" class="headerlink" title="Glide"></a>Glide</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
+<li>会根据控件大小进行下采样，以解码出符合需求的大小，对内存更友好</li>
+<li>内存缓存+磁盘缓存</li>
+<li>感知生命周期，取消任务，防止内存泄漏</li>
+<li>感知内存吃紧，进行回收</li>
+<li>BitmapPool，防止内存抖动的进行bitmap��换</li>
+<li>定义请求优先级</li>
+</ol>
+<h3 id="手写一个图片库注意事项"><a href="#手写一个图片库注意事项" class="headerlink" title="手写一个图片库注意事项"></a>手写一个图片库注意事项</h3><ol>
+<li>获取资源：异步并发下载图片，最大化利用cpu资源</li>
+<li>资源解码：按实际需求异步解码，多线程并发是否能加快解码速度</li>
+<li>资源变换：使用资源池，复用变换的资源，避免内存抖动</li>
+<li>缓存：磁盘缓存原始图片，或变换的资源。内存缓存刚使用过的资源，使用lru策略控制大小</li>
+<li>感知生命周期：避免内存泄漏</li>
+<li>感知内存吃紧：清理缓存</li>
+</ol>
+<h3 id="Glide-数据加载流程-1"><a href="#Glide-数据加载流程-1" class="headerlink" title="Glide 数据加载流程"></a>Glide 数据加载流程</h3><ul>
+<li>RequestBuilder 构建 Request和 Target，将请求委托给RequestManager，RequestManager触发Request.begin(),然后调用Engine.load()加载资源，若有内存缓存则返回，否则启动异步任务加载磁盘缓存，若无则从网络加载</li>
+<li>DecodeJob 负责加载数据（可能从磁盘，或网络，onDataFetcherReady），再进行数据解码（onDataFetcherReady），再进行数据变换（Transformation），写ActiveResource，（将变换后的数据回调给Target），将变换后的资源写文件（ResourceEncoder）</li>
+</ul>
+<h3 id="预加载"><a href="#预加载" class="headerlink" title="预加载"></a>预加载</h3><p>preload，加载到一个PreloadTarget，等资源加载好了，就调用clear，将资源从ActiveResource移除存到Lrucache中</p>
+<h3 id="感知内存吃紧-1"><a href="#感知内存吃紧-1" class="headerlink" title="感知内存吃紧"></a>感知内存吃紧</h3><p>注册ComponentCallbacks2，实现细粒度内存管理：</p>
+<ol>
+<li>onLowMemory(){清除内存}</li>
+<li>onTrimMemory(){修剪内存}</li>
+</ol>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">memoryCache<span class="selector-class">.trimMemory</span>(level); <span class="comment">// 内存缓存</span></span><br><span class="line">bitmapPool<span class="selector-class">.trimMemory</span>(level); <span class="comment">// bitmap池</span></span><br><span class="line">arrayPool<span class="selector-class">.trimMemory</span>(level); <span class="comment">// 字节数组池</span></span><br></pre></td></tr></table></figure>
+
+<p>可以设置在onTrimMemory时，取消所有正在进行的请求。</p>
+<h3 id="BitmapPool"><a href="#BitmapPool" class="headerlink" title="BitmapPool"></a>BitmapPool</h3><ul>
+<li>BitmatPool 是 Glide 维护了一个图片复用池，LruBitmapPool 使用 Lru 算法保留最近使用的尺寸的 Bitmap。</li>
+<li>api19 后使用bitmap的字节数和config作为key，而之前使用宽高和congif，所以19以后复用度更高</li>
+<li>用类似LinkedHashMap存储，键值对中的值是一组Bitmap，相同字节数的Bitmap 存在一个List中（这样设计的目的是，将Lru策略运用在Bitmap大小上，而不是单个Bitmap上），控制BitmapPool大小通过删除数据组中最后一个Bitmap。</li>
+<li>BitmapPool 大部分用于Bitmap变换和gif加载时</li>
+</ul>
+<h3 id="ArrayPool"><a href="#ArrayPool" class="headerlink" title="ArrayPool"></a>ArrayPool</h3><ul>
+<li>是一个采用Lru策略的数组池，用于解码时候的字节数组的复用。</li>
+<li>清理内存意味着清理MemoryCache，BitmapPool,ArrayPool</li>
+</ul>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>默认情况下，Glide 会在开始一个新的图片请求之前检查以下多级的缓存：</p>
+<ul>
+<li>活动资源 (Active Resources) - 现在是否有另一个 View 正在展示这张图片？</li>
+<li>内存缓存 (Memory cache) - 该图片是否最近被加载过并仍存在于内存中？</li>
+<li>资源类型（Resource） - 该图片是否之前曾被解码、转换并写入过磁盘缓存？</li>
+<li><del>数据来源 (Data) - 构建这个图片的资源是否之前曾被写入过文件缓存？</del></li>
+</ul>
+<p>在 Glide v4 里，所有缓存键都包含至少两个元素 活动资源，内存缓存，资源磁盘缓存的缓存键还包含一些其他数据，包括： 必选：Model 可选：签名 宽度和高度 可选的变换（Transformation） 额外添加的任何 选项(Options) 请求的数据类型 (Bitmap, GIF, 或其他)</p>
+<h3 id="磁盘缓存策略"><a href="#磁盘缓存策略" class="headerlink" title="磁盘缓存策略"></a>磁盘缓存策略</h3><ul>
+<li>如果缓存策略是AUTOMATIC（默认），对于网络图片只缓存原始数据，加载本地资源是存储变换过的数据，如果加载不同尺寸的图片，则会获取原始缓存并在此基础上做变换。</li>
+<li>如果缓存策略是ALL，会缓存原始图片以及每个尺寸的副本，</li>
+<li>如果缓存策略是SOURCE,只会缓存变换过的资源，如果另一个界面换一个尺寸显示图片，则会重新拉取网络 可通过自定义Key实现操控缓存命中策略（混入自己的值，比如修改时间）</li>
+</ul>
+<h3 id="内存缓存"><a href="#内存缓存" class="headerlink" title="内存缓存"></a>内存缓存</h3><ul>
+<li>内存缓存分为两级<ol>
+<li>活跃图片 ActiveResource<ul>
+<li>使用HashMap存储正在使用资源的弱引用</li>
+<li>资源被包装成带引用计数的EngineResource，标记引用资源的次数（当引用数不为0时阻止被回收或降级，降级即是存储到LruCache中）</li>
+<li>这一级缓存没有大小限制，所以使用了资源的弱引用</li>
+<li>存：每当下载资源后会在onEngineJobComplete()中存入ActiveResource，或者LruCache命中后，将资源从中LruCache移除并存入ActiveResource。</li>
+<li>取：每当资源释放时，会降级到LruCache中（请求对应的context onDestroy了或者被gc了）</li>
+<li>开一个后台线程，监听ReferenceQueue，不停地从中获取被gc的资源，将其从ActiveResource中移除，并重新构建一个新资源将其降级为LruCache</li>
+<li>ActiveResource是为了缓解LruCache中缓存造成压力，因为LruCache中没有命中的缓存只有等到容量超限时才会被清除，强引用即使内存吃紧也不会被gc，现在当LruCache命中后移到ActiveResource，弱引用持有，当内存吃紧时能被回收。</li>
+</ul>
+</li>
+<li>LruCache<ul>
+<li>使用 LinkedHashMap 存储从活跃图片降级的资源，使用Lru算法淘汰最近最少使用的</li>
+<li>存：从活跃图片降级的资源（退出当前界面，或者ActiveResource资源被回收）</li>
+<li>取：网络请求资源之前，从缓存中取，若命中则直接从LruCache中移除了。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>内存缓存只会缓存经过转换后的图片</li>
+<li>内存缓存键根据10多个参数生成，url，宽高</li>
+</ul>
+<h3 id="磁盘缓存-1"><a href="#磁盘缓存-1" class="headerlink" title="磁盘缓存"></a>磁盘缓存</h3><ul>
+<li>会将源数据或经过变换的数据存储在磁盘，在内存中用LinkedHashMap记录一组Entry，Entry内部包含一组文件，文件名即是key，并且有开启后台线程执行删除文件操作以控制磁盘缓存大小。</li>
+<li>写磁盘缓存即是触发Writer将数据写入磁盘，并在内存构建对应的File缓存在LinkedHashMap中</li>
+<li>根据缓存策略的不同，可能存储源数据和经过变换的数据。</li>
+</ul>
+<h3 id="感知生命周期-1"><a href="#感知生命周期-1" class="headerlink" title="感知生命周期"></a>感知生命周期</h3><ul>
+<li>构造RequestManager时传入context，可以是app的，activity的，或者是view的</li>
+<li>向界面添加无界面Fragment（SupportRequestManagerFragment），Fragment把生命周期传递给Lifecycle，Fragment持有RequestManager，RequestManager监听Lifecycle，RequestManager向RequestTracker传递生命周期以暂停加载，RequestTracker遍历所有正在进行的请求，并暂停他们（移除回调resourceReady回调）</li>
+<li>当绑定context destroy时，RequestManager会将该事件传递给RequestTracker，然后触发该请求Resource的clear，再调用Engine.release，将resource降级到LruCache</li>
+<li>通过HashMap结构保存无界面Fragment以避免重复创建</li>
+</ul>
+<h3 id="取消请求"><a href="#取消请求" class="headerlink" title="取消请求"></a>取消请求</h3><p>通过移除回调，设置取消标志位实现：无法取消已经发出的请求，会在DecodeJob的异步任务的run()方法中判断，如果cancel，则返回。移除各种回调，会传递到DataFetcher，httpUrlConnection 读取数据后会判断是否cancel，如果是则返回null。并没有断开链接</p>
+<h3 id="感知网络变化"><a href="#感知网络变化" class="headerlink" title="感知网络变化"></a>感知网络变化</h3><ul>
+<li>通过 ConnectivityManager 监听网络变化，当网络恢复时，遍历请求列表，将没有完成的任务继续开始</li>
+</ul>
+<h3 id="Transformation"><a href="#Transformation" class="headerlink" title="Transformation"></a>Transformation</h3><ul>
+<li>所有的BitmapTransformation 都是从BitmapPool 拿到一个bitmap，然后将在原有bitmap基础上应用一个matrix再画到新bitmap上。</li>
+<li>变换也是一个key，用以在缓存的时候做区别</li>
+</ul>
+<h3 id="RecycleView图片错乱"><a href="#RecycleView图片错乱" class="headerlink" title="RecycleView图片错乱"></a>RecycleView图片错乱</h3><ul>
+<li>异步任务+视图复用导致</li>
+<li>解决方案：设置占位图+回收表项时取消图片加载（或者新得加载开始时取消旧的加载）+imageview加tag判断是否是自己的图片如果不是则先调用clear</li>
+</ul>
+<h3 id="Glide-缓存失效"><a href="#Glide-缓存失效" class="headerlink" title="Glide 缓存失效"></a>Glide 缓存失效</h3><ul>
+<li>是因为 Key 发生变化，Url是生成key的依据，Url可能发生变化比如把token追加在后面</li>
+<li>自定义生成key的方式，继承GlideUrl重写getCacheKey()</li>
+</ul>
+<h3 id="自定义加载"><a href="#自定义加载" class="headerlink" title="自定义加载"></a>自定义加载</h3><ul>
+<li>定义一个Model类用于包装需要加载的数据</li>
+<li>定义一个Key的实现类，用于实现第一步的Model中的数据的签名用于区分缓存</li>
+<li>定义一个DataFetcher的实现类，用于告诉Glide音频封面如何加载，并把加载结果回调出去</li>
+<li>定义一个ModelLoader的实现类用于包装DataFetcher</li>
+<li>定义一个ModelLoaderFactory的实现类用于生成ModelLoader实例</li>
+<li>将自定义加载配置到AppGlideModule中</li>
+</ul>
+<h3 id="Glide线程池-1"><a href="#Glide线程池-1" class="headerlink" title="Glide线程池"></a>Glide线程池</h3><ol>
+<li>磁盘缓存线程池，一个核心线程：用于io图片编码</li>
+<li>加载资源线程池，最多不超过4个核心线程数，用于处理网络请求，图片解码转码</li>
+<li>动画线程池，最多不超过2个线程</li>
+<li>磁盘缓存清理线程池</li>
+<li>ActiveResource 开启一个后台线程监听ReferenceQueue 所有线程池都默认采用优先级队列</li>
+</ol>
+<h3 id="加载Gif流程-1"><a href="#加载Gif流程-1" class="headerlink" title="加载Gif流程"></a>加载Gif流程</h3><p>读取流的前三个字节，若判断是gif，则会命中gif解码器-将资源解码成GifDrawable，它持有GifFrameLoader会将资源解码成一张张Bitmap并且传递给DelayTarget的对象，该对象每次资源加载完毕都会通过handler发送延迟消息回调 onFrameReady() 以触发GifDrawable.invalidataSelf()重绘。加载下一帧时会重新构建DelayTarget</p>
+<h3 id="请求优先级"><a href="#请求优先级" class="headerlink" title="请求优先级"></a>请求优先级</h3><p>通过给加载线程池配置优先级队列，加载任务DecodeJob 实现了 compareTo 方法，将priority相减</p>
+<h3 id="图片加载优化"><a href="#图片加载优化" class="headerlink" title="图片加载优化"></a>图片加载优化</h3><ol>
+<li>服务器存多种尺寸的图片</li>
+<li>自定义 AppGlideModule，按设备性能好坏设定MemoryCategory.HIGH,LOW,NORMAL，内存缓存和bitmapPool的大小系数，以及图片解码格式，ARGB_8888，RGB_565</li>
+<li>RecyclerView 在onViewRecycled 中调用clear ，因为recyclerView会默认会缓存5个同类表项，如果类型很多，内存中会持有表项，如果这些表项都包含图片，Glide 的ActiveResource会膨胀。导致gc</li>
+<li>如果 RecyclerView 包含一个很长的itemView，超过一屏，其中包含很多照片，最好把长itemView拆成多个itemView</li>
+<li>使用thumbnail，加载一个缩略图，最好是一个独立的链接，如果是本地的也不差</li>
+<li>使用preload，将资源提前加载到内存中。</li>
+<li>大部分情况下 RESOURCE ，即缓存经过变换的图片上是最好选择，节约内存和磁盘。对于gif资源只缓存原始资源DATA，因为gif是多张图每次编码解码反而耗时</li>
+<li>使用Glide实现变换，因为有BitmapPool供复用</li>
+</ol>
 </blockquote>
 </div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-07-30T09:32:40.000Z" title="7/30/2021, 5:32:40 PM">2021-07-30</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.864Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">an hour read (About 6885 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2021/07/30/ActivityStart/">ActivityStart</a></h1><div class="content"><p><img src="/2021/07/30/ActivityStart/%E5%BD%93%E6%89%8B%E6%8C%87%E7%82%B9%E5%87%BB%E4%BA%86%E6%A1%8C%E9%9D%A2%E7%9A%84App%E5%9B%BE%E6%A0%87%E6%97%B6.jpg" alt="当手指点击了桌面的App图标时"></p>
 <p><img src="/2021/07/30/ActivityStart/%E5%BD%93%E6%89%8B%E6%8C%87%E7%82%B9%E5%87%BB%E4%BA%86%E6%A1%8C%E9%9D%A2%E7%9A%84App%E5%9B%BE%E6%A0%87%E6%97%B6%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88.jpg" alt="当手指点击了桌面的App图标时发生了什么"></p>
