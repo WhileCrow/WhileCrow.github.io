@@ -76,12 +76,14 @@
 <h1 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h1><h3 id="vndservicemanager"><a href="#vndservicemanager" class="headerlink" title="vndservicemanager"></a>vndservicemanager</h3><p>以前，Binder 服务通过 <code>servicemanager</code> 注册，其他进程可从中检索这些服务。在 Android 8 中，<code>servicemanager</code> 现在专供框架使用，而应用进程和供应商进程无法再对其进行访问。</p>
 <p>不过，供应商服务现在可以使用 <code>vndservicemanager</code>，这是一个使用 <code>/dev/vndbinder</code>（作为构建基础的源代码与框架 <code>servicemanager</code> 的相同）而非 <code>/dev/binder</code> 的 <code>servicemanager</code> 的新实例。供应商进程无需更改即可与 <code>vndservicemanager</code> 通信；当供应商进程打开 /<code>dev/vndbinder</code> 时，服务查询会自动转至 <code>vndservicemanager</code>。</p>
 <p><code>vndservicemanager</code> 二进制文件包含在 Android 的默认设备 Makefile 中。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-08-08T09:14:02.000Z" title="8/8/2022, 5:14:02 PM">2022-08-08</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-03-25T07:35:02.929Z" title="3/25/2024, 3:35:02 PM">2024-03-25</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">34 minutes read (About 5028 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/08/08/Binder/">Binder</a></h1><div class="content"><p>为什么是Binder</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-08-08T09:14:02.000Z" title="8/8/2022, 5:14:02 PM">2022-08-08</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-12-16T09:36:39.197Z" title="12/16/2024, 5:36:39 PM">2024-12-16</time></span><span class="level-item"><a class="link-muted" href="/categories/Android/">Android</a><span> / </span><a class="link-muted" href="/categories/Android/Framework/">Framework</a></span><span class="level-item">34 minutes read (About 5034 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/08/08/Binder/">Binder</a></h1><div class="content"><p>为什么是Binder</p>
 <p><img src="/2022/08/08/Binder/v2-30dce36be4e6617596b5fab96ef904c6_1440w.jpg" alt="img"></p>
 <p>具体见QA。</p>
 <p>一次完整的 Binder IPC 通信过程通常是这样：</p>
 <ol>
-<li></li>
+<li>Server创建Binder实例，并调用<code>ServiceManager.addService(String name, IBinder service)</code>向ServiceManager注册</li>
+<li>ServiceManager根据传入的服务名与服务实体，在svclist中增加该服务对应的handle和name映射</li>
+<li>Client发起通信，先向ServiceManager查询该服务名，命中后返回</li>
 </ol>
 <p>其内存流向是这样的：</p>
 <ol>
