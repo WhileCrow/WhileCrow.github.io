@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Crow&#039;s Sky</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Crow&#039;s Sky"><meta name="msapplication-TileImage" content="/img/avatarCircle.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crow&#039;s Sky"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="AsyncLayoutInflater框架是Google提供的可用于异步线程中解析布局的工具，原理就是在新建的单线程中循环执行提交到**任务队列(容量固定为10的ArrayBlockingQueue)**的任务。 注意事项 所填充的布局中自定义View中不能直接使用Handler，因为其布局中所有子View都是在异步线程中创建的，故默认没有初始化Looper 单线程易阻塞 提交超过10个任务会导"><meta property="og:type" content="blog"><meta property="og:title" content="Crow&#039;s Sky"><meta property="og:url" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/"><meta property="og:site_name" content="Crow&#039;s Sky"><meta property="og:description" content="AsyncLayoutInflater框架是Google提供的可用于异步线程中解析布局的工具，原理就是在新建的单线程中循环执行提交到**任务队列(容量固定为10的ArrayBlockingQueue)**的任务。 注意事项 所填充的布局中自定义View中不能直接使用Handler，因为其布局中所有子View都是在异步线程中创建的，故默认没有初始化Looper 单线程易阻塞 提交超过10个任务会导"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/39m8kimxj6.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/x8lr69v50i.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/4id8l2b8ss-20250107174609761.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/33yxjzrjrq.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/29m4g6rz8m.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/hjk9yo5yrq.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/m7jysrqcnz.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/bxmnk9cty1.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/jhtg4jv694.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/wy9za9nsi9.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/yyws5j6rux.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/7y7egqdvp8.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/7oxgvqi64h.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/cbwisom5i5.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/ceboy18h4v.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/b8kftsseeo.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/eu41qgq1v9.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/m7wxjghrnk.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/zty31j2qv8.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/u2fkijpd8t.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/ote9z14dvn.png"><meta property="og:image" content="http://example.com/2025/01/07/AsyncLayoutInflaterManager/3zzsud2qof.png"><meta property="article:published_time" content="2025-01-07T09:36:46.283Z"><meta property="article:modified_time" content="2025-01-07T09:50:38.401Z"><meta property="article:author" content="White Crow"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/2025/01/07/AsyncLayoutInflaterManager/39m8kimxj6.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2025/01/07/AsyncLayoutInflaterManager/"},"headline":"Crow's Sky","image":["http://example.com/2025/01/07/AsyncLayoutInflaterManager/39m8kimxj6.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/x8lr69v50i.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/4id8l2b8ss-20250107174609761.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/33yxjzrjrq.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/29m4g6rz8m.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/hjk9yo5yrq.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/m7jysrqcnz.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/bxmnk9cty1.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/jhtg4jv694.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/wy9za9nsi9.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/yyws5j6rux.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/7y7egqdvp8.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/7oxgvqi64h.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/cbwisom5i5.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/ceboy18h4v.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/b8kftsseeo.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/eu41qgq1v9.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/m7wxjghrnk.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/zty31j2qv8.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/u2fkijpd8t.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/ote9z14dvn.png","http://example.com/2025/01/07/AsyncLayoutInflaterManager/3zzsud2qof.png"],"datePublished":"2025-01-07T09:36:46.283Z","dateModified":"2025-01-07T09:50:38.401Z","author":{"@type":"Person","name":"white crow"},"publisher":{"@type":"Organization","name":"Crow's Sky","logo":{"@type":"ImageObject","url":"http://example.com/img/avatarCircle.png"}},"description":"AsyncLayoutInflater框架是Google提供的可用于异步线程中解析布局的工具，原理就是在新建的单线程中循环执行提交到**任务队列(容量固定为10的ArrayBlockingQueue)**的任务。 注意事项 所填充的布局中自定义View中不能直接使用Handler，因为其布局中所有子View都是在异步线程中创建的，故默认没有初始化Looper 单线程易阻塞 提交超过10个任务会导"}</script><link rel="canonical" href="http://example.com/2025/01/07/AsyncLayoutInflaterManager/"><link rel="icon" href="/img/avatarCircle.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/WhileCrow"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-10-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2025-01-07T09:36:46.283Z" title="1/7/2025, 5:36:46 PM">2025-01-07</time></span><span class="level-item">Updated&nbsp;<time dateTime="2025-01-07T09:50:38.401Z" title="1/7/2025, 5:50:38 PM">2025-01-07</time></span><span class="level-item">24 minutes read (About 3662 words)</span></div></div><div class="content"><ol>
+<li><p>AsyncLayoutInflater框架是Google提供的可用于异步线程中解析布局的工具，原理就是在新建的<strong>单线程</strong>中<strong>循环执行</strong>提交到**任务队列(容量固定为10的ArrayBlockingQueue)**的任务。</p>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ol>
+<li>所填充的布局中自定义View中不能直接使用Handler，因为其布局中所有子View都是在异步线程中创建的，故默认没有初始化Looper</li>
+<li>单线程易阻塞</li>
+<li>提交超过10个任务会导致主线程等待</li>
+<li>view需手动加到Viewparent</li>
+<li>不支持设置LayoutInflater. Factory或LayoutInflater. Factory2</li>
+<li>锁可能导致inflater不及时，导致反而比不用异步布局慢</li>
+</ol>
+</li>
+</ol>
+<h4 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h4><p>但是异步布局<strong>并不需要担心View测绘</strong>时抛出<code>&quot;Only the original thread that created a view hierarchy can touch its views.&quot;</code>异常。</p>
+<p>因为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ViewRootImpl.java</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">checkThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mThread != Thread.currentThread()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> CalledFromWrongThreadException(</span><br><span class="line">                <span class="string">&quot;Only the original thread that created a view hierarchy can touch its views.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>checkThread判断的是更新UI（<code>requestLayout or invalidate</code>）时，<strong>ViewRootImpl的创建线程与更新UI线程</strong>是否一致</p>
+<p>ViewRootImpl线程是在初始化的时候赋值的。而ViewRootImpl的初始化是在：</p>
+<ol>
+<li><p>PhoneWindow(如Activity)在setContentView时先installDecor()，然后将setContentView的入参view添加到DecorView布局中的R.id.content上</p>
+</li>
+<li><p>之后会等到AMS发来Resume消息的时候，走ActivityThread.handleResumeActivity时，调用<code>wm.addView(decor, l);</code>，走到activity.mWindowManager.addView -&gt; WindowManagerImpl.addView -&gt; WindowManagerGlobal.addView</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WindowManagerGlobal.java</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(View view, ViewGroup.LayoutParams params,</span></span></span><br><span class="line"><span class="function"><span class="params">            Display display, Window parentWindow, <span class="keyword">int</span> userId)</span>  </span>&#123;</span><br><span class="line">    ViewRootImpl root;</span><br><span class="line">    ...</span><br><span class="line">    root = <span class="keyword">new</span> ViewRootImpl(view.getContext(), display);</span><br><span class="line">    view.setLayoutParams(wparams);</span><br><span class="line"></span><br><span class="line">    mViews.add(view);</span><br><span class="line">    mRoots.add(root);</span><br><span class="line">    mParams.add(wparams);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于ActivityThread所在线程其实就是主线程（ActivityThread.main调用了Looper.prepareMainLooper()、Looper.loop()，整个应用都是存活在这个looper的调度中的），所以调用ActivityThread.handleResumeActivity初始化ViewRootImpl的时候，就是在主线程。</p>
+</li>
+</ol>
+<p><strong>故而不管是不是用异步布局填充最后checkThread时还是比较是否为主线程</strong></p>
+<h4 id="改进方式"><a href="#改进方式" class="headerlink" title="改进方式"></a>改进方式</h4><p>可以通过拷贝一份AsyncLayoutInflater，然后改动代码的方式：</p>
+<ol>
+<li>通过增加线程池调度，规避只能单线程inflater的弊端，解决注意事项2</li>
+<li>可以通过在inflater前，反射调用线程池中每个线程设置MainLooper()，解决注意事项1</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">forceSetMainLoop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Field field = Looper.class.getDeclaredField(<span class="string">&quot;sThreadLocal&quot;</span>);</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        Object object = field.get(Looper.getMainLooper());</span><br><span class="line">        <span class="keyword">if</span> (object <span class="keyword">instanceof</span> ThreadLocal) &#123;</span><br><span class="line">            ThreadLocal threadLocal = (ThreadLocal&lt;Looper&gt;) object;</span><br><span class="line">            threadLocal.set(Looper.getMainLooper());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><p>页面没出来之前（空闲时渲染）直接填充布局，生成View后缓存到内存中，使用时直接取用，空间换时间的方式降低页面耗时，简单将就是填充一份View备用，需要时直接取用后再异步填充取代回去。</p>
+</li>
+<li><p><del>重写cloneInContext（LayoutInflater.from(context)最后走到的是ContextThemeWrapper的getSystemService。<code>mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(this);</code>故重写该方法直接返回新的LayoutInflater即可）</del></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ContextThemeWrapper.java</span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getSystemService</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (LAYOUT_INFLATER_SERVICE.equals(name)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mInflater == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mInflater;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> getBaseContext().getSystemService(name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//改进后be like:</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> LayoutInflater <span class="title">cloneInContext</span><span class="params">(Context newContext)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> BasicInflater(newContext);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="一、现状"><a href="#一、现状" class="headerlink" title="一、现状"></a>一、现状</h2><p>项目中针对xml布局加载，一般是使用LayoutInflate.from(context).inflate或则View.inflate来进行，其他方式则是直接new XXXView</p>
+<p>LayoutInflate 进行 xml 加载包括三个步骤：</p>
+<ul>
+<li>1、将 xml 文件解析到内存中 XmlResourceParser 的 IO 过程</li>
+<li>2、根据 XmlResourceParser 的 Tag name 获取 Class 的 Java 反射过程</li>
+<li>3、创建 View 实例，最终生成 View 树</li>
+</ul>
+<p>这 3 步涉及IO和反射，所以是耗时的。</p>
+<p>在业务层面上，我们可以通过优化 xml 层级、使用 ViewStub 方式进行按需加载等方式进行优化，降低布局填充耗时。</p>
+<p>或则使用View复用方式(业务销毁时重置View属性)</p>
+<p>但对于一些页面元素仍然较多，暂无法View复用，或则启动阶段针对布局填充还需要进一步降低耗时的，可以考虑布局异步预加载方案.</p>
+<p>google本身提供了AsyncLayoutInflater类来完成布局异步加载，这套方案暂不支持预存View，只能通过回调来通知主线程。 主端也提供了一套异步加载基础能力AsyncInflateManager，但主端只是在VM架构中使用软引用来使用。 目前根据咱们自身业务形态中遇到的布局填充耗时问题，需要在AsyncInflateManager基础能力进行扩展。 可以先看几个trace：</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/39m8kimxj6.png" alt="img"></p>
+<p>中端机一次播控栏布局的填充，按trace的时间维度77ms，按损耗折算也有30ms，低端机耗时会更多。</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/x8lr69v50i.png" alt="img"></p>
+<p>中端机一次More面板布局填充，也差不多75ms，咱们在某些切换视频场景，大概一次要填充10个布局，可想而知，光填充时间就要占大量主线程时间。 方案上可以按需不加载10个这么多，而选择性填充，例如这些场景优化填充数量到5个来优化。 这里不讨论按需的场景，主要看下布局异步加载整个流程如何来优化这种元素较多的使用场景。</p>
+<h2 id="二、异步预加载方案"><a href="#二、异步预加载方案" class="headerlink" title="二、异步预加载方案"></a>二、异步预加载方案</h2><p>主端方案AsyncInflateManager实现上比较简单大致流程如下：</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/4id8l2b8ss-20250107174609761.png" alt="img"></p>
+<p>同时，也支持原生方案中的回调来通知主线程。即支持主动查询，也支持被动回调</p>
+<h2 id="三、遇到的问题以及方案改造"><a href="#三、遇到的问题以及方案改造" class="headerlink" title="三、遇到的问题以及方案改造"></a>三、遇到的问题以及方案改造</h2><p>上述方案使用场景当前仅限于VM架构： 在XXXVM调用bindFields开始做异步加载，在XXXCell调用getItemView的时候去获取缓存View 根据咱们业务需求，需要在非VM架构使用。</p>
+<p>根据使用过程产生的问题先后顺序，记录不断升级改造的迭代</p>
+<h6 id="问题1：Map缓存的是软引用View对象，一些低端机或小内存设备，在布局异步加载完缓存进Map后，就被gc了"><a href="#问题1：Map缓存的是软引用View对象，一些低端机或小内存设备，在布局异步加载完缓存进Map后，就被gc了" class="headerlink" title="问题1：Map缓存的是软引用View对象，一些低端机或小内存设备，在布局异步加载完缓存进Map后，就被gc了"></a>问题1：Map缓存的是软引用View对象，一些低端机或小内存设备，在布局异步加载完缓存进Map后，就被gc了</h6><p><img src="/2025/01/07/AsyncLayoutInflaterManager/33yxjzrjrq.png" alt="img"></p>
+<p>使用软引用，基本上都走向了兜底逻辑，主线程Inflate布局。  改造：保留软引用使用基础上，派生强引用View对象</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/29m4g6rz8m.png" alt="img"></p>
+<p>这样就能适配需要频繁填充布局的场景，根据业务使用场景，控制好布局最大缓存数，避免过度加载浪费资源。</p>
+<h6 id="问题2：异步加载后的SeekBar触摸时序发生了变化，导致同样代码逻辑缺出现问题，音量控件滑动后，声音大小没变"><a href="#问题2：异步加载后的SeekBar触摸时序发生了变化，导致同样代码逻辑缺出现问题，音量控件滑动后，声音大小没变" class="headerlink" title="问题2：异步加载后的SeekBar触摸时序发生了变化，导致同样代码逻辑缺出现问题，音量控件滑动后，声音大小没变"></a>问题2：异步加载后的SeekBar触摸时序发生了变化，导致同样代码逻辑缺出现问题，音量控件滑动后，声音大小没变</h6><p>分析原因： 如果是主线程创建出的SeekBar，那么滑动事件的时序如下： onStartTrackingTouch -&gt; onProgressChanged -&gt; onStopTrackingTouch</p>
+<p>而如果是子线程创建的SeekBar，同样滑动事件时序如下： onStartTrackingTouch -&gt; onStopTrackingTouch -&gt; onProgressChanged</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/hjk9yo5yrq.png" alt="img"></p>
+<p>所以这段逻辑的isVolumeSeeking没有起到作用，导致onProgressChanged没有执行changeVolume 时序执行发生变化，从源码中可以找到原因：</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/m7jysrqcnz.png" alt="img"></p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/bxmnk9cty1.png" alt="img"></p>
+<p>代码语言：javascript</p>
+<p>复制</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SeekBar的父类ProgressBar构造的时候会记录线程id，在刷新progress的时候，如果当前</span><br><span class="line">线程id与构造记录的线程id一致，则直接回调onProgressChanged。否则就抛到主线程在执行这个操作</span><br><span class="line">所以出现上述调用时序变化</span><br><span class="line">改造：使用fromUser参数</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/jhtg4jv694.png" alt="img"></p>
+<p>代码语言：javascript</p>
+<p>复制</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">使用这个参数来判定变化是不是来自用户操作</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">问题<span class="number">3</span>：如果自定义View使用的VM架构，同时该View被其他页面复用，同时使用了DataBinding进行view绑定，那么不能使用异步加载该View布局，会出现Lifecycle绑定宿主错误问题</span><br></pre></td></tr></table></figure>
+
+<p>代码语言：javascript</p>
+<p>复制</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例子：业务SubmarineImmersiveVideoBoardView主feeds用来作为播放器容器，同时被创作者页面复用也是作为创作者播放器容器，同时bindViewModel的方法中使用</span><br></pre></td></tr></table></figure>
+
+<p>DataBinding.bind(mLayoutAbovePlayer, vm.mPosterField);来绑定对应View和VisibilityField可见性属性。</p>
+<p>代码语言：javascript</p>
+<p>复制</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如果主feeds页面异步预加载了<span class="number">1</span>次，而主feeds因为某些原因这一次没使用到，当切到创作者页面后使用到这个预加载的布局，那么，这个View对应的上下文还是主Feeds的Activity，</span><br><span class="line">DataBinding.bind过程会识别到这个宿主是主Feeds Activity，而不是创作者Activity，导致生命周期绑定错误</span><br><span class="line">所以对于这样场景，暂不能使用异步加载布局，后续可以考虑预加载与页面绑定，避免自定义可复用View引起DataBinding绑定问题</span><br></pre></td></tr></table></figure>
+
+<h6 id="问题4：ViewConfiguration初始化阶段和Typeface-create阶段线上产生ArrayIndexOutOfBoundsException"><a href="#问题4：ViewConfiguration初始化阶段和Typeface-create阶段线上产生ArrayIndexOutOfBoundsException" class="headerlink" title="问题4：ViewConfiguration初始化阶段和Typeface create阶段线上产生ArrayIndexOutOfBoundsException"></a>问题4：ViewConfiguration初始化阶段和Typeface create阶段线上产生ArrayIndexOutOfBoundsException</h6><p><a href="https://cloud.tencent.com/developer/tools/blog-entry?target=https://bugly.woa.com/v2/exception/crash/issues/detail?productId=8cff7e7c1f&pid=1&token=1ff71910a43e91d6a3b0057fc8869e10&feature=874B15C5217D653EAAF155D17F0B049B&cId=7E:4D:A4:E3:CA:14:7D:E9:6E:D5:BB:7A:E6:95:8B:D8&objectId=2192978&objectType=1&isNewArticle=undefined">https://bugly.woa.com/v2/exception/crash/issues/detail?productId=8cff7e7c1f&amp;pid=1&amp;token=1ff71910a43e91d6a3b0057fc8869e10&amp;feature=874B15C5217D653EAAF155D17F0B049B&amp;cId=7E:4D:A4:E3:CA:14:7D:E9:6E:D5:BB:7A:E6:95:8B:D8</a></p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/wy9za9nsi9.png" alt="img"></p>
+<p>两个问题是同一个根因，异步加载布局后，一些系统属性在主线程初始化的同时，子线程也在初始化，导致同时访问了线程不安全的SparseArray<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/tke?from_column=20065&from=20065">容器</a>出现越界。</p>
+<p>改造：AttachBase阶段都在子线程先初始化完，一般主线程需要初始这些属性要在firstActivity创建之后，这个初始化耗时本身不高，所以到firstActivity阶段已经完成</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/yyws5j6rux.png" alt="img"></p>
+<p>优化后后续没出现类似crash</p>
+<h6 id="问题5：LayoutInflate对象锁导致的锁等待"><a href="#问题5：LayoutInflate对象锁导致的锁等待" class="headerlink" title="问题5：LayoutInflate对象锁导致的锁等待"></a>问题5：LayoutInflate对象锁导致的锁等待</h6><p><img src="/2025/01/07/AsyncLayoutInflaterManager/7y7egqdvp8.png" alt="img"></p>
+<p>锁等待发生在inflate阶段，LayoutInflater.inflate和View.inflate如果都是在主线程调用，不会存在锁等待，因为是单一线程。</p>
+<p>而异步加载布局如果也是用这两个方法进行填充，那么就会因线程竞争导致锁等待，可能是主线程等子线程释放锁，也可能是子线程等主线程释放锁</p>
+<p>锁等待会导致主线程在耗时增加，比没有优化更耗时，所以是必须要解决的问题</p>
+<p>改造：使用new BasicInflater进行布局填充，避免对象锁</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/7oxgvqi64h.png" alt="img"></p>
+<p>只要保证异步加载的LayoutInflater与主线程LayoutInflater是不同对象即可。 基于现有的方式在子线程已经使用了new BasicInflater，但某些布局是嵌套布局，View构造的时候 还是会使用LayoutInflater，所以全部替换为new BasicInflater</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/cbwisom5i5.png" alt="img"></p>
+<p>父布局xml被异步加载了，PlayerIntroView作为自定义子布局，如果使用了Inflate的方式，需要换成new BasicInflater(context).inflate</p>
+<h6 id="问题5：AssetMananger对象锁导致的锁等待"><a href="#问题5：AssetMananger对象锁导致的锁等待" class="headerlink" title="问题5：AssetMananger对象锁导致的锁等待"></a>问题5：AssetMananger对象锁导致的锁等待</h6><p>解决完LayoutInflater锁问题，还有AssetMananger对象锁问题</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/ceboy18h4v.png" alt="img"></p>
+<p>查看源码是对象锁</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/b8kftsseeo.png" alt="img"></p>
+<p>解决思路就变成如何新生成AssetMananger对象，而inflate填充传入了context，那么问题就变成新生成一个包含新AssetMananger对象context 改造：使用context.createConfigurationContext来生成</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/eu41qgq1v9.png" alt="img"></p>
+<p>这个方法创建的context是一个新对象，但AssetMananger还是同一对象 还是需要查看源码了解原因。源码里面要生成新AssetMananger，需要ResourcesKey不同，如果同一个key 那么就会从map取出缓存的Assetmanager对象，显然不是我们预期的新对象</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/m7wxjghrnk.png" alt="img"></p>
+<p>为了能产生不同ResourcesKey，需要改下Configuartion配置</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/zty31j2qv8.png" alt="img"></p>
+<p>通过增加语言来创建语言环境对象，新增AssetManager对象。这样异步加载AssetManager对象锁才得以解决</p>
+<p><img src="/2025/01/07/AsyncLayoutInflaterManager/u2fkijpd8t.png" alt="img"></p>
+<p>这里在回顾View的构造，可以看到进行异步加载的布局context是子线程使用的MutableContextWrapper可变上下文，代理mBase在子线程是由getAsyncLayoutContext生成，当主线程获取这个缓存后，通过replace会将这个mBase替换为页面上下文，完成上下文替换。</p>
+<p>但mResources还是使用的子线程创建的Resources，如果主线程通过View.getResources的方式来获取资源，那么在极端场景下，子线程正在预加载同一个布局，而主线程使用上一次预加载缓存View，那么也会存在AssetManager锁等待的情况，</p>
+<p>当然这种也可以通过将业务调用方式改为context.getResources来解决。</p>
+<h6 id="问题6：Art虚拟机InternTable-Lock导致的锁等待"><a href="#问题6：Art虚拟机InternTable-Lock导致的锁等待" class="headerlink" title="问题6：Art虚拟机InternTable Lock导致的锁等待"></a>问题6：Art虚拟机InternTable Lock导致的锁等待</h6><p><img src="/2025/01/07/AsyncLayoutInflaterManager/ote9z14dvn.png" alt="img"></p>
+<p>第三种锁，除上述截图外还有：</p>
+<p>Lock contention on ClassLinker classes lock Lock contention on thread suspend count lock</p>
+<p>Lock contention on runtime shutdown lock Lock contention on linear alloc</p>
+<p>都是Art虚拟机的相关锁，这个不是特有锁，其他线程也有，具体原因不得而知，有清楚的同学还望不吝指点哈。 这个锁每次耗时不长，大概us级别，但数量不少，目前还不清楚原因以及如何处理，暂时记录下</p>
+<h6 id="问题7：使用单一线程还是线程池"><a href="#问题7：使用单一线程还是线程池" class="headerlink" title="问题7：使用单一线程还是线程池"></a>问题7：使用单一线程还是线程池</h6><p>目前我们业务统一采用单一高优线程来做异步预加载，线程池解决掉上述2种锁等待后，也是可用的。 但线程池每个线程的优先级不同，可能会导致某些高优布局需要更多的时间片更快执行，所以使用线程池 需要对执行线程有优先级要求</p>
+<h2 id="四、数据对比"><a href="#四、数据对比" class="headerlink" title="四、数据对比"></a>四、数据对比</h2><p><img src="/2025/01/07/AsyncLayoutInflaterManager/3zzsud2qof.png" alt="img"></p>
+<p>使用这种方案后，inflate操作变成了读取缓存View，时间上就很快，和读取普通集合对象一样。一般不超过5ms</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p><a href="http://example.com/2025/01/07/AsyncLayoutInflaterManager/">http://example.com/2025/01/07/AsyncLayoutInflaterManager/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>white crow</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2025-01-07</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2025-01-07</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2024/12/19/Handler/"><span class="level-item">Handler</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1 is-sticky"><!--!--><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/avatarPng.png" alt="White Crow"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">White Crow</p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">80</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">4</p></a></div></div></nav></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/avatarCircle.png" alt="Crow&#039;s Sky" height="28"></a><p class="is-size-7"><span>&copy; 2025 white crow</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://github.com/WhileCrow"><i class="fab fa-creative-commons-by"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
